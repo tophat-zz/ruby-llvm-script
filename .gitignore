@@ -1,0 +1,9 @@
+.DS_Store
+*.gem
+*.dylib
+*.o
+*.so
+*~
+.rvmrc
+.yardoc
+doc/*
