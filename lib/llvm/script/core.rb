@@ -25,6 +25,11 @@ module LLVM
           SecureRandom.uuid
         end
         
+        # Needed on Ruby 1.9.x to get the class of a BasicObject.
+        def class
+          (class << self; self end).superclass
+        end
+        
         # On Ruby 1.9.x, tries to get unknown constants from Object.
         def self.const_missing(name)
           ::Object.const_get(name)

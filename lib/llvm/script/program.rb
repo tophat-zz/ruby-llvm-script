@@ -56,7 +56,6 @@ module LLVM
         if @main.nil?
           raise RuntimeError, "Program, #{@name}, cannot be run without a main funcion."
         end
-        self.link unless @links.empty?
         @jit ||= LLVM::JITCompiler.new(@module)
         @jit.run_function(@main, GenericValue.from_i(0), GenericValue.from_i(0))
       end
@@ -71,16 +70,6 @@ module LLVM
         File.delete("#{file}.s")
       end
       
-      # Links the libraries imported into the program to the program.
-      # @raise [RuntimeError] if the LLVM Linker fails.
-      def link
-        @links.each do |lib, mod|
-          err = @module.link(mod, :linker_destroy_source)
-          raise RuntimeError, "LLVM Linker failed to link library, #{lib.name}, to program." if err
-        end
-        @links = {}
-      end
-      
       # Verifys that the program is valid. Prints any problems to $stdout.
       def verify
        @module.verify!
@@ -92,7 +81,6 @@ module LLVM
       # @see http://jvoorhis.com/ruby-llvm/LLVM/PassManager.html
       # @see http://llvm.org/docs/Passes.html 
       def optimize(*passes)
-        self.link unless @links.empty?
         @jit ||= LLVM::JITCompiler.new(@module)
         manager = LLVM::PassManager.new(@jit)
         passes.each{ |name| manager.__send__("#{name.to_s}!".to_sym) }

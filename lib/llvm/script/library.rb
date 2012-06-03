@@ -6,8 +6,11 @@ module LLVM
       # The name of this library
       attr_reader :name
       
-      # Whether or not to prefix globals with the name of the library.
-      attr_accessor :prefix
+      # When to prefix globals with the name of the library.
+      attr_reader :prefix
+      
+      # The LLVM::Module the library represents.
+      attr_reader :module
       
       # A Uuid placed in front of global string names to prevent them from conflicting with 
       # other globals. It is chopped down to 5 characters to make the name somewhat readable 
@@ -50,9 +53,8 @@ module LLVM
         @functions = {}
         @macros = {}
         @elements = {}
-        @links = {}
         if self.class == Library
-          @@libraries[name.to_s] = self
+          @@libraries[@name.to_sym] = self
           @@last_library = self
         end
         build(&block) if ::Kernel.block_given?
@@ -81,18 +83,18 @@ module LLVM
       # Functions/Globals:: First, if the the object's name already exists in the library, it tries to rename
       #                     it to add the library's prefix (if prefix is :smart). If a object with that name
       #                     already exists, it will print a warning and the version in the caller will take 
-      #                     precedence in ruby-llvm-script. However, what the linker (the internals of 
-      #                     {LLVM::Script::Program#link}) will do depends on how the object was declared 
-      #                     (ex. if a function's linkage is :weak, it will be overriden). If the linker is 
-      #                     unable to resolve the conflict, it will error. *Advice:* Try to avoid function 
-      #                     and global conflicts unless you know what you are doing.
+      #                     precedence in ruby-llvm-script. However, what the linker will do depends on how 
+      #                     the object was declared (ex. if a function's linkage is :weak, it will be overriden). 
+      #                     If the linker is unable to resolve the conflict, it will error. *Advice:* Try to 
+      #                     avoid function and global conflicts unless you know what you are doing.
       # @param [String, Symbol, LLVM::Script::Library] library The name of the library to import or the 
       #   library itself.
       # @return [LLVM::Script::Library] The imported library.
+      # @raise [RuntimeError] Raised if the LLVM Linker fails.
       def import(library)
         if library.is_a?(String) || library.is_a?(Symbol)
           if @@libraries.has_key?(library.to_sym)
-            library = @@libraries[library]
+            library = @@libraries[library.to_sym]
           else
             raise ArgumentError, "Library, #{library.to_s}, does not exist."
           end
@@ -136,8 +138,8 @@ module LLVM
             @strings[str] = glb
           end
         end
-        @links.merge!(library.instance_variable_get(:@links))
-        @links[library] = library.instance_variable_get(:@module)
+        err = @module.link(library.module, :linker_destroy_source)
+        raise RuntimeError, "Failed to link library, #{library.name.to_s}, to #{name}." if err
         return library
       end
       
