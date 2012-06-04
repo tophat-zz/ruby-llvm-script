@@ -22,9 +22,9 @@ program "I/O" do
 	  buf = alloca(CHAR, bufsize) # Allocate a pointer to a CHAR array that is bufsize
 	  stdin = fdopen(0, "r") # Get the stdin stream for reading (0 - stdin, 1 - stdout, 2 - stderr)
 	  self.printf("Please enter a line of text, max %d characters\n", bufsize);
-		cond opr(:ne, fgets(buf, bufsize, stdin), nil) do # Get some input and put it in buf
+    cond is_not_null(fgets(buf, bufsize, stdin)) do # Get some input and put it in buf
 		   p = strchr(buf, 10) # Get a pointer to the "\n" character (ASCII 10) in the input buffer
-		   cond opr(:ne, p, nil) do
+		   cond is_not_null(p) do
 		     store(0, p) # Replace the "\n" character with a "\0" (null) character (ASCII 0)
 		   end
 		   self.printf("Thank you, you entered >%s<\n", buf);

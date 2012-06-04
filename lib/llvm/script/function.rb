@@ -53,6 +53,9 @@ module LLVM
           @generator.basic_block.dispose
         end
         @return_block.move_after(@raw.basic_blocks.last) unless  @return_block.nil?
+        unless @generator.finished?
+          warn("#{name.to_s.capitalize} has no return at the end of the function!")
+        end
         @generator.finish
       end
     

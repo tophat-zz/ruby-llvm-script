@@ -15,7 +15,8 @@
 ## Introduction
 
 This project aims to make a simple clean interface on top of ruby-llvm to make it 
-easier for one to write ruby-llvm programs and libraries.
+easier for one to write ruby-llvm programs and libraries. It is also very well documented,
+if I do say so myself.
 
 ruby-llvm-script has been tested on OS X 10.7 using the following Ruby interpreters:
 
@@ -23,7 +24,7 @@ ruby-llvm-script has been tested on OS X 10.7 using the following Ruby interpret
 * MRI 1.9.3-p194
 
 ## Roadmap
-* Finish documentation.
+* Make sure everything works.
 * *Requests appreciated.*
 
 ## Installing
