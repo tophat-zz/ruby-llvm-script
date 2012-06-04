@@ -257,7 +257,7 @@ module LLVM
       def trunc(v, type)
         type = LLVM::Type(type)
         unless type.kind_of?(LLVM::Type)
-          raise ArgumentError, "Type passed to bitcast must be of LLVM::Type. #{type_name(type)} given."
+          raise ArgumentError, "Type passed to trunc must be of LLVM::Type. #{type_name(type)} given."
         end
         val = convert(v)
         case val.type.kind
@@ -309,6 +309,51 @@ module LLVM
           @builder.fp_ext(val, type)
         else
           raise ArgumentError, "Value passed to zext is not Numeric."
+        end
+      end
+      
+      # Converts a float to an integer.
+      # @param [LLVM::ConstantReal, Float] v The float to convert.
+      # @param [LLVM::Type] type The type of integer to convert the float into.
+      # @param [Boolean] signed Whether the integer can be negative.
+      # @return [LLVM::ConstantInteger] The resulting integer.
+      def ftoi(v, type, signed=true)
+        type = LLVM::Type(type)
+        unless type.kind_of?(LLVM::Type)
+          raise ArgumentError, "Type passed to ftoi must be of LLVM::Type. #{type_name(type)} given."
+        end
+        val = convert(v)
+        case val.type.kind
+        when :float, :double, :x86_fp80, :fp128, :ppc_fp128
+          if signed
+            @builder.fp2si(val, type)
+          else
+            @builder.fp2ui(val, type)
+          end
+        else
+          raise ArgumentError, "Value passed to ftoi is not of a float type."
+        end
+      end
+      
+      # Converts a integer to float.
+      # @param [LLVM::ConstantInt, Integer] v The integer to convert.
+      # @param [LLVM::Type] type The type of float to convert the integer into.
+      # @param [Boolean] signed Whether the integer can be negative.
+      # @return [LLVM::ConstantReal] The resulting float.
+      def itof(v, type, signed=true)
+        type = LLVM::Type(type)
+        unless type.kind_of?(LLVM::Type)
+          raise ArgumentError, "Type passed to itof must be of LLVM::Type. #{type_name(type)} given."
+        end
+        val = convert(v)
+        if val.type.kind == :integer
+          if signed
+            @builder.si2fp(val, type)
+          else
+            @builder.ui2fp(val, type)
+          end
+        else
+          raise ArgumentError, "Value passed to itof is not an integer."
         end
       end
       

@@ -126,6 +126,5 @@ LLVM::Script::Program#run which runs the `main` function.
 ## Moving On
 
 For more ruby-llvm-script examples, look in the sample directory. Also, you will probably need to
-look at the ruby-llvm documentation at http://jvoorhis.com/ruby-llvm/LLVM/PassManager.html and
-the LLVM assembly language reference at http://llvm.org/docs/LangRef.html if you want to get in 
-real deep.
+look at the ruby-llvm documentation at http://jvoorhis.com/ruby-llvm and the LLVM assembly language reference at
+http://llvm.org/docs/LangRef.html if you want to get in real deep.
