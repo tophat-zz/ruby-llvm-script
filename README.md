@@ -27,10 +27,7 @@ ruby-llvm-script has been tested on OS X 10.7 using the following Ruby interpret
 * Make sure everything works.
 * *Requests appreciated.*
 
-## Installing
-
-If you want to install ruby-llvm-script, you will need to install LLVM. You can learn how to do both 
-on the [Installation](https://github.com/tophat/ruby-llvm-script/wiki/Installation) wiki page.
+## Getting Started
 
 <table>
   <tr>
@@ -38,29 +35,15 @@ on the [Installation](https://github.com/tophat/ruby-llvm-script/wiki/Installati
   </tr>
 </table>
 
-## Getting Started
+If you would like to see what ruby-llvm-script feels like before getting started, take a look at the [Hello World program](https://github.com/tophat/ruby-llvm-script/wiki/Hello-World). Otherwise, you will need to [install LLVM and ruby-llvm-script](https://github.com/tophat/ruby-llvm-script/wiki/Installation) first. After you are done with that, you might wish to take a look at the breakdowns of the example programs in the samples directory: 
 
-Here is a hello world program in ruby-llvm-script:
+1. Hello World: [hello.rb](https://github.com/tophat/ruby-llvm-script/wiki/Hello-World)
+2. Factorial: [factorial.rb](https://github.com/tophat/ruby-llvm-script/wiki/Factorial)
+3. I/O: [io.rb](https://github.com/tophat/ruby-llvm-script/wiki/IO)
+4. Conditionals: [cond.rb](https://github.com/tophat/ruby-llvm-script/wiki/Conditionals)
+5. Function Pointers: [fp.rb](https://github.com/tophat/ruby-llvm-script/wiki/Function-Pointers)
 
-```ruby
-require 'rubygems'
-require 'llvm/script'
-require 'llvm/script/kernel'
-  
-program "Hello World" do
-  extern :printf, [CHARPTR, VARARGS], INT
-    
-  main do
-    printf("Hello World")
-    sret 0
-  end
-end
-  
-program.run # => Hello World
-```
-  
-If wish to fully understand what the above is doing, look [here](https://github.com/tophat/ruby-llvm-script/wiki/Hello-World).
-There are also examples for a [Factorial](https://github.com/tophat/ruby-llvm-script/wiki/Factorial), [I/O](https://github.com/tophat/ruby-llvm-script/wiki/IO), [Conditionals](https://github.com/tophat/ruby-llvm-script/wiki/Conditionals), and [Function Pointers](https://github.com/tophat/ruby-llvm-script/wiki/Function-Pointers) on the wiki.
+It is advised to look at them in the above order because as each builds upon the last.
 
 ## Moving On
 
