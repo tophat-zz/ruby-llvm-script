@@ -13,16 +13,9 @@ module Kernel
   # @see LLVM::Script::Program#initialize  
   def program(name="", opts={}, &block)
     unless block_given?
-      if name.empty?
-        return LLVM::Script::Program.last
-      elsif programs.include?(name.to_sym)
-        return programs[name.to_sym]
-      else
-        raise ArgumentError, "Program, #{name.to_s}, does not exist."
-      end
+      return LLVM::Script::Program.lookup(name)
     else
-      prog = LLVM::Script::Program.new(name, opts, &block)
-      programs[prog.name.to_sym] = prog
+      return LLVM::Script::Program.new(name, opts, &block)
     end
   end
   
@@ -40,16 +33,9 @@ module Kernel
   # @see LLVM::Script::Library#initialize
   def library(name="", opts={}, &block)
     unless block_given?
-      if name.empty?
-        return LLVM::Script::Library.last
-      elsif libraries.include?(name.to_sym)
-        return libraries[name.to_sym]
-      else
-        raise ArgumentError, "Library, #{name.to_s}, does not exist."
-      end
+      return LLVM::Script::Library.lookup(name)
     else
-      lib = LLVM::Script::Library.new(name, opts, &block)
-      libraries[lib.name.to_sym] = lib
+      return LLVM::Script::Library.new(name, opts, &block)
     end
   end
   

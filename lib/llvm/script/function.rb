@@ -49,7 +49,7 @@ module LLVM
         @generator ||= Generator.new(@library, @module, self)
         return if @generator.finished?
         @generator.instance_exec(*self.args, &block)
-        if @generator.basic_block.instructions.first.nil?
+        if @generator.basic_block.empty?
           @generator.basic_block.dispose
         end
         @return_block.move_after(@raw.basic_blocks.last) unless  @return_block.nil?

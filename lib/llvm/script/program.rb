@@ -6,9 +6,10 @@ module LLVM
       @@programs = {}       # @private
       @@last_program = nil  # @private
       
-      # Retrieves an array of all programs that have been created.
-      # @return [Array<LLVM::Script::Program>] An array of all programs.
-      def self.programs
+      # Retrieves a hash of all programs that have been created.
+      # @return [Hash<Symbol, LLVM::Script::Library>] An hash where each symbol is the name of the 
+      #   program it points to.
+      def self.collection
         return @@programs
       end
       
@@ -29,7 +30,7 @@ module LLVM
         LLVM.init_x86
         opts[:prefix] = :none
         super(name, opts, &block)
-        @@programs[name.to_s] = self
+        @@programs[name.to_sym] = self
         @@last_program = self
       end
       

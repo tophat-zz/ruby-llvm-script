@@ -1,0 +1,31 @@
+---
+Duplication:
+  max_calls: 3
+  exclude:
+  - LLVM::Script::Generator#convert
+LongParameterList:
+  max_params: 5
+UncommunicativeModuleName: 
+  accept: 
+  - LLVM::C
+IrresponsibleModule:
+  exclude:
+  - LLVM::Script::ScriptObject
+DataClump:
+  enabled: false
+FeatureEnvy: 
+  enabled: false
+UtilityFunction: 
+  enabled: false
+SimulatedPolymorphism:
+  enabled: false
+LargeClass:
+  enabled: false
+LongMethod:
+  enabled: false
+ClassVariable:
+  enabled: false
+ControlCouple:
+  enabled: false
+BooleanParameter:
+  enabled: false

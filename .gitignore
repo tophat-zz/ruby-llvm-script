@@ -4,6 +4,7 @@
 *.o
 *.so
 *~
+.sass-cache
 .rvmrc
 .yardoc
 doc/*

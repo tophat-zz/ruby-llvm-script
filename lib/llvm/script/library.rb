@@ -12,17 +12,18 @@ module LLVM
       # The LLVM::Module the library represents.
       attr_reader :module
       
-      # A Uuid placed in front of global string names to prevent them from conflicting with 
-      # other globals. It is chopped down to 5 characters to make the name somewhat readable 
+      # A Uuid placed in front of global string names in LLVM IR to prevent them from conflicting 
+      # with other globals. It is chopped down to 5 characters to make the name somewhat readable 
       # (thought not extremely unique).
       @@str_id = nil
       
       @@libraries = {}      # @private
       @@last_library = nil  # @private
       
-      # Retrieves an array of all libraries (not including subclasses) that have been created.
-      # @return [Array<LLVM::Script::Library>] An array of all libraries.
-      def self.libraries
+      # Retrieves a hash of all libraries (not including subclasses) that have been created.
+      # @return [Hash<Symbol, LLVM::Script::Library>] An hash where each symbol is the name of the 
+      #   library it points to.
+      def self.collection
         return @@libraries
       end
       
@@ -30,6 +31,21 @@ module LLVM
       # @return [LLVM::Script::Library] The last created library.
       def self.last
         return @@last_library
+      end
+      
+      # Looks for the specified library.
+      # @param [String, Symbol] The name of the library to look for. If no name is given, 
+      #   returns the last created library.
+      # @return [LLVM::Script::Library] The found library.
+      def self.lookup(name="")
+        libs = self.collection
+        if name.empty?
+          return self.last
+        elsif libs.include?(name.to_sym)
+          return libs[name.to_sym]
+        else
+          raise ArgumentError, "#{self.nam}, #{name.to_s}, does not exist."
+        end
       end
       
       # Creates a new library.
@@ -54,8 +70,8 @@ module LLVM
         @macros = {}
         @elements = {}
         if self.class == Library
+          @@last_libary = self
           @@libraries[@name.to_sym] = self
-          @@last_library = self
         end
         build(&block) if ::Kernel.block_given?
       end
@@ -104,25 +120,27 @@ module LLVM
         @macros[:public] ||= {}
         @macros[:public].merge!(library.macros) 
         library.functions.each do |key, func|
-          key = functions.has_key?(key.to_sym) ? func.name : key
-          if functions.has_key?(func.name.to_sym)
+          name = func.name
+          key = functions.has_key?(key) ? name : key
+          if functions.has_key?(name.to_sym)
             warn("Imported function, #{func.name}, already exists.")
           else
             args = func.varargs? ? func.arg_types + [VARARGS] : func.arg_types
-            fun = Function.new(self, @module, func.name, args, func.return_type)
+            fun = Function.new(self, @module, name.to_s, args, func.return_type)
             fun.linkage = :external
             @functions[:public] ||= {}
             @functions[:public][key.to_sym] = fun
           end
         end
         library.globals.each do |key, glob|
-          key = globals.has_key?(key) ? glob.name : key
-          if globals.has_key?(glob.name.to_sym)
+          name = glob.name
+          key = globals.has_key?(key) ? name : key
+          if globals.has_key?(name.to_sym)
             warn("Imported global, #{key.to_s}, already exists.")
           else
-            glb = @module.globals.add(glob.type, glob.name)
-            glb.linkage = :external
+            glb = @module.globals.add(glob.type, name.to_s)
             glb.global_constant = glob.global_constant?
+            glb.linkage = :external
             @globals[:public] ||= {}
             @globals[:public][key.to_sym] = glb
           end
@@ -298,7 +316,7 @@ module LLVM
       # Creates a new global value.
       # @param [String, Symbol] name The name of the global.
       # @param [LLVM::Value, LLVM::Type] info If an LLVM::Value, the default value of the global. 
-      #   Otherwise, it is the type of the global that is assumed to be external.
+      #   Otherwise, it is the type of the external global.
       # @return [LLVM::GlobalValue] The new global.
       def global(name, info)
         if info.kind_of?(LLVM::Type)

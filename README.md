@@ -35,7 +35,11 @@ ruby-llvm-script has been tested on OS X 10.7 using the following Ruby interpret
   </tr>
 </table>
 
-If you would like to see what ruby-llvm-script feels like before getting started, take a look at the [Hello World program](https://github.com/tophat/ruby-llvm-script/wiki/Hello-World). Otherwise, you will need to [install LLVM and ruby-llvm-script](https://github.com/tophat/ruby-llvm-script/wiki/Installation) first. After you are done with that, you might wish to take a look at the breakdowns of the example programs in the samples directory: 
+If you would like to see what ruby-llvm-script feels like before getting started, take a look at the 
+[Hello World program](https://github.com/tophat/ruby-llvm-script/wiki/Hello-World). Otherwise, you will need 
+to [install LLVM and ruby-llvm-script](https://github.com/tophat/ruby-llvm-script/wiki/Installation) first. After 
+you are done with that, you might wish to take a look at the breakdowns of the example programs in the samples 
+directory: 
 
 1. Hello World: [hello.rb](https://github.com/tophat/ruby-llvm-script/wiki/Hello-World)
 2. Factorial: [factorial.rb](https://github.com/tophat/ruby-llvm-script/wiki/Factorial)
@@ -47,4 +51,5 @@ It is advised to look at them in the above order because as each builds upon the
 
 ## Moving On
 
-You might want to look at the ruby-llvm documentation at <http://jvoorhis.com/ruby-llvm> and the LLVM assembly language reference at <http://llvm.org/docs/LangRef.html> if you want to get in real deep.
+You might want to look at the ruby-llvm documentation at <http://jvoorhis.com/ruby-llvm> and the LLVM assembly 
+language reference at <http://llvm.org/docs/LangRef.html> if you want to get in real deep.

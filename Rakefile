@@ -1,23 +1,12 @@
 require 'rubygems'
 require 'rake/testtask'
-require 'rake/gempackagetask'
+require 'rubygems/package_task'
 require 'rdoc/task'
 
 begin
-  require 'rcov/rcovtask'
-
-  Rcov::RcovTask.new do |t|
-    t.libs << "test"
-    t.rcov_opts << "--exclude gems"
-    t.test_files = FileList["test/**/*_test.rb"]
-  end
-rescue LoadError
-  warn "Proceeding without Rcov. gem install rcov on supported platforms."
-end
-
-Rake::TestTask.new do |t|
-  t.libs << "test"
-  t.test_files = FileList["test/**/tc_*.rb"]
+  import 'Quality.rake'
+rescue Exception
+  warn "Proceeding without quality tests. Install flay, flog, and reek gems for code quality testing."
 end
 
 begin
@@ -30,6 +19,24 @@ begin
 rescue LoadError
   warn "Yard is not installed. `gem install yard` to build documentation."
 end
+
+begin
+  require 'rcov/rcovtask'
+
+  Rcov::RcovTask.new do |t|
+    t.libs << "test"
+    t.rcov_opts << "--exclude gems"
+    t.test_files = FileList["test/**/tc_*.rb"]
+  end
+rescue LoadError
+  warn "Proceeding without Rcov. `gem install rcov` on supported platforms."
+end
+
+Rake::TestTask.new do |t|
+  t.libs << "test"
+  t.test_files = FileList["test/**/tc_*.rb"]
+end
+task :default => [:test]
 
 spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
@@ -52,23 +59,4 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.extra_rdoc_files = ['README.rdoc', 'LICENSE']
 end
-
-Rake::GemPackageTask.new(spec) do |t|
-end
-
-task :generate_ffi do
-  require 'ffi_gen'
-  
-  FFIGen.generate(
-    :module_name => "LLVM::C",
-    :ffi_lib     => "LLVM-3.0",
-    :headers     => ["linker.h"],
-    :cflags      => `llvm-config --cflags`.split(" "),
-    :prefixes    => ["LLVM"],
-    :blacklist   => ["LLVMGetMDNodeNumOperands", "LLVMGetMDNodeOperand",
-                    "LLVMInitializeAllTargetInfos", "LLVMInitializeAllTargets", "LLVMInitializeNativeTarget"],
-    :output      => "lib/llvm/linker_ffi.rb"
-  )
-end
-
-task :default => [:test]
+Gem::PackageTask.new(spec)
