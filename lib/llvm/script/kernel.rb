@@ -1,5 +1,3 @@
-# The file containing global functions of ruby-llvm-script. It includes LLVM::Script::Types
-
 include LLVM::Script::Types
 
 # Adds some ease-of-use functions to Kernel. It also includes {LLVM::Script::Types}.

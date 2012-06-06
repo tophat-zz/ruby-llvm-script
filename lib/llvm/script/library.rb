@@ -34,7 +34,7 @@ module LLVM
       end
       
       # Looks for the specified library.
-      # @param [String, Symbol] The name of the library to look for. If no name is given, 
+      # @param [String, Symbol] name The name of the library to look for. If no name is given, 
       #   returns the last created library.
       # @return [LLVM::Script::Library] The found library.
       def self.lookup(name="")

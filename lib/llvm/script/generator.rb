@@ -861,9 +861,7 @@ module LLVM
       end
       
       def numeric_cast(casts, num, type)
-        val = convert(num)
-        type = validate_type(type)
-        numeric_call([casts[0], nil, casts[1]], val, type)
+        numeric_call([casts[0], nil, casts[1]], convert(num), validate_type(type))
       end
       
       def numeric_operation(meth, lhs, rhs, signed=true)

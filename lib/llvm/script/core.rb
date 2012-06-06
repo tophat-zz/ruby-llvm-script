@@ -1,5 +1,3 @@
-# The ruby version dependent core of ruby-llvm-script.
-
 require 'securerandom'
 
 module LLVM
