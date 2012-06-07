@@ -16,7 +16,7 @@ body {
 }
 
 .wrapper {
-  width:640px;
+  width:80%;
   margin:0 auto;
   background:#585858;
   @include border-radius(8px);
@@ -257,7 +257,7 @@ hr {
 }
 
 footer {
-  width:640px;
+  width:80%;
   margin:0 auto;
   padding:20px 0 0;
   color:#ccc;

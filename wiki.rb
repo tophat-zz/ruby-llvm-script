@@ -13,12 +13,13 @@ FILEMAP = {
   "Conditionals"      => "breakdowns/conditionals.html",
   "Function-Pointers" => "breakdowns/function-pointers.html",  
 }
+TEMP_DIR = "src"
 OLD_ROOT = "https://github.com/tophat/ruby-llvm-script/wiki/"
 NEW_ROOT = "http://tophat.github.com/ruby-llvm-script/"
 
-Git.clone("https://github.com/tophat/ruby-llvm-script.wiki.git", "src")
+Git.clone("https://github.com/tophat/ruby-llvm-script.wiki.git", TEMP_DIR)
 
-wiki = Gollum::Wiki.new("src")
+wiki = Gollum::Wiki.new(TEMP_DIR)
 wiki.pages.each do |page|
   
   fname = FILEMAP[page.filename_stripped]
@@ -44,6 +45,6 @@ wiki.pages.each do |page|
   file = File.open(fname, "w")
   file.puts(doc.to_xml)
   file.close
-  
+ 
 end
-FileUtils.rm_rf("src")
+FileUtils.rm_rf(TEMP_DIR)
