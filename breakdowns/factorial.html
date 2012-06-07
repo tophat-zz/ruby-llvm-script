@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<title>Ruby LLVM Script by tophat</title>
+<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/styles.css">
+<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/pygment_trac.css">
+<script src="http://tophat.github.com/ruby-llvm-script/javascripts/scale.fix.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+      <header><h1>Ruby LLVM Script</h1>
+        <p>Simple, clean interface for ruby-llvm.</p>
+        <p class="view"><a href="https://github.com/tophat/ruby-llvm-script">View the Project on GitHub <small>tophat/ruby-llvm-script</small></a></p>
+        <ul>
+<li><a href="https://github.com/tophat/ruby-llvm-script/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/tophat/ruby-llvm-script/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/tophat/ruby-llvm-script">View On <strong>GitHub</strong></a></li>
+        </ul></header><section><h1>Factorial</h1>
+<p>This page will analyze the example program <code>factorial.rb</code> from the samples directory. <code>factorial.rb</code> is a basic factorial program done using ruby-llvm-script.</p>
+
+<h3>Source</h3>
+
+<div class="highlight">
+<pre><span class="nb">require</span> <span class="s1">'rubygems'</span>
+<span class="nb">require</span> <span class="s1">'llvm/script'</span>
+<span class="nb">require</span> <span class="s1">'llvm/script/kernel'</span>
+
+<span class="n">program</span> <span class="s2">"Factorial"</span> <span class="k">do</span>
+  <span class="n">function</span> <span class="ss">:factorial</span><span class="p">,</span> <span class="o">[</span><span class="no">INT</span><span class="o">]</span><span class="p">,</span> <span class="no">INT</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+    <span class="n">cret</span> <span class="n">opr</span><span class="p">(</span><span class="ss">:eq</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">1</span>
+    <span class="n">ret</span> <span class="n">mul</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">factorial</span><span class="p">(</span><span class="nb">sub</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+  <span class="k">end</span>
+  
+  <span class="n">main</span> <span class="k">do</span>
+    <span class="n">sret</span> <span class="n">factorial</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="nb">puts</span>
+<span class="n">program</span><span class="o">.</span><span class="n">dump</span>
+
+<span class="nb">puts</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">fac(</span><span class="si">#{</span><span class="mi">6</span><span class="si">}</span><span class="s2">) = </span><span class="si">#{</span><span class="n">program</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">to_i</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>    <span class="c1"># =&gt; "fac(6) = 720"</span>
+</pre>
+</div>
+
+
+<h3>Breakdown</h3>
+
+<p>Some of this has already been discussed in <a href="http://tophat.github.com/ruby-llvm-script/breakdowns/hello-world.html">Hello World</a>. Therefore, I am only going to breakdown the newer parts.</p>
+
+<div class="highlight">
+<pre><span class="n">function</span> <span class="ss">:factorial</span><span class="p">,</span> <span class="o">[</span><span class="no">INT</span><span class="o">]</span><span class="p">,</span> <span class="no">INT</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="k">end</span>
+</pre>
+</div>
+
+
+<p>This defines the <code>factorial</code> function. It tells ruby-llvm-script that the <code>factorial</code> function takes a single integer parameter and returns an integer. The <code>do</code> block containing the internals of the function is passed, as arguments, the function's parameters (i.e. <code>n</code> is the integer given to <code>factorial</code> when called).</p>
+
+<div class="highlight">
+<pre><span class="n">cret</span> <span class="n">opr</span><span class="p">(</span><span class="ss">:eq</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">1</span>
+</pre>
+</div>
+
+
+<p>This is what is called a conditional return. If the result of of argument (<code>opr(:eq, n, 1)</code>) is 1, then the second argument (1) is returned. In this case, if <code>n</code> is equal to 1, 1 is returned.</p>
+
+<div class="highlight">
+<pre><span class="n">ret</span> <span class="n">mul</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">factorial</span><span class="p">(</span><span class="nb">sub</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+</pre>
+</div>
+
+
+<p>This is a pretty simple line. It returns <code>n</code> multiplied by the factorial of <code>n</code> minus 1. The important thing to note is that ruby-llvm-script is smart enough to know that <code>factorial</code> is a function even inside of itself.</p>
+
+<div class="highlight">
+<pre><span class="n">program</span><span class="o">.</span><span class="n">dump</span>
+</pre>
+</div>
+
+
+<p>This prints out the LLVM IR code of the program. LLVM IR is a human-readable version of assembly LLVM creates. In ruby-llvm-script, it is usually only viewed for low-level debugging purposes.</p>
+
+<div class="highlight">
+<pre><span class="nb">puts</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">fac(</span><span class="si">#{</span><span class="mi">6</span><span class="si">}</span><span class="s2">) = </span><span class="si">#{</span><span class="n">program</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">to_i</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>A basic output line. The only reason I'm breaking it down is for the <code>program.run.to_i</code> part. As mention previously in <a href="http://tophat.github.com/ruby-llvm-script/breakdowns/hello-world.html">Hello World</a>, <code>program.run</code> runs the <code>main</code> function. What I did not mention is that it returns a <a href="http://jvoorhis.com/ruby-llvm/LLVM/GenericValue.html">GenericValue</a> with the result of <code>main</code>. This can be converted into an integer using <code>to_i</code> (as shown above). As main can only return integers, this is the only conversion function of <a href="http://jvoorhis.com/ruby-llvm/LLVM/GenericValue.html">GenericValue</a> you need to know for ruby-llvm-script.</p></section>
+</div>
+    <footer><p>Project maintained by <a href="https://github.com/tophat">tophat</a></p>
+      <p>Hosted on GitHub Pages — Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer><!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: Kernel
+  
+    &mdash; Documentation by YARD 0.8.1
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (K)</a> &raquo;
+    
+    
+    <span class="title">Kernel</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: Kernel
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/llvm/script/kernel.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Adds some ease-of-use functions to Kernel. It also includes
+<span class='object_link'><a href="LLVM/Script/Types.html" title="LLVM::Script::Types (module)">LLVM::Script::Types</a></span>.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#libraries-instance_method" title="#libraries (instance method)">- (Object) <strong>libraries</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#library-instance_method" title="#library (instance method)">- (LLVM::Script::Library) <strong>library</strong>(name = &quot;&quot;, opts = {}, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates a new library with the given options and an optional name.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#program-instance_method" title="#program (instance method)">- (LLVM::Script::Program) <strong>program</strong>(name = &quot;&quot;, opts = {}, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates a new program with the given options and an optional name.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#programs-instance_method" title="#programs (instance method)">- (Object) <strong>programs</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="libraries-instance_method">
+  
+    - (<tt>Object</tt>) <strong>libraries</strong> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+41
+42
+43</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/kernel.rb', line 41</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_libraries identifier id'>libraries</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Library constant id'>Library</span><span class='dot token'>.</span><span class='rubyid_libraries identifier id'>libraries</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="library-instance_method">
+  
+    - (<tt><span class='object_link'><a href="LLVM/Script/Library.html" title="LLVM::Script::Library (class)">LLVM::Script::Library</a></span></tt>) <strong>library</strong>(name = &quot;&quot;, opts = {}, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates a new library with the given options and an optional name. If this
+is  called without a block and with no arguments, it returns the last
+created library or nil if none. If called without a block and with a name,
+returns the library with that name or nil if none.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&quot;&quot;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An optional name for the library. If you do not give one a unique id  will
+be generated using #make_uuid.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>opts</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Options for the new library.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>block</span>
+      
+      
+        <span class='type'>(<tt>Proc</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A block with the insides of the library.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    
+    
+    <p class="tag_title">Options Hash (<tt>opts</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:prefix</span>
+          <span class="type">(<tt>:all</tt>, <tt>:smart</tt>, <tt>:none</tt>)</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>:smart</tt>
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>When to prefix globals with the name of the library. :smart prefixes the
+functions in the LLVM IR but not in ruby-llvm-script. :all does both, :none
+does neither.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:visibility</span>
+          <span class="type">(<tt>:public</tt>, <tt>:private</tt>)</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>:public</tt>
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>The default visibility of globals in the library.</p>
+</div>
+          
+        </li>
+      
+    </ul>
+  
+    
+    
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="LLVM/Script/Library.html" title="LLVM::Script::Library (class)">LLVM::Script::Library</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The new library.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="LLVM/Script/Library.html#initialize-instance_method" title="LLVM::Script::Library#initialize (method)">LLVM::Script::Library#initialize</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+32
+33
+34
+35
+36
+37
+38</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/kernel.rb', line 32</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_library identifier id'>library</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='assign token'>=</span><span class='string val'>&quot;&quot;</span><span class='comma token'>,</span> <span class='rubyid_opts identifier id'>opts</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='rubyid_unless unless kw'>unless</span> <span class='rubyid_block_given? fid id'>block_given?</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Library constant id'>Library</span><span class='dot token'>.</span><span class='rubyid_lookup identifier id'>lookup</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='rubyid_else else kw'>else</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Library constant id'>Library</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_opts identifier id'>opts</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='rubyid_end end kw'>end</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="program-instance_method">
+  
+    - (<tt><span class='object_link'><a href="LLVM/Script/Program.html" title="LLVM::Script::Program (class)">LLVM::Script::Program</a></span></tt>) <strong>program</strong>(name = &quot;&quot;, opts = {}, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates a new program with the given options and an optional name. If this
+is  called without a block and with no arguments, it returns the last
+created program or nil if none. If called without a block and with a name,
+returns the program with that name or nil if none.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&quot;&quot;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An optional name for the program. If you do not give one a unique id  will
+be generated using #make_uuid.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>opts</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Options for the new program, same as those for a library (except :prefix is
+ALWAYS :none).</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>block</span>
+      
+      
+        <span class='type'>(<tt>Proc</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A block with the insides of the program.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="LLVM/Script/Program.html" title="LLVM::Script::Program (class)">LLVM::Script::Program</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The new program.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="LLVM/Script/Program.html#initialize-instance_method" title="LLVM::Script::Program#initialize (method)">LLVM::Script::Program#initialize</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+12
+13
+14
+15
+16
+17
+18</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/kernel.rb', line 12</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_program identifier id'>program</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='assign token'>=</span><span class='string val'>&quot;&quot;</span><span class='comma token'>,</span> <span class='rubyid_opts identifier id'>opts</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='rubyid_unless unless kw'>unless</span> <span class='rubyid_block_given? fid id'>block_given?</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Program constant id'>Program</span><span class='dot token'>.</span><span class='rubyid_lookup identifier id'>lookup</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='rubyid_else else kw'>else</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Program constant id'>Program</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_opts identifier id'>opts</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='rubyid_end end kw'>end</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="programs-instance_method">
+  
+    - (<tt>Object</tt>) <strong>programs</strong> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+21
+22
+23</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/kernel.rb', line 21</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_programs identifier id'>programs</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Program constant id'>Program</span><span class='dot token'>.</span><span class='rubyid_programs identifier id'>programs</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Wed Jun  6 17:35:07 2012 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.1 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

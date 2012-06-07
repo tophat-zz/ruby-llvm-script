@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<title>Ruby LLVM Script by tophat</title>
+<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/styles.css">
+<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/pygment_trac.css">
+<script src="http://tophat.github.com/ruby-llvm-script/javascripts/scale.fix.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+      <header><h1>Ruby LLVM Script</h1>
+        <p>Simple, clean interface for ruby-llvm.</p>
+        <p class="view"><a href="https://github.com/tophat/ruby-llvm-script">View the Project on GitHub <small>tophat/ruby-llvm-script</small></a></p>
+        <ul>
+<li><a href="https://github.com/tophat/ruby-llvm-script/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/tophat/ruby-llvm-script/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/tophat/ruby-llvm-script">View On <strong>GitHub</strong></a></li>
+        </ul></header><section><h1>Hello World</h1>
+<p>This page will analyze the example program <code>hello.rb</code> from the samples directory. <code>hello.rb</code> is a basic hello world program done using ruby-llvm-script.</p>
+
+<h3>Source</h3>
+
+<div class="highlight">
+<pre><span class="nb">require</span> <span class="s1">'rubygems'</span>
+<span class="nb">require</span> <span class="s1">'llvm/script'</span>
+<span class="nb">require</span> <span class="s1">'llvm/script/kernel'</span>
+	
+<span class="n">program</span> <span class="s2">"Hello World"</span> <span class="k">do</span>
+  <span class="n">extern</span> <span class="ss">:printf</span><span class="p">,</span> <span class="o">[</span><span class="no">CHARPTR</span><span class="p">,</span> <span class="no">VARARGS</span><span class="o">]</span><span class="p">,</span> <span class="no">INT</span>
+		
+  <span class="n">main</span> <span class="k">do</span>
+    <span class="nb">printf</span><span class="p">(</span><span class="s2">"Hello World"</span><span class="p">)</span>
+    <span class="n">sret</span> <span class="mi">0</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+	
+<span class="n">program</span><span class="o">.</span><span class="n">run</span>	<span class="c1"># =&gt; Hello World</span>
+</pre>
+</div>
+
+
+<h3>Breakdown</h3>
+
+<p>Now let's break it down.</p>
+
+<div class="highlight">
+<pre><span class="nb">require</span> <span class="s1">'rubygems'</span>
+<span class="nb">require</span> <span class="s1">'llvm/script'</span>
+<span class="nb">require</span> <span class="s1">'llvm/script/kernel'</span>
+</pre>
+</div>
+
+
+<p>These lines require ruby-llvm-script. The <code>require llvm/script/kernel</code> line enables us to 
+use the global function <code>program</code> and, in the future examples, the global function <code>library</code>.</p>
+
+<div class="highlight">
+<pre><span class="n">program</span> <span class="s2">"Hello World"</span> <span class="k">do</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="k">end</span>
+</pre>
+</div>
+
+
+<p>This defines a new LLVM::Script::Program with the name Hello World and instance evaluates 
+the code between <code>do</code> and <code>end</code>.</p>
+
+<div class="highlight">
+<pre><span class="n">extern</span> <span class="ss">:printf</span><span class="p">,</span> <span class="o">[</span><span class="no">CHARPTR</span><span class="p">,</span> <span class="no">VARARGS</span><span class="o">]</span><span class="p">,</span> <span class="no">INT</span>
+</pre>
+</div>
+
+
+<p>This makes the C function, <a href="http://www.cplusplus.com/reference/clibrary/cstdio/printf/">printf</a>, available to the program. The <code>extern</code> function in ruby-llvm-script takes a function name (a Symbol or String), an array of the types of each argument the function takes, and the type of the return value. In this case, the <code>printf</code> function takes a single character pointer (<code>CHARPTR</code>) for its format string and then a variable number of arguments (<code>VARARGS</code>) to be substituted into the string (similiar the ruby <a href="http://ruby-doc.org/core-1.8.7/Kernel.html#method-i-printf">printf</a>). It also returns the number of characters written, an integer (<code>INT</code>).</p>
+
+<div class="highlight">
+<pre><span class="n">main</span> <span class="k">do</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="k">end</span>
+</pre>
+</div>
+
+
+<p>This defines the <code>main</code> function of the program. This is equivalent to the C main function and is
+run when the either the compiled version of the program is run or LLVM::Script::Program#run is called.</p>
+
+<div class="highlight">
+<pre><span class="nb">printf</span><span class="p">(</span><span class="s2">"Hello World"</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>This just calls <code>printf</code> with the string "Hello World". Nothing too fancy, ruby-llvm-script is
+able to convert Ruby strings (and other ruby types) into their LLVM equivalents. However, if
+you are running Ruby 1.8.x you will have to call <code>self.printf</code>, because the new <code>printf</code> function
+will conflict with the existing <code>printf</code> function (this is solved via the use of BasicObject 
+in 1.9.x).</p>
+
+<div class="highlight">
+<pre><span class="n">sret</span> <span class="mi">0</span>
+</pre>
+</div>
+
+
+<p>This returns 0. All LLVM functions must have a return statement even if they return void.
+The 's' in <code>sret</code> tells ruby-llvm-script that you don't want it to add a return block, like
+it (and gcc and clang) would. This is solely for optimization purposes, it will still work
+the same if you just used <code>ret</code>.</p>
+
+<div class="highlight">
+<pre><span class="n">program</span><span class="o">.</span><span class="n">run</span>
+</pre>
+</div>
+
+
+<p>Since <code>program</code> is called without arguments, it returns the last created program. It then calls
+LLVM::Script::Program#run which runs the <code>main</code> function.</p></section>
+</div>
+    <footer><p>Project maintained by <a href="https://github.com/tophat">tophat</a></p>
+      <p>Hosted on GitHub Pages — Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer><!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+</body>
+</html>

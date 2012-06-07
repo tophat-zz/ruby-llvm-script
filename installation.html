@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<title>Ruby LLVM Script by tophat</title>
+<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/styles.css">
+<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/pygment_trac.css">
+<script src="http://tophat.github.com/ruby-llvm-script/javascripts/scale.fix.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+      <header><h1>Ruby LLVM Script</h1>
+        <p>Simple, clean interface for ruby-llvm.</p>
+        <p class="view"><a href="https://github.com/tophat/ruby-llvm-script">View the Project on GitHub <small>tophat/ruby-llvm-script</small></a></p>
+        <ul>
+<li><a href="https://github.com/tophat/ruby-llvm-script/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/tophat/ruby-llvm-script/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/tophat/ruby-llvm-script">View On <strong>GitHub</strong></a></li>
+        </ul></header><section><h1>Installation</h1>
+<p>This is a guide to installing ruby-llvm-script. First, before you can install ruby-llvm-script, you will need to install LLVM. You can compile it from the source or install it through Homebrew.</p>
+
+<h2>Installing LLVM</h2>
+
+<h3>From Source</h3>
+
+<p>In order to compile LLVM, you will need to download the source from <a href="http://llvm.org/releases/">here</a> (preferably version 3.0). Then you will need to navigate to the source in Command Prompt (Windows) or Terminal (Mac). To do this use <code>cd</code>:</p>
+
+<pre><code>cd path/to/llvm/source
+</code></pre>
+
+<p>Then configure LLVM with the following:</p>
+
+<pre><code>./configure --enable-shared --enable-jit
+</code></pre>
+
+<p>After that finishes, run:</p>
+
+<pre><code>make
+</code></pre>
+
+<p>Then finally:</p>
+
+<pre><code>make install
+</code></pre>
+
+<h3>From Homebrew</h3>
+
+<p>You can also install LLVM through <a href="http://mxcl.github.com/homebrew/">Homebrew</a>:</p>
+
+<pre><code>brew install llvm --shared --jit
+</code></pre>
+
+<h2>Installing Ruby-LLVM-Script</h2>
+
+<p>Then you can install ruby-llvm-script with: </p>
+
+<pre><code>sudo gem install ruby-llvm-script
+</code></pre>
+
+<p>NOTE: This will install <a href="http://github.com/jvoorhis/ruby-llvm">ruby-llvm</a> as a dependency.</p></section>
+</div>
+    <footer><p>Project maintained by <a href="https://github.com/tophat">tophat</a></p>
+      <p>Hosted on GitHub Pages — Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer><!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+</body>
+</html>

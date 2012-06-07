@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<title>Ruby LLVM Script by tophat</title>
+<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/styles.css">
+<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/pygment_trac.css">
+<script src="http://tophat.github.com/ruby-llvm-script/javascripts/scale.fix.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+      <header><h1>Ruby LLVM Script</h1>
+        <p>Simple, clean interface for ruby-llvm.</p>
+        <p class="view"><a href="https://github.com/tophat/ruby-llvm-script">View the Project on GitHub <small>tophat/ruby-llvm-script</small></a></p>
+        <ul>
+<li><a href="https://github.com/tophat/ruby-llvm-script/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/tophat/ruby-llvm-script/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/tophat/ruby-llvm-script">View On <strong>GitHub</strong></a></li>
+        </ul></header><section><h1>Function Pointers</h1>
+<p>This page will analyze the example program <code>fp.rb</code> from the samples directory. <code>fp.rb</code> exhibits how to use function pointers in ruby-llvm-script.</p>
+
+<h3>Source</h3>
+
+<div class="highlight">
+<pre><span class="nb">require</span> <span class="s1">'rubygems'</span>
+<span class="nb">require</span> <span class="s1">'llvm/script'</span>
+<span class="nb">require</span> <span class="s1">'llvm/script/kernel'</span>
+
+<span class="n">program</span> <span class="s2">"Function Pointers"</span> <span class="k">do</span>
+  <span class="n">f</span> <span class="o">=</span> <span class="n">function</span> <span class="ss">:f</span><span class="p">,</span> <span class="o">[</span><span class="no">INT</span><span class="o">]</span><span class="p">,</span> <span class="no">INT</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+    <span class="n">sret</span> <span class="n">add</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="k">end</span>
+  
+  <span class="n">function</span> <span class="ss">:g</span><span class="p">,</span> <span class="o">[</span><span class="n">f</span><span class="o">.</span><span class="n">pointer</span><span class="p">,</span> <span class="no">INT</span><span class="o">]</span><span class="p">,</span> <span class="no">INT</span> <span class="k">do</span> <span class="o">|</span><span class="n">fp</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+    <span class="n">sret</span> <span class="n">call</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+  <span class="k">end</span>
+  
+  <span class="n">main</span> <span class="k">do</span>
+    <span class="n">sret</span> <span class="n">g</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">41</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="nb">puts</span>
+<span class="n">program</span><span class="o">.</span><span class="n">dump</span>
+
+<span class="nb">puts</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">g(f(41)) = </span><span class="si">#{</span><span class="n">program</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">to_i</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">"</span>   <span class="c1"># =&gt; "g(f(41)) = 42"</span>
+</pre>
+</div>
+
+
+<h3>Breakdown</h3>
+
+<p>A lot of this has already been discussed in <a href="http://tophat.github.com/ruby-llvm-script/breakdowns/hello-world.html">Hello World</a> and <a href="http://tophat.github.com/ruby-llvm-script/breakdowns/factorial.html">Factorial</a>. So I am not going to go over much of this example.</p>
+
+<div class="highlight">
+<pre><span class="n">f</span> <span class="o">=</span> <span class="n">function</span> <span class="ss">:f</span><span class="p">,</span> <span class="o">[</span><span class="no">INT</span><span class="o">]</span><span class="p">,</span> <span class="no">INT</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="k">end</span>
+</pre>
+</div>
+
+
+<p>The <code>function</code> call has already been discussed in <a href="http://tophat.github.com/ruby-llvm-script/breakdowns/factorial.html">Factorial</a>, so I am not going to review that. The important thing to note here is that <code>function</code> does return a LLVM::Script::Function object, which can be used to gain information about the function.</p>
+
+<div class="highlight">
+<pre><span class="n">function</span> <span class="ss">:g</span><span class="p">,</span> <span class="o">[</span><span class="n">f</span><span class="o">.</span><span class="n">pointer</span><span class="p">,</span> <span class="no">INT</span><span class="o">]</span><span class="p">,</span> <span class="no">INT</span> <span class="k">do</span> <span class="o">|</span><span class="n">fp</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="k">end</span>
+</pre>
+</div>
+
+
+<p>The breakdown part here is <code>f.pointer</code>. This method returns the type of a pointer to the function's type. This can be used to allow functions to take other functions as arguments (as shown in this example).</p>
+
+<div class="highlight">
+<pre><span class="n">sret</span> <span class="n">call</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>In order to call a function pointer we have to use the <code>call</code> method. This is usually done internally when you call functions like <code>factorial(6)</code> because ruby-llvm-scipt knows <code>factorial</code> is a function. In this case, though, ruby-llvm-script has no way of knowing <code>fp</code> is a function, so we have to use the <code>call</code> method. <code>call</code> takes either a the name of a function or a literal function as its first argument, and then passes the remaining arguments to the function.</p></section>
+</div>
+    <footer><p>Project maintained by <a href="https://github.com/tophat">tophat</a></p>
+      <p>Hosted on GitHub Pages — Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer><!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+</body>
+</html>

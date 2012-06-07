@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<title>Ruby LLVM Script by tophat</title>
+<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/styles.css">
+<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/pygment_trac.css">
+<script src="http://tophat.github.com/ruby-llvm-script/javascripts/scale.fix.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+      <header><h1>Ruby LLVM Script</h1>
+        <p>Simple, clean interface for ruby-llvm.</p>
+        <p class="view"><a href="https://github.com/tophat/ruby-llvm-script">View the Project on GitHub <small>tophat/ruby-llvm-script</small></a></p>
+        <ul>
+<li><a href="https://github.com/tophat/ruby-llvm-script/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/tophat/ruby-llvm-script/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/tophat/ruby-llvm-script">View On <strong>GitHub</strong></a></li>
+        </ul></header><section><h1>IO</h1>
+<p>This page will analyze the example program <code>io.rb</code> from the samples directory. <code>io.rb</code> exhibits how basic input is done and how libraries work in ruby-llvm-script. It would be beneficially for you to understand the basic concepts behind <a href="http://en.wikipedia.org/wiki/Pointer_(computer_programming)">pointers</a> before breaking this example down. </p>
+
+<h3>Source</h3>
+
+<div class="highlight">
+<pre><span class="nb">require</span> <span class="s1">'rubygems'</span>
+<span class="nb">require</span> <span class="s1">'llvm/script'</span>
+<span class="nb">require</span> <span class="s1">'llvm/script/kernel'</span>
+
+<span class="no">FILE</span> <span class="o">=</span> <span class="no">LLVM</span><span class="o">::</span><span class="no">Struct</span><span class="p">(</span><span class="s2">"FILE"</span><span class="p">)</span>
+<span class="no">FILEPTR</span> <span class="o">=</span> <span class="no">FILE</span><span class="o">.</span><span class="n">pointer</span>
+
+<span class="n">library</span> <span class="s2">"stdio"</span> <span class="k">do</span>  
+  <span class="n">extern</span> <span class="ss">:fdopen</span><span class="p">,</span> <span class="o">[</span><span class="no">INT</span><span class="p">,</span> <span class="no">CHARPTR</span><span class="o">]</span><span class="p">,</span> <span class="no">FILEPTR</span>
+  <span class="n">extern</span> <span class="ss">:printf</span><span class="p">,</span> <span class="o">[</span><span class="no">CHARPTR</span><span class="p">,</span> <span class="no">VARARGS</span><span class="o">]</span><span class="p">,</span> <span class="no">INT</span>
+  <span class="n">extern</span> <span class="ss">:fgets</span><span class="p">,</span> <span class="o">[</span><span class="no">CHARPTR</span><span class="p">,</span> <span class="no">INT</span><span class="p">,</span> <span class="no">FILEPTR</span><span class="o">]</span><span class="p">,</span> <span class="no">CHARPTR</span>
+<span class="k">end</span>
+
+<span class="n">program</span> <span class="s2">"I/O"</span> <span class="k">do</span>
+  <span class="n">import</span> <span class="s2">"stdio"</span>
+  <span class="n">extern</span> <span class="ss">:strchr</span><span class="p">,</span> <span class="o">[</span><span class="no">CHARPTR</span><span class="p">,</span> <span class="no">INT</span><span class="o">]</span><span class="p">,</span> <span class="no">CHARPTR</span>
+	
+  <span class="n">main</span> <span class="k">do</span>
+    <span class="n">bufsize</span> <span class="o">=</span> <span class="mi">800</span>
+    <span class="n">stdin</span> <span class="o">=</span> <span class="n">fdopen</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">alloca</span><span class="p">(</span><span class="no">CHAR</span><span class="p">,</span> <span class="n">bufsize</span><span class="p">)</span>
+    <span class="nb">printf</span><span class="p">(</span><span class="s2">"Please enter a line of text, max %d characters</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">bufsize</span><span class="p">);</span>
+    <span class="n">cond</span> <span class="n">is_not_null</span><span class="p">(</span><span class="n">fgets</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">bufsize</span><span class="p">,</span> <span class="n">stdin</span><span class="p">))</span> <span class="k">do</span>
+      <span class="nb">p</span> <span class="o">=</span> <span class="n">strchr</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+      <span class="n">cond</span> <span class="n">is_not_null</span><span class="p">(</span><span class="nb">p</span><span class="p">)</span> <span class="k">do</span>
+        <span class="n">store</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">p</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">printf</span><span class="p">(</span><span class="s2">"Thank you, you entered &gt;%s&lt;</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">buf</span><span class="p">);</span>
+    <span class="k">end</span>
+    <span class="n">sret</span> <span class="mi">0</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="nb">puts</span>
+<span class="n">program</span><span class="o">.</span><span class="n">dump</span>
+
+<span class="nb">puts</span>
+<span class="n">program</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">"io"</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<h3>Breakdown</h3>
+
+<p>This example is a lot more complex than the previous ones. It exhibits how to do handle input and how to create libraries. However, I hope that you have learned enough from the past examples to get you through this one.</p>
+
+<div class="highlight">
+<pre><span class="no">FILE</span> <span class="o">=</span> <span class="no">LLVM</span><span class="o">::</span><span class="no">Struct</span><span class="p">(</span><span class="s2">"FILE"</span><span class="p">)</span>
+<span class="no">FILEPTR</span> <span class="o">=</span> <span class="no">FILE</span><span class="o">.</span><span class="n">pointer</span>
+</pre>
+</div>
+
+
+<p>The first line creates a struct, <code>FILE</code>, but do not define it. This is because this struct is already declared in the C library (its a input/ouput stream). The second line stores a pointer type to the <code>FILE</code> struct in a constant for future reference. Also, if you need a briefing on structs, look <a href="http://en.wikipedia.org/wiki/Struct_(C_programming_language">here</a> for an overview of C structs. While they may not be entirely like LLVM structs, they are pretty close.</p>
+
+<div class="highlight">
+<pre><span class="n">library</span> <span class="s2">"stdio"</span> <span class="k">do</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="k">end</span>
+</pre>
+</div>
+
+
+<p>This defines a ruby-llvm-script library. A program is an executable library. This means that libraries have all the functions and features of programs, except they can't be executed, compiled, or optimized (and don't have a <code>main</code> function). The reason for the existence of libraries is so that other programmers can write and distribute ruby-llvm-script that you can use in your programs. Also, like classes and modules in Ruby, they can be used to help compartmentalize your scripts. I will go over the functions contained in the "stdio" library as we come across them in the program.</p>
+
+<div class="highlight">
+<pre><span class="n">import</span> <span class="s2">"stdio"</span>
+</pre>
+</div>
+
+
+<p>A pretty simple line. This imports all the functions, macros, and globals from the "stdio" library into our program (similar to how <code>require</code> and <code>include</code> work in normal ruby). One important thing to remember is that it is highly unadvised to have defined (or imported) any functions, macros, or globals that have the same name as those in the imported library, because it can result in errors.</p>
+
+<div class="highlight">
+<pre><span class="n">extern</span> <span class="ss">:fdopen</span><span class="p">,</span> <span class="o">[</span><span class="no">INT</span><span class="p">,</span> <span class="no">CHARPTR</span><span class="o">]</span><span class="p">,</span> <span class="no">FILEPTR</span>
+<span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="n">stdin</span> <span class="o">=</span> <span class="n">fdopen</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>This line allows us retrieves the <code>stdin</code> stream. This will be used later to get input. In order to get the <code>stdin</code> we use the C function, <a href="http://www.codecogs.com/reference/computing/c/stdio.h/fopen.php">fdopen</a>. When <code>fdopen</code> is passed a 0 file descriptor (the integer first parameter), it returns a <code>FILE</code> pointer (<code>FILEPTR</code>) to the <code>stdin</code> stream. The "r" signifies that we want to open the stream for reading (.i.e. getting input).</p>
+
+<div class="highlight">
+<pre><span class="n">buf</span> <span class="o">=</span> <span class="n">alloca</span><span class="p">(</span><span class="no">CHAR</span><span class="p">,</span> <span class="n">bufsize</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>Before we tackle this line, we need to clear something up. In LLVM (and in C), a string is an array of 8-bit (-128-127) integers, each integer representing a single character in the string. For this reason, 8-bit integers are commonly called <code>CHAR</code>'s. This line gets allocates a pointer to an array of <code>CHAR</code>'s the size of <code>bufsize</code> (previously defined as 800). This is equivalent to creating a 800 character string in ruby.</p>
+
+<div class="highlight">
+<pre><span class="n">extern</span> <span class="ss">:fgets</span><span class="p">,</span> <span class="o">[</span><span class="no">CHARPTR</span><span class="p">,</span> <span class="no">INT</span><span class="p">,</span> <span class="no">FILEPTR</span><span class="o">]</span><span class="p">,</span> <span class="no">CHARPTR</span>
+<span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="n">cond</span> <span class="n">is_not_null</span><span class="p">(</span><span class="n">fgets</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">bufsize</span><span class="p">,</span> <span class="n">stdin</span><span class="p">))</span> <span class="k">do</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="k">end</span>
+</pre>
+</div>
+
+
+<p>This line is composed of three parts: <code>fgets</code>, <code>is_not_null</code>, and <code>cond</code>. </p>
+
+<ul>
+<li><p><a href="http://www.cplusplus.com/reference/clibrary/cstdio/fgets/"><strong>fgets</strong></a> - Retrieves characters from a stream (<code>FILEPTR</code>) and stores them in its <code>CHARPTR</code> first argument until it reads the given number of characters (the <code>INT</code>) or runs into a newline ("\n") or End-Of-File. It then returns the <code>CHARPTR</code> passed to it or <code>null</code> if no characters have been read. </p></li>
+<li><p><strong>is_not_null</strong> - Returns 0 if the value passed to it is <code>null</code> or 1 if it isn't. </p></li>
+<li><p><strong>cond</strong> - Evaluates the block between <code>do</code> and <code>end</code> if the value passed to it is 1. <code>cond</code> is elaborated more on in the <a href="http://tophat.github.com/ruby-llvm-script/breakdowns/conditionals.html">Conditionals</a> example. </p></li>
+</ul>
+<p>So, to some it all up, <code>fgets</code> stores, at max, 800 characters of input in the string <code>buf</code>, then the <code>do</code> block executes if <code>fgets</code> did not return <code>null</code>.</p>
+
+<div class="highlight">
+<pre><span class="n">extern</span> <span class="ss">:strchr</span><span class="p">,</span> <span class="o">[</span><span class="no">CHARPTR</span><span class="p">,</span> <span class="no">INT</span><span class="o">]</span><span class="p">,</span> <span class="no">CHARPTR</span>
+<span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="nb">p</span> <span class="o">=</span> <span class="n">strchr</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>As stated in the C reference for <a href="http://www.cplusplus.com/reference/clibrary/cstring/strchr/">strchr</a>, it returns a pointer to first occurrence of the a character (the <code>INT</code> argument) in the given string (<code>CHARPTR</code>). In this case, it returns a pointer to the newline character ("\n", <a href="http://www.asciitable.com/">ASCII</a> 10) in <code>buf</code>.</p>
+
+<div class="highlight">
+<pre><span class="n">store</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">p</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>The <code>store</code> function changes the value pointed to by the given pointer (the second argument) to the given value (the first argument). In this case, it changes the character <code>p</code> points to ("\n") to 0 (a null character, "\0", which is virtually equivalent to "").</p>
+
+<div class="highlight">
+<pre><span class="n">program</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">"io"</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>This single function is the whole reason for using LLVM instead of just basic ruby. It turns the program into a native application with the given filename. This greatly decreases the startup time of your program. It also allows you to not have to distribute the source code of your program.</p></section>
+</div>
+    <footer><p>Project maintained by <a href="https://github.com/tophat">tophat</a></p>
+      <p>Hosted on GitHub Pages — Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer><!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+</body>
+</html>
