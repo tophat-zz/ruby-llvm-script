@@ -1,5 +1,3 @@
-require 'llvm/linker'
-
 module LLVM
   class ConstantStruct 
     def self.typed_const(type, size_or_values, &block)

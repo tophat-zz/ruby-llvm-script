@@ -17,9 +17,9 @@ module Kernel
     end
   end
   
-  # (see LLVM::Script::Program.programs)
+  # (see LLVM::Script::Program.collection)
   def programs
-    return LLVM::Script::Program.programs
+    return LLVM::Script::Program.collection
   end
   
   # Creates a new library with the given options and an optional name. If this is 
@@ -37,8 +37,8 @@ module Kernel
     end
   end
   
-  # (see LLVM::Script::Library.libraries)
+  # (see LLVM::Script::Library.collection)
   def libraries
-    return LLVM::Script::Library.libraries
+    return LLVM::Script::Library.collection
   end
 end

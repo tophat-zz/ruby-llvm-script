@@ -362,7 +362,7 @@ module LLVM
         type = ptr.type.element_type
         type = type.element_type while type.kind == :pointer
         indices = indices.flatten.map do |idx|
-          index = convert(idx)
+          index = convert(idx, Types::INT)
         end
         @builder.gep(ptr, indices)
       end
@@ -677,7 +677,7 @@ module LLVM
       #   (if a the function's return type is void) or just branches to the return block if nil.
       def ret(val=nil)
         return if @finished
-        if @function.return_type == VOID
+        if @function.return_type == Types::VOID
           @builder.ret_void
         else
           @function.setup_return
@@ -711,7 +711,7 @@ module LLVM
       #   function's return type is void, otherwise raises an ArgumentError.
       def sret(val=nil)
         return if @finished
-        if @function.return_type == VOID
+        if @function.return_type == Types::VOID
           @builder.ret_void
         else
           raise ArgumentError, "Value must be passed to non-void function simple return." if val.nil?
@@ -727,7 +727,7 @@ module LLVM
       def pret(val=nil)
         return if @finished
         @function.setup_return
-        if @function.return_type == VOID
+        if @function.return_type == Types::VOID
           @builder.ret_void
         else
           raise ArgumentError, "Value must be passed to non-void function pre-return." if val.nil?
@@ -791,9 +791,9 @@ module LLVM
           if val == 0 && !type.nil? && type.kind == :pointer
             return type.null_pointer
           elsif val.kind_of?(Float) && (type.nil? || int_klass.respond_to?(:from_f))
-            return (int_klass || FLOAT).from_f(val.to_f)
+            return (int_klass || Types::FLOAT).from_f(val.to_f)
           elsif val.kind_of?(Numeric) && (type.nil? || int_klass.respond_to?(:from_i))
-            return (int_klass || INT).from_i(val.to_i)
+            return (int_klass || Types::INT).from_i(val.to_i)
           else
             raise ArgumentError, "Value passed to Generator function should be of #{type_name(type)}. Numeric given."
           end
@@ -804,14 +804,14 @@ module LLVM
           str = @library.string(val)
           return str.type != type ? @builder.bit_cast(str, type) : str
         elsif val == true && (type.nil? || type.kind == :integer)
-          return BOOL.from_i(1)
+          return Types::BOOL.from_i(1)
         elsif !val && (type.nil? || type.kind == :integer)
-          return BOOL.from_i(0)
+          return Types::BOOL.from_i(0)
         elsif val.nil? && !type.nil? && type.kind == :pointer
           return type.null_pointer
         else
           types = type.nil? ? "LLVM::Value, Numeric, Array, or True/False/Nil" : "#{type_name(type)} or the Ruby equivalent"
-          raise ArgumentError, "Value passed to Generator function should be of #{types}. #{type_name(v)} given."
+          raise ArgumentError, "Value passed to Generator function should be of #{types}. #{type_name(val)} given."
         end
       end
       
@@ -829,9 +829,9 @@ module LLVM
         end
       end
     
-      def type_name(type)
-        return type.name if type.is_a?(Class)
-        type = LLVM::Type(type)
+      def type_name(obj)
+        return obj.name if obj.is_a?(Class)
+        type = LLVM::Type(obj)
         if type.kind_of?(LLVM::Type)
           kind = type.kind
           if kind == :pointer
@@ -841,7 +841,7 @@ module LLVM
             return kind.to_s.capitalize
           end
         else
-          return type.class.name
+          return obj.class.name
         end
       end
       

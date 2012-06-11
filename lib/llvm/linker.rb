@@ -31,7 +31,7 @@ module LLVM
     def link(other, mode)
       result = nil
       FFI::MemoryPointer.new(FFI.type_size(:pointer)) do |str|
-        status = C.link_modules(self, other, mode, str)
+        status = C.link_modules(self.to_ptr, other.to_ptr, mode, str)
         result = str.read_string if status == 1
         C.dispose_message str.read_pointer
       end

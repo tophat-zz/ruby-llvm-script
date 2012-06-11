@@ -7,4 +7,5 @@
 .sass-cache
 .rvmrc
 .yardoc
-doc/*
+coverage
+doc

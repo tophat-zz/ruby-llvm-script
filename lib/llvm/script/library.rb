@@ -9,9 +9,6 @@ module LLVM
       # When to prefix globals with the name of the library.
       attr_reader :prefix
       
-      # The LLVM::Module the library represents.
-      attr_reader :module
-      
       # A Uuid placed in front of global string names in LLVM IR to prevent them from conflicting 
       # with other globals. It is chopped down to 5 characters to make the name somewhat readable 
       # (thought not extremely unique).
@@ -44,7 +41,7 @@ module LLVM
         elsif libs.include?(name.to_sym)
           return libs[name.to_sym]
         else
-          raise ArgumentError, "#{self.nam}, #{name.to_s}, does not exist."
+          raise ArgumentError, "#{self.name}, #{name.to_s}, does not exist."
         end
       end
       
@@ -65,12 +62,12 @@ module LLVM
         @name = name.empty? ? make_uuid[0, 10] : name
         @module = LLVM::Module.new(name)
         @strings = {}
-        @globals = {}
-        @functions = {}
-        @macros = {}
+        @globals = {:public=>{}, :private=>{}}
+        @functions = {:public=>{}, :private=>{}}
+        @macros = {:public=>{}, :private=>{}}
         @elements = {}
-        if self.class == Library
-          @@last_libary = self
+        if self.instance_of?(Library)
+          @@last_library = self
           @@libraries[@name.to_sym] = self
         end
         build(&block) if ::Kernel.block_given?
@@ -92,17 +89,16 @@ module LLVM
         self.instance_eval(&block)
       end
       
-      # Imports the given library, adding all of its functions, macros, and globals to the caller.
-      # If an imported function, macro, or global already exists, one of the following will happen:
+      # Imports the given library, adding all of its public functions, macros, and globals to the caller.
+      # If the imported library's prefix style is :smart, all non-extern objects will have the library's name added 
+      # as a prefix (ex. if there is a function hello in a library called greeter, the function's name will 
+      # become greeter_hello), otherwise all objects will retain their declared names. If any object in the caller 
+      # has the same name as one of the imported objects, one of the following will happen:
       # Macros::  The macro will be overwritten, and from then on, the macro will execute as declared in 
-      #           the imported library. This will NOT cause any unusual behavior.
-      # Functions/Globals:: First, if the the object's name already exists in the library, it tries to rename
-      #                     it to add the library's prefix (if prefix is :smart). If a object with that name
-      #                     already exists, it will print a warning and the version in the caller will take 
-      #                     precedence in ruby-llvm-script. However, what the linker will do depends on how 
-      #                     the object was declared (ex. if a function's linkage is :weak, it will be overriden). 
-      #                     If the linker is unable to resolve the conflict, it will error. *Advice:* Try to 
-      #                     avoid function and global conflicts unless you know what you are doing.
+      #           the imported library.
+      # Functions/Globals:: A warning will be printed and the version in the caller will take precedence in 
+      #                     ruby-llvm-script. If the linker is unable to resolve the conflict, it will error.
+      #                     *Advice:* Try to avoid function and global conflicts.
       # @param [String, Symbol, LLVM::Script::Library] library The name of the library to import or the 
       #   library itself.
       # @return [LLVM::Script::Library] The imported library.
@@ -114,49 +110,41 @@ module LLVM
           else
             raise ArgumentError, "Library, #{library.to_s}, does not exist."
           end
-        elsif !library.kind_of?(Library)
+        elsif library.class != Library
           raise ArgumentError, "Can only import libraries. #{library.class.name} given."
         end
-        @macros[:public] ||= {}
-        @macros[:public].merge!(library.macros) 
+        library.macros.each do |key, macro|
+          fullname = "#{library.name}_#{key.to_s}"
+          name = (library.prefix == :smart ? fullname.to_sym : key.to_sym)
+          @macros[:public][name] = macro
+        end
         library.functions.each do |key, func|
-          name = func.name
-          key = functions.has_key?(key) ? name : key
-          if functions.has_key?(name.to_sym)
-            warn("Imported function, #{func.name}, already exists.")
+          name = (library.prefix == :smart ? func.name.to_sym : key.to_sym)
+          if functions.has_key?(name)
+            warn("Imported function, #{name.to_s}, already exists.")
           else
-            args = func.varargs? ? func.arg_types + [VARARGS] : func.arg_types
-            fun = Function.new(self, @module, name.to_s, args, func.return_type)
-            fun.linkage = :external
-            @functions[:public] ||= {}
-            @functions[:public][key.to_sym] = fun
+            self.extern(name, func.varargs? ? func.arg_types + [VARARGS] : func.arg_types, func.return_type)
           end
         end
-        library.globals.each do |key, glob|
-          name = glob.name
-          key = globals.has_key?(key) ? name : key
-          if globals.has_key?(name.to_sym)
-            warn("Imported global, #{key.to_s}, already exists.")
+        library.globals.each do |key, info|
+          name = (library.prefix == :smart ? info.name.to_sym : key.to_sym)
+          if globals.has_key?(name)
+            warn("Imported global, #{name.to_s}, already exists.")
           else
-            glb = @module.globals.add(glob.type, name.to_s)
-            glb.global_constant = glob.global_constant?
-            glb.linkage = :external
-            @globals[:public] ||= {}
-            @globals[:public][key.to_sym] = glb
+            glob = global(name, info.type)
+            glob.global_constant = info.global_constant?
           end
         end
         library.strings.each do |str, glob|
           if @strings.has_key?(str)
-            @strings[str].linkage = :external
             @strings[str].initializer = nil
           else
             glb = @module.globals.add(glob.type, glob.name)
-            glb.linkage = :external
             glb.global_constant = 1
             @strings[str] = glb
           end
         end
-        err = @module.link(library.module, :linker_destroy_source)
+        err = @module.link(library, :linker_destroy_source)
         raise RuntimeError, "Failed to link library, #{library.name.to_s}, to #{name}." if err
         return library
       end
@@ -209,22 +197,34 @@ module LLVM
       #     visibility  # => :private
       #   end
       # @param [:public, :private, nil] new_visibility The new visibility.
-      # @param [List<LLVM::Script::Function>] functions A list of functions to change to the new visibility.
+      # @param [List<LLVM::Script::Function, LLVM::Value>] values A list of functions, macros, and/or globals 
+      #   to change to the new visibility.
       # @param [Proc] block A block to execute in the new visibility.
-      def visibility(new_visibility=nil, *functions, &block)
-        return @visiblity if new_visibility.nil?
+      def visibility(new_visibility=nil, *values, &block)
+        return @visibility if new_visibility.nil?
         new_visibility = new_visibility == :private ? :private : :public
-        @visibility = new_visibility unless ::Kernel.block_given? || functions.length > 0
+        @visibility = new_visibility unless ::Kernel.block_given? || values.length > 0
         if ::Kernel.block_given?
           state = @visibility
           @visibility = new_visibility
-          self.instance_eval(&proc)
+          self.instance_eval(&block)
           @visibility = state
         end
-        if functions.length > 0
-          @functions[new_visibility] ||= {}
-          functions.each do |fname|
-            @functions[new_visibility][fname.to_sym] = @functions[@visibility].delete(fname.to_sym)
+        if values.length > 0
+          linkage = (new_visibility == :private ? :private : :external)
+          values.each do |name|
+            name = name.to_sym
+            if functions(true).include?(name)
+              @functions[new_visibility][name] = @functions[@visibility].delete(name)
+              @functions[new_visibility][name].linkage = linkage
+            elsif macros(true).include?(name)
+              @macros[new_visibility][name] = @macros[@visibility].delete(name)
+            elsif globals(true).include?(name)
+              @globals[new_visibility][name] = @globals[@visibility].delete(name)
+              @globals[new_visibility][name].linkage = linkage
+            else
+              raise ArgumentError, "Unknown function, macro, and/or global, #{name.to_s}, passed to visibility."
+            end
           end
         end
       end
@@ -255,8 +255,8 @@ module LLVM
       
       # @private
       def values(collection, include_private=false)
-        return (collection[:public] || {}) unless include_private
-        return (collection[:public] || {}).merge(collection[:private] || {})
+        return (collection[:public]) unless include_private
+        return (collection[:public]).merge(collection[:private])
       end
       private :values
       
@@ -276,12 +276,9 @@ module LLVM
       def function(name, args=[], ret=Types::VOID, &block)
         fullname = "#{@name}_#{name.to_s}"
         fun = Function.new(self, @module, @prefix == :none ? name.to_s : fullname, args, ret)
-        if @visiblity == :private
-          fun.linkage = :internal
-        end
-        @functions[@visibility] ||= {}
+        fun.linkage = :private if @visibility == :private
         @functions[@visibility][(@prefix == :all ? fullname : name).to_sym] = fun
-        fun.build(&block)
+        fun.build(&block) if ::Kernel.block_given?
         return fun
       end
       
@@ -293,13 +290,11 @@ module LLVM
       # @param [Array<Symbol>] attributes An array of the attributes of this function.
       #   The current version of ruby-llvm (3.0.0) has no attributes, so ignore this.
       # @return [LLVM::Script::Function] The external function.
-      def extern(name, args=[], ret=VOID, attributes=[])
+      def extern(name, args=[], ret=Types::VOID, attributes=[])
         fun = Function.new(self, @module, name.to_s, args, ret)
-        fun.linkage = :external
-        for atr in attributes
-          fun.add_attribute(atr)
-        end
-        @functions[:public] ||= {}
+        # for atr in attributes
+        #  fun.add_attribute(atr)
+        # end
         @functions[:public][name.to_sym] = fun
       end
       
@@ -319,29 +314,25 @@ module LLVM
       #   Otherwise, it is the type of the external global.
       # @return [LLVM::GlobalValue] The new global.
       def global(name, info)
-        if info.kind_of?(LLVM::Type)
+        if info.kind_of?(LLVM::Type) || info.is_a?(Class)
           glob = @module.globals.add(info, name.to_s)
-          glob.linkage = :external
-          @globals[:public] ||= {}
           @globals[:public][name.to_sym] = glob
         else
           fullname = "#{@name}_#{name.to_s}"
-          glob = @module.globals.add(value.type, @prefix == :none ? name.to_s : fullname)
-          glob.initializer = value
-          if @visiblity == :private
-            glob.linkage = :private
-          end
-          @globals[@visibility] ||= {}
+          glob = @module.globals.add(info.type, @prefix == :none ? name.to_s : fullname)
+          glob.initializer = info
+          glob.linkage = :private if @visibility == :private
           @globals[@visibility][(@prefix == :all ? fullname : name).to_sym] = glob
         end
       end
       
       # Creates a new global constant.
       # @param [String, Symbol] name The name of the constant.
-      # @param [LLVM::Value] value The value of the constant.
+      # @param [LLVM::Value, LLVM::Type] info If an LLVM::Value, the value of the constant. 
+      #   Otherwise, it is the type of the external constant.
       # @return [LLVM::GlobalValue] The new constant.
-      def constant(name, value)
-        glob = global(name, value)
+      def constant(name, info)
+        glob = global(name, info)
         glob.global_constant = 1
         return glob
       end

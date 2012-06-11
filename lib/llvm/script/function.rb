@@ -28,10 +28,10 @@ module LLVM
         @return_type = ret
         if args.last == Types::VARARGS
           args.pop
-          @type = LLVM::Function(args, ret, :varargs => true)
+          @type = LLVM::Function(args.dup, ret, :varargs => true)
           @varargs = true
         else
-          @type = LLVM::Function(args, ret)
+          @type = LLVM::Function(args.dup, ret)
         end
         @arg_types = args
         @raw = @module.functions.add(name, @type)
@@ -58,6 +58,13 @@ module LLVM
         end
         @generator.finish
       end
+      
+      # Checks whether the function has a return at its end.
+      # @return [Boolean] A true/false value.
+      def finished?
+        return false if @generator.nil?
+        return @generator.finished?
+      end
     
       # The array of args (LLVM::Values) passed to the function.
       # @return [Array<LLVM::Value>] The function's arguments.
@@ -73,7 +80,7 @@ module LLVM
     
       # Bitcasts (changing type without modifying bits) this function to the given type.
       # @param [LLVM::Type] type The type to bitcast to.
-      # @return [LLVM::Value] The resulting function of the new type.
+      # @return [LLVM::ConstantExpr] The resulting function of the new type.
       def bitcast(type)
         @raw.bitcast_to(type)
       end
@@ -94,14 +101,14 @@ module LLVM
       # Creates the return block. This is usually only used internally by the Generator.
       def setup_return
         return if @generator.nil?
-        return unless @return_val.nil?
+        return unless @return_block.nil?
         @return_block = @raw.basic_blocks.append("return")
         builder = LLVM::Builder.new
         instruction = @generator.start_block.instructions.first
         instruction ? builder.position_before(instruction) : builder.position_at_end(@generator.start_block)
-        @return_val = builder.alloca(@return_type, "retval")
+        @return_val = builder.alloca(@return_type, "retval") unless @return_type == Types::VOID
         builder.position_at_end(@return_block)
-        if @return_type == VOID
+        if @return_type == Types::VOID
           builder.ret_void
         else
           builder.ret(builder.load(@return_val))
@@ -120,7 +127,7 @@ module LLVM
     
       # Checks for unknown methods in the internal LLVM::Function.
       def respond_to?(sym, *args, &block)
-        return true if @generator.respond_to?(sym)
+        return true if @raw.respond_to?(sym)
         super(sym, *args, &block)
       end
     end

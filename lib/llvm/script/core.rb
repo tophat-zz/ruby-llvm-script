@@ -28,6 +28,11 @@ module LLVM
           (class << self; self end).superclass
         end
         
+        # Needed on Ruby 1.9.x for instance_of testing of a BasicObject.
+        def instance_of?(klass)
+          return self.class == klass
+        end
+        
         # On Ruby 1.9.x, tries to get unknown constants from Object.
         def self.const_missing(name)
           ::Object.const_get(name)

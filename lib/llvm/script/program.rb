@@ -30,12 +30,13 @@ module LLVM
         LLVM.init_x86
         opts[:prefix] = :none
         super(name, opts, &block)
-        @@programs[name.to_sym] = self
+        @@programs[@name.to_sym] = self
         @@last_program = self
       end
       
       # Creates the main function of the program. The main function takes the arguments `argc` 
-      # and `argv` and returns a integer (usually 0 on success).
+      # and `argv` and returns a integer (usually 0 on success). If the function already exists,
+      # it is just returned.
       # @example
       #   extern :printf, [CHARPTR, VAARGS], INT
       #   ...
@@ -45,8 +46,11 @@ module LLVM
       #   end
       # @param [Proc] block A block with the insides of the main function.
       def main(&block)
-        @main ||= self.function(:main, [INT, VOIDPTRPTR], INT, &block)
-        visibility(:public, @main.name)
+        unless @main
+          @main = self.function(:main, [Types::INT, Types::VOIDPTRPTR], Types::INT, &block)
+          visibility(:public, @main.name)
+        end
+        return @main
       end
       
       # Runs the main function of the program.
