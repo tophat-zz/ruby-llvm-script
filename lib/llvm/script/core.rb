@@ -11,7 +11,8 @@ module LLVM
       # Ruby 1.9.x::  It inherits BasicObject, allowing it to ignore default Kernel methods unless
       #               the method is missing. This allows you not to have to self.methodname syntax 
       #               when a Library or Program function name conflicts with a Kernel function. 
-      #               An example of this is in the hello world program in the README.
+      #               An example of this is in the 
+      #               {https://github.com/tophat/ruby-llvm-script/wiki/Hello-World hello world program}.
       #
       class ScriptObject < BasicObject
         # On Ruby 1.9.x, makes LLVM available to the object system

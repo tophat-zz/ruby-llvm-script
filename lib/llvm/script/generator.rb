@@ -110,7 +110,7 @@ module LLVM
         @builder.store(sub(val, convert(amount)), ptr)
       end
     
-      # Adds the two numeric values together (two integers or two floats). (<tt>v1 + v2</tt>)
+      # Adds the two numeric values together (two integers or two floats). (<tt>rhs + lhs</tt>)
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] rhs The first numeric.
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] lhs The second numeric.
       # @return [LLVM::ConstantInt, LLVM::ConstantReal]  The numeric sum.
@@ -118,7 +118,7 @@ module LLVM
         numeric_operation(:add, lhs, rhs)
       end
     
-      # Subtracts the second numeric from the first (two integers or two floats). (<tt>v1 - v2</tt>)
+      # Subtracts the second numeric from the first (two integers or two floats). (<tt>minuend - subtrahend</tt>)
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] minuend The numeric to be subtracted from.
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] subtrahend The numeric to subtract.
       # @return [LLVM::ConstantInt, LLVM::ConstantReal]  The numeric difference.
@@ -126,7 +126,7 @@ module LLVM
         numeric_operation(:sub, minuend, subtrahend)
       end
     
-      # Multiplys two numerics together (two integers or two floats). (<tt>v1 * v2</tt>)
+      # Multiplys two numerics together (two integers or two floats). (<tt>lhs * rhs</tt>)
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] lhs The first numeric.
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] rhs The second numeric.
       # @return [LLVM::ConstantInt, LLVM::ConstantReal]  The numeric product.
@@ -134,7 +134,7 @@ module LLVM
         numeric_operation(:mul, lhs, rhs)
       end
       
-      # Divides the first numeric by the second (two integers or two floats). (<tt>v1 / v2</tt>)
+      # Divides the first numeric by the second (two integers or two floats). (<tt>dividend / divisor</tt>)
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] dividend The numeric to be divided.
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] divisor The numeric to divide by.
       # @param [Boolean] signed Whether any of numerics can be negative.
@@ -145,7 +145,8 @@ module LLVM
         numeric_operation(:div, dividend, divisor, signed)
       end
       
-      # Finds the remainder of the first numeric by the second (two integers or two floats). (<tt>v1 % v2</tt>)
+      # Finds the remainder of the first numeric divided by the second (two integers or two floats). 
+      # (<tt>dividend % divisor</tt>)
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] dividend The numeric to be divided.
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] divisor The numeric to divide by.
       # @param [Boolean] signed Whether any of numerics can be negative.
@@ -157,7 +158,7 @@ module LLVM
       end
     
       # Shifts the bits of the given integer the given amount to the left, replacing those bits with 0. 
-      # (<tt>v1 << v2</tt> in C)
+      # (<tt>num << bits</tt> in C)
       # @param [LLVM::ConstantInt, Integer] num The integer to shift left.
       # @param [LLVM::ConstantInt, Integer] bits The the number of bits to shift left.
       # @return [LLVM::ConstantInt] The resulting integer.
@@ -169,7 +170,7 @@ module LLVM
       end
       
       # Arithmetically shifts the bits of the given integer the given amount to the right, replacing 
-      # those bits with the bit value of the sign. (0 - Negative, 1 - Positive) (<tt>v1 >> v2</tt> in C)
+      # those bits with the bit value of the sign. (0 - Negative, 1 - Positive) (<tt>num >> bits</tt> in C)
       # @param [LLVM::ConstantInt, Integer] num The integer to shift right.
       # @param [LLVM::ConstantInt, Integer] bits The the number of bits to shift right.
       # @return [LLVM::ConstantInt] The resulting integer.
@@ -181,7 +182,7 @@ module LLVM
       end
       
       # Logically shifts the bits of the given integer the given amount to the right, replacing 
-      # those bits with 0. (<tt>v1 >> v2</tt> in C)
+      # those bits with 0. (<tt>num >> bits</tt> in C)
       # @param [LLVM::ConstantInt, Integer] num The integer to shift right.
       # @param [LLVM::ConstantInt, Integer] bits The the number of bits to shift right.
       # @return [LLVM::ConstantInt] The resulting integer.
@@ -411,7 +412,7 @@ module LLVM
       end
       
       # Inverts the given integer (a boolean in LLVM is a one-bit integer). If bigger than a bit,
-      # returns what is called the {http://en.wikipedia.org/wiki/Ones'_complement one's complement}.
+      # returns what is called the {http://en.wikipedia.org/wiki/Ones%27_complement one's complement}.
       # @param [LLVM::ConstantInt, Integer, Boolean] num The integer to invert.
       # @return [LLVM::ConstantInt] The resulting inverted integer.
       def invert(num)
@@ -601,7 +602,7 @@ module LLVM
       #   end
       # @param [Array<Value>] vars A list of values (LLVM::Value or the Ruby equivalent) to create pointers of.
       #   It can also just be a single value.
-      # @param [Proc] cmp A proc that returns (literally, not using and form of +ret+ or +return+) a 0 or 1 boolean.
+      # @param [Proc] cmp A proc that returns (literally, not using any form of +ret+ or +return+) a 0 or 1 boolean.
       #   If this is not the given, the loop becomes infinte unless broken. The proc is passed the values or +vars+
       # @param [Proc] inc A proc that executes a the end of each loop, usually to increment some value. 
       #   The proc is passed pointers to the given +vars+.
@@ -664,7 +665,7 @@ module LLVM
         return ptrs.length == 1 ? ptrs.first : ptrs
       end
     
-      # Branches to the given block, finishing the current one and execute the given one.
+      # Branches to the given block, finishing the current one and executing the given one.
       # @param [LLVM::BasicBlock] block The block to branch to.
       def br(block)
         return if @finished
@@ -672,7 +673,7 @@ module LLVM
         self.finish
       end
     
-      # Returns the given value, creating a return block if not one already.
+      # Returns the given value, creating a return block if there is not one already.
       # @param [Value] val The LLVM::Value or Ruby equivalent to return. Either returns void
       #   (if a the function's return type is void) or just branches to the return block if nil.
       def ret(val=nil)

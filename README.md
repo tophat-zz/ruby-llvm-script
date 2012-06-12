@@ -31,7 +31,7 @@ ruby-llvm-script has been tested on OS X 10.7 using the following Ruby interpret
 
 <table>
   <tr>
-    <th>Notice</th><td>ruby-llvm-script is currently not released as a gem (will be soon). You will, for now, have to rake it from the source if you wish to use it.</td>
+    <th>Notice</th><td>ruby-llvm-script is currently not released as a gem (will be soon). You will, for now, have to install it from the source if you wish to use it.</td>
   </tr>
 </table>
 
