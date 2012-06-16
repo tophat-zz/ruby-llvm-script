@@ -72,8 +72,8 @@ module LLVM
             raise NoMethodError, "Function or macro, '#{function.to_s}', does not exist."
           end
         elsif callable.kind_of?(LLVM::Script::Function)
-          @builder.call(callable, *args.map{|arg| convert(arg, fun.arg_types[args.index(arg)])})
-        elsif callable.kind_of?(LLVM::Value)
+          @builder.call(callable, *args.map{|arg| convert(arg, callable.arg_types[args.index(arg)])})
+        elsif callable.kind_of?(LLVM::Value) && (callable.type.kind == :function || callable.type.kind == :pointer)
           @builder.call(callable, *args.map{|arg| convert(arg)})
         else
           raise ArgumentError, "Callable passed to call must be a LLVM::Value or a name of a Library function or macro."
@@ -91,30 +91,37 @@ module LLVM
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] num The numeric to change sign.
       # @return [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] The resulting numeric of the opposite sign.
       def neg(num)
-        @builder.neg(convert(num))
+        val = convert(num, :numeric)
+        sub(convert(0, val.type), val)
       end
     
       # Increments the numeric pointed to by a pointer by the given amount.
       # @param [LLVM::Value] ptr The numeric pointer to increment.
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] amount The amount to add. 
+      # @return [LLVM::Value] The newly incremented numeric pointer.
       def inc(ptr, amount=1)
+        validate_pointer(ptr, "The inc function can only increment pointers.")
         val = @builder.load(ptr)
-        @builder.store(add(val, convert(amount)), ptr)
+        @builder.store(add(val, amount), ptr)
+        return ptr
       end
     
       # Decrements the numeric pointed to by a pointer by the given amount.
-      # @param [LLVM::Value] ptr The integer pointer to decrement.
+      # @param [LLVM::Value] ptr The numeric pointer to decrement.
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] amount The amount to subtract.
+      # @return [LLVM::Value] The newly decremented numeric pointer.
       def dec(ptr, amount=1)
+        validate_pointer(ptr, "The dec function can only decrement pointers.")
         val = @builder.load(ptr)
-        @builder.store(sub(val, convert(amount)), ptr)
+        @builder.store(sub(val, amount), ptr)
+        return ptr
       end
     
-      # Adds the two numeric values together (two integers or two floats). (<tt>rhs + lhs</tt>)
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] rhs The first numeric.
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] lhs The second numeric.
+      # Adds the two numeric values together (two integers or two floats). (<tt>lhs + rhs</tt>)
+      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] lhs The first numeric.
+      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] rhs The second numeric.
       # @return [LLVM::ConstantInt, LLVM::ConstantReal]  The numeric sum.
-      def add(rhs, lhs)
+      def add(lhs, rhs)
         numeric_operation(:add, lhs, rhs)
       end
     
@@ -139,57 +146,63 @@ module LLVM
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] divisor The numeric to divide by.
       # @param [Boolean] signed Whether any of numerics can be negative.
       # @return [LLVM::ConstantInt, LLVM::ConstantReal]  The numeric quotient.
-      # @raise [ZeroDivisionError] Raised if the second numeric (v2) is 0.
+      # @raise [ZeroDivisionError] Raised if the divisor is 0.
       def div(dividend, divisor, signed=true)
-        raise ZeroDivisionError if divisor == 0
+        val = convert(divisor, :numeric)
+        raise ZeroDivisionError if val == convert(0, val.type)
         numeric_operation(:div, dividend, divisor, signed)
       end
       
-      # Finds the remainder of the first numeric divided by the second (two integers or two floats). 
-      # (<tt>dividend % divisor</tt>)
+      # Finds the remainder of the first numeric divided by the second (two integers or two floats).
+      # (<tt>dividend.remainder(divisor)</tt>)
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] dividend The numeric to be divided.
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] divisor The numeric to divide by.
       # @param [Boolean] signed Whether any of numerics can be negative.
       # @return [LLVM::ConstantInt, LLVM::ConstantReal]  The numeric remainder.
-      # @raise [ZeroDivisionError] Raised if the second numeric (v2) is 0.
+      # @raise [ZeroDivisionError] Raised if the divisor is 0.
       def rem(dividend, divisor, signed=true)
-        raise ZeroDivisionError if divisor == 0
+        val = convert(divisor, :numeric)
+        raise ZeroDivisionError if val == convert(0, val.type)
         numeric_operation(:rem, dividend, divisor, signed)
       end
     
       # Shifts the bits of the given integer the given amount to the left, replacing those bits with 0. 
-      # (<tt>num << bits</tt> in C)
-      # @param [LLVM::ConstantInt, Integer] num The integer to shift left.
+      # (<tt>int * (2 ** bits)</tt> or <tt>int << bits</tt> in C, unless overflow occurs)
+      # @param [LLVM::ConstantInt, Integer] int The integer to shift left.
       # @param [LLVM::ConstantInt, Integer] bits The the number of bits to shift left.
       # @return [LLVM::ConstantInt] The resulting integer.
       # @see http://llvm.org/docs/LangRef.html#i_shl
       # @see http://en.wikipedia.org/wiki/Bitwise_operation#Bit_shifts
-      def shl(num, bits)
-        val = convert(num)
+      def shl(int, bits)
+        val = convert(int, :integer)
         @builder.shl(val, convert(bits, val.type))
       end
       
       # Arithmetically shifts the bits of the given integer the given amount to the right, replacing 
-      # those bits with the bit value of the sign. (0 - Negative, 1 - Positive) (<tt>num >> bits</tt> in C)
-      # @param [LLVM::ConstantInt, Integer] num The integer to shift right.
+      # those bits with the bit value of the sign. (<tt>int / 2 ** bits</tt> or <tt>int >> bits</tt> 
+      # in C, unless overflow occurs)
+      # @param [LLVM::ConstantInt, Integer] int The integer to shift right.
       # @param [LLVM::ConstantInt, Integer] bits The the number of bits to shift right.
       # @return [LLVM::ConstantInt] The resulting integer.
       # @see http://llvm.org/docs/LangRef.html#i_ashr
       # @see http://en.wikipedia.org/wiki/Arithmetic_shift
-      def ashr(num, bits)
-        val = convert(num)
+      def ashr(int, bits)
+        val = convert(int, :integer)
         @builder.ashr(val, convert(bits, val.type))
       end
       
       # Logically shifts the bits of the given integer the given amount to the right, replacing 
-      # those bits with 0. (<tt>num >> bits</tt> in C)
-      # @param [LLVM::ConstantInt, Integer] num The integer to shift right.
+      # those bits with 0. The equivalent in Ruby is as follows, unless overflow occurs:
+      # Positive Number:: <tt>int / 2 ** bits</tt>  
+      # Negative Number:: <tt>(abs(MIN) / 2 ** (bits-1)) - (int / 2 ** bits)</tt>
+      # *MIN*: The minimum value of a integer for the type of the given integer.
+      # @param [LLVM::ConstantInt, Integer] int The integer to shift right.
       # @param [LLVM::ConstantInt, Integer] bits The the number of bits to shift right.
       # @return [LLVM::ConstantInt] The resulting integer.
       # @see http://llvm.org/docs/LangRef.html#i_lshr
       # @see http://en.wikipedia.org/wiki/Logical_shift
-      def lshr(num, bits)
-        val = convert(num)
+      def lshr(int, bits)
+        val = convert(int, :integer)
         @builder.lshr(val, convert(bits, val.type))
       end
       
@@ -198,12 +211,12 @@ module LLVM
       # @param [LLVM::Type] type The type to change the value into.
       # @return [LLVM::Value] The resulting value of the new type.      
       def bitcast(val, type)
-        type = validate_type(type)
-        @builder.bit_cast(convert(val), type)
+        @builder.bit_cast(convert(val), validate_type(type))
       end
       
-      # Converts an integer of a bigger type into an integer of a smaller one and floats of a larger type into floats
-      # of a smaller type. If the number exceeds the max size of the smaller type it will be shrunk to fit.
+      # Truncates an integer of a bigger type into an integer of a smaller one and floats of a 
+      # larger type into floats of a smaller type. Some negative numbers and numbers that exceed the 
+      # max size of the smaller type will have their values changed.
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] num The numeric to shrink.
       # @param [LLVM::Type] type The smaller type to convert the numeric into.
       # @return [LLVM::Value] The resulting numeric of the new type.
@@ -211,22 +224,23 @@ module LLVM
         numeric_cast([:trunc, :fp_trunc], num, type)
       end
       
-      # Converts an integer of a smaller type into an integer of a bigger one by copy the
-      # value of the sign bit. This will result in negative numbers and booleans have their
-      # values changed. To prevent the integer from changing value, use {#zext}. Also
+      # Converts an integer of a smaller type into an integer of a bigger one by copying the
+      # value of the sign bit. This will result in booleans having their values changed. Also 
       # converts floats of a smaller type into floats of a larger type.
       # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] num The numeric to grow.
       # @param [LLVM::Type] type The bigger type to convert the numeric into.
       # @return [LLVM::Value] The resulting numeric of the new type.
+      # @see #zext
       def sext(num, type)
         numeric_cast([:sext, :fp_ext], num, type)
       end
       
       # Converts an integer of a smaller type into an integer of a bigger one by adding zero value bits. 
-      # In a zero extension, negative numbers and booleans keep their values unlike a {#sext signed extension}.
-      # Also converts floats of a smaller type into floats of a larger type.
+      # In a zero extension, booleans keep their values, but negative numbers lose theirs. Also converts 
+      # floats of a smaller type into floats of a larger type.
       # @param (see #sext)
       # @return (see #sext)
+      # @see #sext
       def zext(num, type)
         numeric_cast([:zext, :fp_ext], num, type)
       end
@@ -237,17 +251,12 @@ module LLVM
       # @param [Boolean] signed Whether the integer can be negative.
       # @return [LLVM::ConstantInteger] The resulting integer.
       def ftoi(float, type, signed=true)
-        val = convert(float)
+        val = convert(float, :decimal)
         type = validate_type(type)
-        case val.type.kind
-        when :float, :double, :x86_fp80, :fp128, :ppc_fp128
-          if signed
-            @builder.fp2si(val, type)
-          else
-            @builder.fp2ui(val, type)
-          end
+        if signed
+          @builder.fp2si(val, type)
         else
-          raise ArgumentError, "Value passed to ftoi is not of a float type."
+          @builder.fp2ui(val, type)
         end
       end
       
@@ -257,16 +266,12 @@ module LLVM
       # @param [Boolean] signed Whether the integer can be negative.
       # @return [LLVM::ConstantReal] The resulting float.
       def itof(int, type, signed=true)
-        val = convert(int)
+        val = convert(int, :integer)
         type = validate_type(type)
-        if val.type.kind == :integer
-          if signed
-            @builder.si2fp(val, type)
-          else
-            @builder.ui2fp(val, type)
-          end
+        if signed
+          @builder.si2fp(val, type)
         else
-          raise ArgumentError, "Value passed to itof is not an integer."
+          @builder.ui2fp(val, type)
         end
       end
       
@@ -276,30 +281,17 @@ module LLVM
       # @param [LLVM::Type] type The different sized type to change the value into.
       # @return [LLVM::Value] The resulting value of the new size.
       def cast(val, type)
-        val = convert(v)
+        val = convert(val)
+        kind = val.type.kind
         type = validate_type(type)
-        case val.type.kind
-        when :integer
-          if type.kind == :integer
-            @builder.int_cast(val, type)
-          else
-            raise ArgumentError, "Type passed to integer cast must be an integer type."
-          end
-        when :float, :double, :x86_fp80, :fp128, :ppc_fp128
-          case type.kind
-          when :float, :double, :x86_fp80, :fp128, :ppc_fp128
-            @builder.fp_cast(val, type)
-          else
-            raise ArgumentError, "Type passed to float cast must be a float type."
-          end
-        when :pointer
-          if type.kind == :pointer
-            @builder.pointer_cast(val, type)
-          else
-            raise ArgumentError, "Type passed to pointer cast must be a pointer type."
-          end
+        if kind == :integer && type.kind == :integer
+          @builder.int_cast(val, type)
+        elsif check_decimal(kind) && check_decimal(type.kind)
+          @builder.fp_cast(val, type)
+        elsif kind == :pointer && type.kind == :pointer
+          @builder.pointer_cast(val, type)
         else
-          raise ArgumentError, "Value passed to cast is not Numeric or Pointer."
+          raise ArgumentError, "Value and type passed to cast are not both of Integer, Float, or Pointer."
         end
       end
       
@@ -310,7 +302,7 @@ module LLVM
       def alloca(type, size=nil)
         type = validate_type(type)
         if size
-          @builder.array_alloca(type, convert(size))
+          @builder.array_alloca(type, convert(size, :integer))
         else
           @builder.alloca(type)
         end
@@ -323,7 +315,7 @@ module LLVM
       def malloc(type, size=nil)
         type = validate_type(type)
         if size
-          @builder.array_malloc(type, convert(size))
+          @builder.array_malloc(type, convert(size, :integer))
         else
           @builder.malloc(type)
         end
@@ -332,16 +324,14 @@ module LLVM
       # Frees the given pointer (only needs to be called for malloc'd pointers).
       # @param [LLVM::Value] ptr The pointer to free.
       def free(ptr)
-        validate_pointer(ptr, "The free function can only free pointers.")
-        @builder.free(ptr)
+        @builder.free(validate_pointer(ptr, "The free function can only free pointers."))
       end
     
       # Gets the value a pointer points to.
       # @param [LLVM::Value] ptr The pointer to load.
       # @return [LLVM::Value] The value the pointer points to.
       def load(ptr)
-        validate_pointer(ptr, "The load function can only load pointers.")
-        @builder.load(ptr)
+        @builder.load(validate_pointer(ptr, "The load function can only load pointers."))
       end
     
       # Stores a value into a pointer (makes it point to this value).
@@ -359,13 +349,8 @@ module LLVM
       # @return [LLVM::Value] A pointer to the value at the given index.
       # @see http://llvm.org/docs/GetElementPtr.html
       def gep(ptr, *indices)
-        validate_pointer(ptr, "The gep function can only index pointers.")
-        type = ptr.type.element_type
-        type = type.element_type while type.kind == :pointer
-        indices = indices.flatten.map do |idx|
-          index = convert(idx, Types::INT)
-        end
-        @builder.gep(ptr, indices)
+        indices = indices.flatten.map { |idx| index = convert(idx, :integer) }
+        @builder.gep(validate_pointer(ptr, "The gep function can only index pointers."), indices)
       end
     
       # Same as {#gep}, but also loads the pointer after finding it.
@@ -387,36 +372,40 @@ module LLVM
       
       # Inserts (adds or replaces) the given value at the given index of a aggregate or vector. 
       # @param [Value] collection The vector or aggregate (or the Ruby equivalent) to insert into.
-      # @param [Value] element The value (a LLVM::Vlaue or the Ruby equivalent) to insert.
-      # @param [LLVM::ConstantInt, Integer] index The index to insert at.
+      # @param [Value] element The value (a LLVM::Value or the Ruby equivalent) to insert.
+      # @param [LLVM::ConstantInt, Integer] index The index to insert at. This can only be a LLVM::Value
+      #   if the given collection is a vector, otherwise it must be a Ruby integer (or something that responds 
+      #   to #to_i).
       def insert(collection, element, index)
         val = convert(collection)
-        if value.type.kind == :vector
-          @builder.insert_element(collection, convert(element, val.type.element_type), convert(index))
+        if val.type.kind == :vector
+          @builder.insert_element(val, convert(element, val.type.element_type), convert(index, :integer))
         else
-          @builder.insert_value(collection, convert(element, val.type.element_type), convert(index))
+          @builder.insert_value(val, convert(element, val.type.element_type), index.to_i)
         end
       end
       
       # Extracts a value from the given index of a aggregate or vector. 
       # @param [Value] collection The vector or aggregate (or the Ruby equivalent) to extract from.
-      # @param [LLVM::ConstantInt, Integer] index The index to extract the value from.
+      # @param [LLVM::ConstantInt, Integer] index The index to extract the value from. This can only be a 
+      #   LLVM::Value if the given collection is a vector, otherwise it must be a Ruby integer (or something 
+      #   that responds to #to_i).
       # @return [LLVM::Value] The extracted element.
       def extract(collection, index)
         val = convert(collection)
-        if value.type.kind == :vector
-          @builder.extract_element(collection, convert(index))
+        if val.type.kind == :vector
+          @builder.extract_element(val, convert(index, :integer))
         else
-          @builder.extract_value(collection, convert(index))
+          @builder.extract_value(val, index.to_i)
         end
       end
       
-      # Inverts the given integer (a boolean in LLVM is a one-bit integer). If bigger than a bit,
-      # returns what is called the {http://en.wikipedia.org/wiki/Ones%27_complement one's complement}.
+      # Inverts the given integer, equivalent to <tt>~num</tt> in C. This returns what is 
+      # called the {http://en.wikipedia.org/wiki/Ones%27_complement one's complement}.
       # @param [LLVM::ConstantInt, Integer, Boolean] num The integer to invert.
       # @return [LLVM::ConstantInt] The resulting inverted integer.
       def invert(num)
-        @builder.not(convert(num))
+        @builder.not(convert(num, :integer))
       end
       
       # Checks if the given value is null.
@@ -424,7 +413,7 @@ module LLVM
       # @return [LLVM::ConstantInt] The resulting one-bit integer boolean (0 or 1).
       def is_null(val)
         unless val.kind_of?(LLVM::Value)
-          raise ArgumentError, "Value passed to is_null must be of LLVM::Value. #{type_name(v)} given."
+          raise ArgumentError, "Value passed to is_null must be of LLVM::Value. #{type_name(val)} given."
         end
         @builder.is_null(val)
       end
@@ -434,7 +423,7 @@ module LLVM
       # @return [LLVM::ConstantInt] The resulting one-bit integer boolean (0 or 1).
       def is_not_null(val)
         unless val.kind_of?(LLVM::Value)
-          raise ArgumentError, "Value passed to is_not_null must be of LLVM::Value. #{type_name(v)} given."
+          raise ArgumentError, "Value passed to is_not_null must be of LLVM::Value. #{type_name(val)} given."
         end
         @builder.is_not_null(val)
       end
@@ -477,12 +466,12 @@ module LLVM
       #   :ole - ordered and less than or equal to (<=)
       #   :ule - unordered and less than or equal to (<=)
       #
-      # @param [Symbol] op One of the above operations symbols.
+      # @param [Symbol] op One of the above operation symbols.
       # @param [LLVM::Value] lhs The first value (numeric or pointer).
       # @param [LLVM::Value] rhs A second value of the same type as the first.
       # @return [LLVM::ConstantInt] The resulting one-bit integer boolean (0 or 1).
       def opr(op, lhs, rhs)
-        lhs = convert(lhs)
+        lhs = convert(lhs, :numeric)
         rhs = convert(rhs, lhs.type)
         case op
         when :or
@@ -491,18 +480,16 @@ module LLVM
           @builder.xor(lhs, rhs)
         when :and
           @builder.and(lhs, rhs)
-        when :eq, :ne, :ugt, :uge, :ult, :ule, :sgt, :sge, :slt, :sle
+        when :eq, :ne, :sgt, :sge, :slt, :sle
           @builder.icmp(op, lhs, rhs)
         when :oeq, :ogt, :oge, :olt, :ole, :one, :ord, :uno, :ueq, :une
           @builder.fcmp(op, lhs, rhs)
         when :ugt, :uge, :ult, :ule 
-          case val.type.kind
+          case lhs.type.kind
           when :integer
             @builder.icmp(op, lhs, rhs)
           when :float, :double, :x86_fp80, :fp128, :ppc_fp128
             @builder.fcmp(op, lhs, rhs)
-          else
-            raise ArgumentError, "Value passed to opr is not Numeric."
           end
         else
           raise ArgumentError, "Unrecognized operation symbol passed to opr."
@@ -515,7 +502,7 @@ module LLVM
       # @param [Proc] proc The proc containing the insides of the block
       # @return [Generator] The generator of the block.
       def block(name="block", &proc)
-        gen = self.class.new(@module, @function, @function.add_block(name))
+        gen = self.class.new(@library, @module, @function, @function.add_block(name))
         gen.instance_eval(&proc)
         return gen
       end
@@ -542,21 +529,17 @@ module LLVM
       # @param [LLVM::BasicBlock] exit An optional block to exit into.
       # @param [Proc] proc This block becoms the insides of crt or wrg if either is nil.
       def cond(cond, crt=nil, wrg=nil, exit=nil, &proc)
+        unless crt || ::Kernel.block_given?
+          raise ArgumentError, "The cond function must either be given a crt argument or a block."
+        end
         exit_provided = exit ? true : false
         unless crt.kind_of?(Generator)
           gen = self.class.new(@library, @module, @function, @function.add_block("then"))
-          unless crt || ::Kernel.block_given?
-            raise ArgumentError, "The cond function must either be given a crt argument or a block."
-          end
           gen.instance_eval(&(crt ? crt : proc))
         end
         gen ||= crt
-        if gen.basic_block.empty? && !exit
-          exit = gen.basic_block
-        else
-          exit ||= @function.add_block("exit") 
-          gen.br(exit)
-        end
+        exit ||= @function.add_block("exit") 
+        gen.br(exit)
         gen.finish
         ifblock = gen.start_block
         if wrg || (crt && ::Kernel.block_given?)
@@ -572,7 +555,7 @@ module LLVM
         elsblock ||= exit
         bb = gen.basic_block
         exit.move_after(bb) unless exit == bb
-        @builder.cond(cond, ifblock, elsblock)
+        @builder.cond(convert(cond, Types::BOOL), ifblock, elsblock)
         unless exit_provided
           @builder.position_at_end(exit)
           @basic_block = exit
@@ -583,7 +566,7 @@ module LLVM
     
       # Creates any kind of loop statement.
       # @example For Loop (Countdown)
-      #   lp 10, proc{|i| opr(:ugt, >, 0)}, proc{|i_ptr| dec(i_ptr)} do |i|
+      #   lp 10, proc{|i| opr(:ugt, i, 0)}, proc{|i_ptr| dec(i_ptr)} do |i|
       #     printf("%d...", i)
       #   end
       #   printf("Blast Off!")
@@ -603,26 +586,26 @@ module LLVM
       # @param [Array<Value>] vars A list of values (LLVM::Value or the Ruby equivalent) to create pointers of.
       #   It can also just be a single value.
       # @param [Proc] cmp A proc that returns (literally, not using any form of +ret+ or +return+) a 0 or 1 boolean.
-      #   If this is not the given, the loop becomes infinte unless broken. The proc is passed the values or +vars+
-      # @param [Proc] inc A proc that executes a the end of each loop, usually to increment some value. 
+      #   If this is not the given, the loop becomes infinte unless broken. The proc is passed the current values of +vars+
+      # @param [Proc] inc A proc that executes a the end of each loop, usually to increment or decrement +vars+. 
       #   The proc is passed pointers to the given +vars+.
-      # @param [LLVM::BasicBlock] exit An optional block to break into.
+      # @param [LLVM::BasicBlock] exit An optional block to exit into.
       # @param [Proc] proc The insides of the loop. This is not required if either cmp or inc is given. 
-      #   The proc is passed the values or +vars+.
+      #   The proc is passed the current values of +vars+.
       # @return [Array<LLVM::Value>] An array of pointers to +vars+. If there is just one var, returns a single 
       #   LLVM::Value of that pointer.  
       def lp(vars=nil, cmp=nil, inc=nil, exit=nil, &proc)
         ptrs = []
         exit_provided = exit ? true : false
         block_provided = ::Kernel.block_given?
+        if cmp.nil? && inc.nil? && !block_provided
+          raise ArgumentError, "A block, a compare proc, or a increment proc must be passed to loop."
+        end
         for var in [vars].flatten.compact
           var = convert(var)
           ptr = @builder.alloca(var.type)
           @builder.store(var, ptr)
           ptrs.push(ptr)
-        end
-        if cmp.nil? && inc.nil? && !block_provided
-          raise ArgumentError, "A block, a compare proc, or a increment proc must be passed to loop."
         end
         if @basic_block.empty?
           loopblk = @basic_block
@@ -645,8 +628,8 @@ module LLVM
         if cmp
           gen = self.class.new(@library, @module, @function, loopblk)
           vals = ptrs[0, cmp.arity >= 0 ? cmp.arity : 0].map{ |ptr| gen.load(ptr) }
-          cond = convert(gen.instance_exec(*vals, &cmp), BOOL)
-          gen.builder.cond(cond, block, exit)
+          cond = convert(gen.instance_exec(*vals, &cmp), Types::BOOL)
+          gen.instance_eval { @builder.cond(cond, block, exit) }
           gen.finish
         end
         if inc
@@ -698,7 +681,7 @@ module LLVM
         @function.setup_return
         @builder.store(convert(val, @function.return_type), @function.return_val) unless val.nil?
         cont = blk ? blk : @function.add_block("block")
-        @builder.cond(cond, @function.return_block, cont)
+        @builder.cond(convert(cond, Types::BOOL), @function.return_block, cont)
         if blk
           self.finish
         else
@@ -721,17 +704,13 @@ module LLVM
         self.finish
       end
     
-      # Creates a return block and stores the given value in the function's return value pointer,
+      # Creates a return block and optionally stores the given value in the function's return value pointer,
       # but does not branch to the return block.
-      # @param [Value] val The LLVM::Value or Ruby equivalent to store in the function's return value. 
-      #   Can only be nil if a function's return type is void, otherwise raises an ArgumentError.
+      # @param [Value] val The optional LLVM::Value or Ruby equivalent to store in the function's return value. 
       def pret(val=nil)
         return if @finished
         @function.setup_return
-        if @function.return_type == Types::VOID
-          @builder.ret_void
-        else
-          raise ArgumentError, "Value must be passed to non-void function pre-return." if val.nil?
+        unless @function.return_type == Types::VOID || val.nil?
           @builder.store(convert(val, @function.return_type), @function.return_val)
         end
       end
@@ -783,51 +762,61 @@ module LLVM
       
       private
     
-      def convert(val, type=nil) 
-        type = LLVM::Type(type) if !type.nil?
-        if val.kind_of?(LLVM::Value) || val.kind_of?(LLVM::Script::ScriptObject)
-          return val
-        elsif val.kind_of?(Numeric)
-          int_klass = LLVM.const_get("Int#{type.width}".to_sym) if type.kind_of?(LLVM::IntType)
-          if val == 0 && !type.nil? && type.kind == :pointer
-            return type.null_pointer
-          elsif val.kind_of?(Float) && (type.nil? || int_klass.respond_to?(:from_f))
-            return (int_klass || Types::FLOAT).from_f(val.to_f)
-          elsif val.kind_of?(Numeric) && (type.nil? || int_klass.respond_to?(:from_i))
-            return (int_klass || Types::INT).from_i(val.to_i)
-          else
-            raise ArgumentError, "Value passed to Generator function should be of #{type_name(type)}. Numeric given."
+      def convert(val, hint=nil)
+        type = LLVM::Type(hint)
+        kind = hint if hint.is_a?(Symbol)
+        kind = type.kind if type.kind_of?(LLVM::Type)
+        klass = Types::DOUBLE if type == LLVM::Double.type
+        klass = LLVM.const_get("Int#{type.width}".to_sym) if type.kind_of?(LLVM::IntType) 
+        if val.kind_of?(LLVM::Value)
+          if hint.nil? || val.type == type || (type.nil? && ((kind == :decimal && check_decimal(val.type.kind)) ||
+              (kind == :numeric && (val.type.kind == :integer || check_decimal(val.type.kind))) || val.type.kind == kind))
+            return val
           end
-        elsif val.kind_of?(Array) && (type.nil? || type.kind == :array)
-          type ||= convert(val.first).type
-          return LLVM::ConstantArray(type, val.map{|elm| convert(elm, type)})
-        elsif val.kind_of?(String) && (type.nil? || type.kind == :pointer)
-          str = @library.string(val)
-          return str.type != type ? @builder.bit_cast(str, type) : str
-        elsif val == true && (type.nil? || type.kind == :integer)
-          return Types::BOOL.from_i(1)
-        elsif !val && (type.nil? || type.kind == :integer)
-          return Types::BOOL.from_i(0)
-        elsif val.nil? && !type.nil? && type.kind == :pointer
+        elsif val.kind_of?(LLVM::Script::ScriptObject)
+          return val
+        elsif (val == 0 || val.nil?) && !type.nil? && type.kind == :pointer
           return type.null_pointer
-        else
-          types = type.nil? ? "LLVM::Value, Numeric, Array, or True/False/Nil" : "#{type_name(type)} or the Ruby equivalent"
-          raise ArgumentError, "Value passed to Generator function should be of #{types}. #{type_name(val)} given."
+        elsif val == true && (kind.nil? || kind == :numeric || kind == :integer)
+          return Types::BOOL.from_i(1)
+        elsif val == false && (kind.nil? || kind == :numeric || kind == :integer)
+          return Types::BOOL.from_i(0)
+        elsif check_decimal(kind) || (val.kind_of?(::Float) && (kind.nil? || kind == :numeric))
+          return (klass || Types::FLOAT).from_f(val.to_f)
+        elsif kind == :integer || kind == :numeric || (kind.nil? && val.kind_of?(Numeric))
+          return (klass || Types::INT).from_i(val.to_i)
+        elsif val.kind_of?(String) && (kind.nil? || kind == :pointer || kind == :array)
+          str = @library.string(val.to_s)
+          return (!type.nil? && str.type != type) ? @builder.bit_cast(str, type) : str
+        elsif kind == :array || (kind.nil? && val.kind_of?(Array))
+          type ||= convert(val.to_a.first).type
+          return LLVM::ConstantArray.const(type, val.to_a.map{|elm| convert(elm, type)})
         end
+        types = hint.nil? ? "LLVM::Value, Numeric, Array, String, or True/False/Nil" : "#{type_name(hint)}"
+        raise ArgumentError, "Value passed to Generator function should be a #{types}. #{type_name(val)} given."
+      end
+      
+      def check_decimal(kind)
+        case kind
+        when :decimal, :float, :double, :x86_fp80, :fp128, :ppc_fp128
+          return true
+        end
+        return false
       end
       
       def validate_type(type)
-        type = LLVM::Type(type)
-        unless type.kind_of?(LLVM::Type)
-          raise ArgumentError, "Type passed to Generator function must be of LLVM::Type. #{type_name(type)} given."
+        ntype = LLVM::Type(type)
+        unless ntype.kind_of?(LLVM::Type)
+          raise ArgumentError, "Type passed to Generator function must be of LLVM::Type. #{type.class.name} given."
         end
-        return type
+        return ntype
       end
       
       def validate_pointer(ptr, message)
         unless ptr.kind_of?(LLVM::Value) && ptr.type.kind == :pointer
           raise ArgumentError, "#{message} #{type_name(ptr)} given."
         end
+        return ptr
       end
     
       def type_name(obj)
@@ -838,9 +827,13 @@ module LLVM
           if kind == :pointer
             kind = type.element_type.kind while kind == :pointer
             return "#{kind.to_s.capitalize} pointer"
+          elsif kind == :integer
+            return LLVM.const_get("Int#{type.width}".to_sym).name
           else
             return kind.to_s.capitalize
           end
+        elsif obj.kind_of?(Symbol)
+          return obj.to_s.capitalize
         else
           return obj.class.name
         end
@@ -850,27 +843,25 @@ module LLVM
         case num.type.kind
         when :integer
           if signed
-            @builder.__send__(meths[0], num, arg)
+            @builder.__send__(meths[0].to_sym, num, arg)
           else
-            @builder.__send__(meths[1], num, arg)
+            @builder.__send__(meths[1].to_sym, num, arg)
           end
         when :float, :double, :x86_fp80, :fp128, :ppc_fp128
-          @builder.__send__(meths[2], num, arg)
-        else
-          raise ArgumentError, "Value passed to #{meths[0].to_s} is not Numeric."
+          @builder.__send__(meths[2].to_sym, num, arg)
         end
       end
       
       def numeric_cast(casts, num, type)
-        numeric_call([casts[0], nil, casts[1]], convert(num), validate_type(type))
+        numeric_call([casts[0], nil, casts[1]], convert(num, :numeric), validate_type(type))
       end
       
-      def numeric_operation(meth, lhs, rhs, signed=true)
+      def numeric_operation(meth, lhs, rhs, signed=nil)
         name = meth.to_s
-        val = convert(lhs)
-        meths = [meth, "u#{name}".to_sym, "f#{name}".to_sym]
-        numeric_call(meths, val, convert(rhs, val.type), signed)
-      end 
+        val = convert(lhs, :numeric)
+        meths = [signed.nil? ? meth : "s#{name}", "u#{name}", "f#{name}"]
+        numeric_call(meths, val, convert(rhs, val.type), signed.nil? ? true : signed)
+      end
     end
   end
 end

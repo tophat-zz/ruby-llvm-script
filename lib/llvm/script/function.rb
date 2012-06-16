@@ -102,7 +102,7 @@ module LLVM
       def setup_return
         return if @generator.nil?
         return unless @return_block.nil?
-        @return_block = @raw.basic_blocks.append("return")
+        @return_block = add_block("return")
         builder = LLVM::Builder.new
         instruction = @generator.start_block.instructions.first
         instruction ? builder.position_before(instruction) : builder.position_at_end(@generator.start_block)

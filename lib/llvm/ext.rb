@@ -31,4 +31,15 @@ module LLVM
       C.delete_basic_block(self)
     end  
   end
+  
+  def self.Type(ty)
+    case ty
+    when LLVM::Type 
+      return ty
+    when LLVM::Value, Class
+      return ty.type
+    else 
+      return nil
+    end
+  end
 end

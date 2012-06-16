@@ -11,6 +11,7 @@ task :flog do
   threshold = 130
     
   bad_methods = flog.totals.select do |name, score|
+    next if name == "LLVM::Script::Generator#convert"
     score > threshold
   end
   
@@ -26,15 +27,15 @@ end
  
 desc "Analyze code duplication"
 task :flay do
-  threshold = 30
+  threshold = 32.5
   flay = Flay.new({:fuzzy => false, :verbose => false, :mass => threshold})
   flay.process(*Flay.expand_dirs_to_files(['lib'])) 
   
   if flay.masses.size > 0 
     flay.report
-    puts "\n#{flay.masses.size} chunks of code have a mass > #{threshold*2}"
+    puts "\n#{flay.masses.size} chunks of code have a mass > #{(threshold*2).to_i}"
   else
-    puts "No chunks of code have a mass > #{threshold*2}"
+    puts "No chunks of code have a mass > #{(threshold*2).to_i}"
   end
 end
 
