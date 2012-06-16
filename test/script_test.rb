@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 begin
   require "ruby-debug"
 rescue LoadError
-  # Ignore ruby-debug is case it's not installed
+  # Ignore ruby-debug in case it's not installed
 end
 
 require 'llvm/script'
@@ -34,6 +34,6 @@ class MiniTest::Unit::TestCase
     tries.downto(1) do 
       results.push(yield)
     end
-    assert results.uniq.length > uniq, "Expected #{results.inspect} to have more than #{uniq} unique value."
+    assert results.uniq.length > uniq, "Expected #{results.inspect} to have more than #{uniq} unique value(s)."
   end
 end

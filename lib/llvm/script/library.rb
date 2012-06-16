@@ -1,3 +1,5 @@
+require 'securerandom'
+
 module LLVM
   module Script
     # A non-executable container of functions, macros, and globals.
@@ -77,6 +79,16 @@ module LLVM
       def to_ptr
         @module.to_ptr
       end
+      
+      # Generates a Uuid (Universally unique identifier).
+      # @return [String] The uuid.
+      def make_uuid
+        ary = SecureRandom.random_bytes(16).unpack("NnnnnN")
+        ary[2] = (ary[2] & 0x0fff) | 0x4000
+        ary[3] = (ary[3] & 0x3fff) | 0x8000
+        "%08x%04x%04x%04x%04x%08x" % ary
+      end
+      private :make_uuid
       
       # Prints the library's LLVM IR to $stdout.
       def dump
