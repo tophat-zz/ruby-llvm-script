@@ -356,18 +356,6 @@ class TestGenerator < MiniTest::Unit::TestCase
       nvec = shuffle([1, 2, 3], [4, 5, 6], [5, 2, 3, 1, 4, 0])
       add extract(nvec, 1), extract(nvec, 4)
     }
-    assert_random do 
-      exec do 
-        nvec = shuffle([1, 2, 3], [4, 5, 6], 2)
-        add extract(nvec, 0), extract(nvec, 1)
-      end
-    end
-    assert_random do 
-      exec do 
-        nvec = shuffle([1, 2, 3], [4, 5, 6])
-        add extract(nvec, 2), extract(nvec, 5)
-      end
-    end
   end
   
   def test_invert

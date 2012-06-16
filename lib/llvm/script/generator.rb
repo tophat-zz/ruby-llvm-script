@@ -192,7 +192,7 @@ module LLVM
       # Logically shifts the bits of the given integer the given amount to the right, replacing 
       # those bits with 0. The equivalent in Ruby is as follows, unless overflow occurs:
       # Positive Number:: <tt>int / 2 ** bits</tt>  
-      # Negative Number:: <tt>(abs(MIN) / 2 ** (bits-1)) - (int / 2 ** bits)</tt>
+      # Negative Number:: <tt>abs(MIN) / 2 ** (bits-1) - int / 2 ** bits</tt>
       # *MIN*: The minimum value of a integer for the type of the given integer.
       # @param (see #ashr)
       # @return (see #ashr)
@@ -437,18 +437,11 @@ module LLVM
       #   shuffle([1, 2, 3], [4, 5, 6], [5, 4, 3, 2, 1, 0]) # => Vector:(6, 5, 4, 3, 2, 1)
       # @param [LLVM::Value, Array] lvec A vector to shuffle.
       # @param [LLVM::Value, Array] rvec A vector of the same type as +lvec+ to shuffle +lvec+ with.
-      # @param [LLVM::Value, Array, Integer] mask A vector of integers specifying how the two vectors ought to 
-      #   be shuffled. If this is an integer or nil, the vectors will be shuffled together randomly and the resulting
-      #   vector will be the length of the the given integer or, if nil, both vectors combined.
+      # @param [LLVM::Value, Array] mask A vector of integers specifying how the two vectors ought to be shuffled.
       # @return [LLVM::Instruction] The resulting shuffled vector.
       def shuffle(lvec, rvec, mask=nil)
         lvec = convert(lvec, :vector)
-        if mask.is_a?(Numeric) || mask.nil?
-          size = LLVM::C.get_vector_size(lvec.type) * 2
-          mask = (0...size).to_a.shuffle.slice(0, mask.nil? ? size : mask.to_i)
-        end
-        mask = convert(mask, :vector)
-        @builder.shuffle_vector(lvec, convert(rvec, lvec.type), mask)
+        @builder.shuffle_vector(lvec, convert(rvec, lvec.type), mask = convert(mask, :vector))
       end
       
       # Inverts the given integer, equivalent to <tt>~num</tt> in C. This returns what is 
