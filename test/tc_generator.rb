@@ -316,14 +316,22 @@ class TestGenerator < MiniTest::Unit::TestCase
     assert_raises(ArgumentError) { @gen.gep("Not a pointer") }
   end
   
-  def test_gev_and_sep
+  def test_gev
     assert_equal 58, exec {
       struct = alloca(LLVM::Struct(LLVM::Int))
       sep(struct, 0, 0, 58.5)
       gev(struct, 0, 0)
     }
-    assert_raises(ArgumentError) { @gen.sep("Not a pointer") }
     assert_raises(ArgumentError) { @gen.gev("Not a pointer") }
+  end
+  
+  def test_sep
+    assert_equal 21, exec {
+      struct = alloca(LLVM::Struct(LLVM::Int))
+      ptr = sep(struct, 0, 0, 21.8)
+      load(ptr)
+    }
+    assert_raises(ArgumentError) { @gen.sep("Not a pointer") }
   end
   
   def test_insert

@@ -53,9 +53,9 @@ module LLVM
       # @param [LLVM::Value, LLVM::Script::Function, String, Symbol] callable The value to call.
       #   If a String or Symbol, tries to call a function or macro of the Generator's library with
       #   the given name. If a LLVM::Value or LLVM::Script::Function, calls it directly.
-      # @param [List<Values>] args A list of values (LLVM::Values or Ruby equivalents) to pass to
+      # @param [List<Object(s)>] args A list of values (LLVM::Values or Ruby equivalents) to pass to
       #   the callable.
-      # @return [Object] The return value of the function (always a LLVM::Value) or macro (could be anything).
+      # @return [Object] The return value of the function (always a LLVM::Instruction) or macro (could be anything).
       def call(callable, *args)
         if callable.is_a?(String) || callable.is_a?(Symbol)
           proc = @library.macros(true)[callable.to_sym]
@@ -88,8 +88,8 @@ module LLVM
       end
       
       # Changes a numeric's sign (positive to negative, negative to positive).
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] num The numeric to change sign.
-      # @return [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] The resulting numeric of the opposite sign.
+      # @param [LLVM::Value, Numeric] num The numeric to change sign.
+      # @return [LLVM::Instruction] The resulting numeric of the opposite sign.
       def neg(num)
         val = convert(num, :numeric)
         sub(convert(0, val.type), val)
@@ -97,8 +97,8 @@ module LLVM
     
       # Increments the numeric pointed to by a pointer by the given amount.
       # @param [LLVM::Value] ptr The numeric pointer to increment.
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] amount The amount to add. 
-      # @return [LLVM::Value] The newly incremented numeric pointer.
+      # @param [LLVM::Value, Numeric] amount The amount to add. 
+      # @return [LLVM::Instruction] The newly incremented numeric pointer.
       def inc(ptr, amount=1)
         validate_pointer(ptr, "The inc function can only increment pointers.")
         val = @builder.load(ptr)
@@ -108,8 +108,8 @@ module LLVM
     
       # Decrements the numeric pointed to by a pointer by the given amount.
       # @param [LLVM::Value] ptr The numeric pointer to decrement.
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] amount The amount to subtract.
-      # @return [LLVM::Value] The newly decremented numeric pointer.
+      # @param [LLVM::Value, Numeric] amount The amount to subtract.
+      # @return [LLVM::Instruction] The newly decremented numeric pointer.
       def dec(ptr, amount=1)
         validate_pointer(ptr, "The dec function can only decrement pointers.")
         val = @builder.load(ptr)
@@ -118,34 +118,34 @@ module LLVM
       end
     
       # Adds the two numeric values together (two integers or two floats). (<tt>lhs + rhs</tt>)
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] lhs The first numeric.
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] rhs The second numeric.
-      # @return [LLVM::ConstantInt, LLVM::ConstantReal]  The numeric sum.
+      # @param [LLVM::Value, Numeric] lhs The first numeric.
+      # @param [LLVM::Value, Numeric] rhs The second numeric.
+      # @return [LLVM::Instruction]  The numeric sum.
       def add(lhs, rhs)
         numeric_operation(:add, lhs, rhs)
       end
     
       # Subtracts the second numeric from the first (two integers or two floats). (<tt>minuend - subtrahend</tt>)
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] minuend The numeric to be subtracted from.
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] subtrahend The numeric to subtract.
-      # @return [LLVM::ConstantInt, LLVM::ConstantReal]  The numeric difference.
+      # @param [LLVM::Value, Numeric] minuend The numeric to be subtracted from.
+      # @param [LLVM::Value, Numeric] subtrahend The numeric to subtract.
+      # @return [LLVM::Instruction]  The numeric difference.
       def sub(minuend, subtrahend)
         numeric_operation(:sub, minuend, subtrahend)
       end
     
       # Multiplys two numerics together (two integers or two floats). (<tt>lhs * rhs</tt>)
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] lhs The first numeric.
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] rhs The second numeric.
-      # @return [LLVM::ConstantInt, LLVM::ConstantReal]  The numeric product.
+      # @param [LLVM::Value, Numeric] lhs The first numeric.
+      # @param [LLVM::Value, Numeric] rhs The second numeric.
+      # @return [LLVM::Instruction]  The numeric product.
       def mul(lhs, rhs)
         numeric_operation(:mul, lhs, rhs)
       end
       
       # Divides the first numeric by the second (two integers or two floats). (<tt>dividend / divisor</tt>)
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] dividend The numeric to be divided.
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] divisor The numeric to divide by.
+      # @param [LLVM::Value, Numeric] dividend The numeric to be divided.
+      # @param [LLVM::Value, Numeric] divisor The numeric to divide by.
       # @param [Boolean] signed Whether any of numerics can be negative.
-      # @return [LLVM::ConstantInt, LLVM::ConstantReal]  The numeric quotient.
+      # @return [LLVM::Instruction]  The numeric quotient.
       # @raise [ZeroDivisionError] Raised if the divisor is 0.
       def div(dividend, divisor, signed=true)
         val = convert(divisor, :numeric)
@@ -155,10 +155,8 @@ module LLVM
       
       # Finds the remainder of the first numeric divided by the second (two integers or two floats).
       # (<tt>dividend.remainder(divisor)</tt>)
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] dividend The numeric to be divided.
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] divisor The numeric to divide by.
-      # @param [Boolean] signed Whether any of numerics can be negative.
-      # @return [LLVM::ConstantInt, LLVM::ConstantReal]  The numeric remainder.
+      # @param (see #div)
+      # @return [LLVM::Instruction]  The numeric remainder.
       # @raise [ZeroDivisionError] Raised if the divisor is 0.
       def rem(dividend, divisor, signed=true)
         val = convert(divisor, :numeric)
@@ -168,9 +166,9 @@ module LLVM
     
       # Shifts the bits of the given integer the given amount to the left, replacing those bits with 0. 
       # (<tt>int * (2 ** bits)</tt> or <tt>int << bits</tt> in C, unless overflow occurs)
-      # @param [LLVM::ConstantInt, Integer] int The integer to shift left.
-      # @param [LLVM::ConstantInt, Integer] bits The the number of bits to shift left.
-      # @return [LLVM::ConstantInt] The resulting integer.
+      # @param [LLVM::Value, Integer] int The integer to shift left.
+      # @param [LLVM::Value, Integer] bits The the number of bits to shift left.
+      # @return [LLVM::Instruction] The resulting integer.
       # @see http://llvm.org/docs/LangRef.html#i_shl
       # @see http://en.wikipedia.org/wiki/Bitwise_operation#Bit_shifts
       def shl(int, bits)
@@ -181,9 +179,9 @@ module LLVM
       # Arithmetically shifts the bits of the given integer the given amount to the right, replacing 
       # those bits with the bit value of the sign. (<tt>int / 2 ** bits</tt> or <tt>int >> bits</tt> 
       # in C, unless overflow occurs)
-      # @param [LLVM::ConstantInt, Integer] int The integer to shift right.
-      # @param [LLVM::ConstantInt, Integer] bits The the number of bits to shift right.
-      # @return [LLVM::ConstantInt] The resulting integer.
+      # @param [LLVM::Value, Integer] int The integer to shift right.
+      # @param [LLVM::Value, Integer] bits The the number of bits to shift right.
+      # @return [LLVM::Instruction] The resulting integer.
       # @see http://llvm.org/docs/LangRef.html#i_ashr
       # @see http://en.wikipedia.org/wiki/Arithmetic_shift
       def ashr(int, bits)
@@ -196,9 +194,8 @@ module LLVM
       # Positive Number:: <tt>int / 2 ** bits</tt>  
       # Negative Number:: <tt>(abs(MIN) / 2 ** (bits-1)) - (int / 2 ** bits)</tt>
       # *MIN*: The minimum value of a integer for the type of the given integer.
-      # @param [LLVM::ConstantInt, Integer] int The integer to shift right.
-      # @param [LLVM::ConstantInt, Integer] bits The the number of bits to shift right.
-      # @return [LLVM::ConstantInt] The resulting integer.
+      # @param (see #ashr)
+      # @return (see #ashr)
       # @see http://llvm.org/docs/LangRef.html#i_lshr
       # @see http://en.wikipedia.org/wiki/Logical_shift
       def lshr(int, bits)
@@ -207,9 +204,9 @@ module LLVM
       end
       
       # Converts the given value into the given type without modifying bits.
-      # @param [Value] val The value (an LLVM::Value or Ruby equivalent) to change type.
+      # @param [Object] val The value (an LLVM::Value or Ruby equivalent) to change type.
       # @param [LLVM::Type] type The type to change the value into.
-      # @return [LLVM::Value] The resulting value of the new type.      
+      # @return [LLVM::Instruction] The resulting value of the new type.      
       def bitcast(val, type)
         @builder.bit_cast(convert(val), validate_type(type))
       end
@@ -217,9 +214,9 @@ module LLVM
       # Truncates an integer of a bigger type into an integer of a smaller one and floats of a 
       # larger type into floats of a smaller type. Some negative numbers and numbers that exceed the 
       # max size of the smaller type will have their values changed.
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] num The numeric to shrink.
+      # @param [LLVM::Value, Numeric] num The numeric to shrink.
       # @param [LLVM::Type] type The smaller type to convert the numeric into.
-      # @return [LLVM::Value] The resulting numeric of the new type.
+      # @return [LLVM::Instruction] The resulting numeric of the new type.
       def trunc(num, type)
         numeric_cast([:trunc, :fp_trunc], num, type)
       end
@@ -227,9 +224,9 @@ module LLVM
       # Converts an integer of a smaller type into an integer of a bigger one by copying the
       # value of the sign bit. This will result in booleans having their values changed. Also 
       # converts floats of a smaller type into floats of a larger type.
-      # @param [LLVM::ConstantInt, LLVM::ConstantReal, Numeric] num The numeric to grow.
+      # @param [LLVM::Value, Numeric] num The numeric to grow.
       # @param [LLVM::Type] type The bigger type to convert the numeric into.
-      # @return [LLVM::Value] The resulting numeric of the new type.
+      # @return [LLVM::Instruction] The resulting numeric of the new type.
       # @see #zext
       def sext(num, type)
         numeric_cast([:sext, :fp_ext], num, type)
@@ -246,10 +243,10 @@ module LLVM
       end
       
       # Converts a float to an integer.
-      # @param [LLVM::ConstantReal, Float] float The float to convert.
+      # @param [LLVM::Value, Float] float The float to convert.
       # @param [LLVM::Type] type The type of integer to convert the float into.
       # @param [Boolean] signed Whether the integer can be negative.
-      # @return [LLVM::ConstantInteger] The resulting integer.
+      # @return [LLVM::Instruction] The resulting integer.
       def ftoi(float, type, signed=true)
         val = convert(float, :decimal)
         type = validate_type(type)
@@ -262,10 +259,10 @@ module LLVM
       alias f2i ftoi
       
       # Converts a integer to float.
-      # @param [LLVM::ConstantInt, Integer] int The integer to convert.
+      # @param [LLVM::Value, Integer] int The integer to convert.
       # @param [LLVM::Type] type The type of float to convert the integer into.
       # @param [Boolean] signed Whether the integer can be negative.
-      # @return [LLVM::ConstantReal] The resulting float.
+      # @return [LLVM::Instruction] The resulting float.
       def itof(int, type, signed=true)
         val = convert(int, :integer)
         type = validate_type(type)
@@ -280,16 +277,16 @@ module LLVM
       # Converts a pointer to an integer, truncating or zero extending as necessary.
       # @param [LLVM::Value] ptr The pointer to convert.
       # @param [LLVM::Type] type The type of integer to convert the pointer into.
-      # @return [LLVM::ConstantInteger] The resulting integer.
+      # @return [LLVM::Instruction] The resulting integer.
       def ptrtoint(ptr, type)
         @builder.ptr2int(validate_pointer(ptr, "The ptr2int function requires a pointer."), validate_type(type))
       end
       alias ptr2int ptrtoint
       
       # Converts a integer to an pointer.
-      # @param [LLVM::Value] int The integer to convert.
+      # @param [LLVM::Value, Integer] int The integer to convert.
       # @param [LLVM::Type] type The type of pointer to convert the integer into.
-      # @return [LLVM::Value] The resulting pointer.
+      # @return [LLVM::Instruction] The resulting pointer.
       def inttoptr(int, type)
         @builder.int2ptr(convert(int, :integer), validate_type(type))
       end
@@ -298,7 +295,7 @@ module LLVM
       # Gets the integer difference between two pointers.
       # @param [LLVM::Value] lptr The first pointer.
       # @param [LLVM::Value] rptr The second pointer of the same type as the first.
-      # @return [LLVM::ConstantInt] The resulting integer.
+      # @return [LLVM::Instruction] The resulting integer.
       def diff(lptr, rptr)
         lhs = validate_pointer(lptr, "First value passed to diff is not a pointer.")
         rhs = validate_pointer(rptr, "Second value passed to diff is not a pointer.")
@@ -307,9 +304,9 @@ module LLVM
       
       # Casts an integer, float, or pointer to a different size (ex. short to long, double to float, 
       # int pointer to array pointer, etc.).
-      # @param [Value] val The value (an LLVM::Value or Ruby equivalent) to change size.
+      # @param [Object] val The value (an LLVM::Value or Ruby equivalent) to change size.
       # @param [LLVM::Type] type The different sized type to change the value into.
-      # @return [LLVM::Value] The resulting value of the new size.
+      # @return [LLVM::Instruction] The resulting value of the new size.
       def cast(val, type)
         val = convert(val)
         kind = val.type.kind
@@ -327,8 +324,8 @@ module LLVM
       
       # Allocates a pointer of the given type and size. Stack allocation.
       # @param [LLVM::Type] type The type of value this pointer points to.
-      # @param [LLVM::ConstantInt, Integer] size If the pointer is an array, the size of it.
-      # @return [LLVM::Value] The allocated pointer.
+      # @param [LLVM::Value, Integer] size If the pointer is an array, the size of it.
+      # @return [LLVM::Instruction] The allocated pointer.
       def alloca(type, size=nil)
         type = validate_type(type)
         if size
@@ -340,8 +337,8 @@ module LLVM
 
       # Allocates a pointer of the given type and size. Heap allocation.
       # @param [LLVM::Type] type The type of value this pointer points to.
-      # @param [LLVM::ConstantInt, Integer] size If the pointer is an array, the size of it.
-      # @return [LLVM::Value] The allocated pointer.
+      # @param [LLVM::Value, Integer] size If the pointer is an array, the size of it.
+      # @return [LLVM::Instruction] The allocated pointer.
       def malloc(type, size=nil)
         type = validate_type(type)
         if size
@@ -353,30 +350,32 @@ module LLVM
       
       # Frees the given pointer (only needs to be called for malloc'd pointers).
       # @param [LLVM::Value] ptr The pointer to free.
+      # @return [LLVM::Instruction] The free instruction.
       def free(ptr)
         @builder.free(validate_pointer(ptr, "The free function can only free pointers."))
       end
     
       # Gets the value a pointer points to.
       # @param [LLVM::Value] ptr The pointer to load.
-      # @return [LLVM::Value] The value the pointer points to.
+      # @return [LLVM::Instruction] The value the pointer points to.
       def load(ptr)
         @builder.load(validate_pointer(ptr, "The load function can only load pointers."))
       end
     
       # Stores a value into a pointer (makes it point to this value).
-      # @param [Value] val The LLVM::Value or Ruby equivalent to store in the given pointer.
+      # @param [Object] val The LLVM::Value or Ruby equivalent to store in the given pointer.
       # @param [LLVM::Value] ptr The pointer to store the value in.
+      # @return [LLVM::Instruction] The store instruction.
       def store(val, ptr)
         validate_pointer(ptr, "The store function can only store values in pointers.")
         @builder.store(convert(val, ptr.type.element_type), ptr)
       end
     
-      # Gets a pointer to an element at the given index of a pointer to an aggregate (a struct, array, or vector). 
+      # Gets a pointer to an element at the given index of a pointer to an aggregate (a struct or array).
       # @param [LLVM::Value] ptr A pointer to the aggregate to index.
-      # @param [List<LLVM::ConstantInt, Integer>] indices A list of integers that point to the exact index of 
+      # @param [List<LLVM::Value, Integer>] indices A list of integers that point to the exact index of 
       #   the desired element.
-      # @return [LLVM::Value] A pointer to the value at the given index.
+      # @return [LLVM::Instruction] A pointer to the value at the given index.
       # @see http://llvm.org/docs/GetElementPtr.html
       def gep(ptr, *indices)
         indices = indices.flatten.map { |idx| index = convert(idx, :integer) }
@@ -385,27 +384,30 @@ module LLVM
     
       # Same as {#gep}, but also loads the pointer after finding it.
       # @param (see #gep)
-      # @return [LLVM::Value] The value of element at the given index.
+      # @return [LLVM::Instruction] The value of element at the given index.
       def gev(obj, *indices)
         @builder.load(gep(obj, *indices))
       end
     
-      # Sets the element at the given index of a pointer to an aggregate (a struct, array, or vector). 
+      # Sets the element at the given index of a pointer to an aggregate (a struct or array). 
       # @param [LLVM::Value] ptr A pointer to the aggregate to index.
-      # @param [List<LLVM::ConstantInt, Integer> and a Value] args A list of integers that point to the exact 
+      # @param [List<LLVM::Value, Integer> and a Object] args A list of integers that point to the exact 
       #   index of the desired element to change and the value (a LLVM::Value or the Ruby equivalent) to change it to.
+      # @return [LLVM::Value] A pointer to the changed element.
       def sep(ptr, *args)
         val = args.pop
         element = gep(ptr, *args)
         @builder.store(convert(val, element.type.element_type), element)
+        return element
       end
       
       # Inserts (adds or replaces) the given value at the given index of a aggregate or vector. 
-      # @param [Value] collection The vector or aggregate (or the Ruby equivalent) to insert into.
-      # @param [Value] element The value (a LLVM::Value or the Ruby equivalent) to insert.
-      # @param [LLVM::ConstantInt, Integer] index The index to insert at. This can only be a LLVM::Value
+      # @param [Object] collection The vector or aggregate (or the Ruby equivalent) to insert into.
+      # @param [Object] element The value (a LLVM::Value or the Ruby equivalent) to insert.
+      # @param [LLVM::Value, Integer] index The index to insert at. This can only be a LLVM::Value
       #   if the given collection is a vector, otherwise it must be a Ruby integer (or something that responds 
       #   to #to_i).
+      # @return [LLVM::Instruction] The insert instruction.
       def insert(collection, element, index)
         val = convert(collection)
         if val.type.kind == :vector
@@ -417,10 +419,10 @@ module LLVM
       
       # Extracts a value from the given index of a aggregate or vector. 
       # @param [Value] collection The vector or aggregate (or the Ruby equivalent) to extract from.
-      # @param [LLVM::ConstantInt, Integer] index The index to extract the value from. This can only be a 
+      # @param [LLVM::Value, Integer] index The index to extract the value from. This can only be a 
       #   LLVM::Value if the given collection is a vector, otherwise it must be a Ruby integer (or something 
       #   that responds to #to_i).
-      # @return [LLVM::Value] The extracted element.
+      # @return [LLVM::Instruction] The extracted element.
       def extract(collection, index)
         val = convert(collection)
         if val.type.kind == :vector
@@ -433,12 +435,12 @@ module LLVM
       # Shuffles the two vectors together using the given mask.
       # @example
       #   shuffle([1, 2, 3], [4, 5, 6], [5, 4, 3, 2, 1, 0]) # => Vector:(6, 5, 4, 3, 2, 1)
-      # @param [LLVM::ConstantVector, Array] lvec A vector to shuffle.
-      # @param [LLVM::ConstantVector, Array] rvec A vector of the same type as +lvec+ to shuffle +lvec+ with.
-      # @param [LLVM::ConstantVector, Array, Integer] mask A vector of integers specifying how the two vectors ought to 
+      # @param [LLVM::Value, Array] lvec A vector to shuffle.
+      # @param [LLVM::Value, Array] rvec A vector of the same type as +lvec+ to shuffle +lvec+ with.
+      # @param [LLVM::Value, Array, Integer] mask A vector of integers specifying how the two vectors ought to 
       #   be shuffled. If this is an integer or nil, the vectors will be shuffled together randomly and the resulting
       #   vector will be the length of the the given integer or, if nil, both vectors combined.
-      # @return [LLVM::ConstanVector] The resulting shuffled vector.
+      # @return [LLVM::Instruction] The resulting shuffled vector.
       def shuffle(lvec, rvec, mask=nil)
         lvec = convert(lvec, :vector)
         if mask.is_a?(Numeric) || mask.nil?
@@ -451,15 +453,15 @@ module LLVM
       
       # Inverts the given integer, equivalent to <tt>~num</tt> in C. This returns what is 
       # called the {http://en.wikipedia.org/wiki/Ones%27_complement one's complement}.
-      # @param [LLVM::ConstantInt, Integer, Boolean] num The integer to invert.
-      # @return [LLVM::ConstantInt] The resulting inverted integer.
+      # @param [LLVM::Value, Integer, Boolean] num The integer to invert.
+      # @return [LLVM::Instruction] The resulting inverted integer.
       def invert(num)
         @builder.not(convert(num, :integer))
       end
       
       # Checks if the given value is null.
       # @param [LLVM::Value] val The value to test.
-      # @return [LLVM::ConstantInt] The resulting one-bit integer boolean (0 or 1).
+      # @return [LLVM::Instruction] The resulting one-bit integer boolean (0 or 1).
       def is_null(val)
         unless val.kind_of?(LLVM::Value)
           raise ArgumentError, "Value passed to is_null must be of LLVM::Value. #{type_name(val)} given."
@@ -469,7 +471,7 @@ module LLVM
       
       # Checks if the given value is NOT null.
       # @param [LLVM::Value] val The value to test.
-      # @return [LLVM::ConstantInt] The resulting one-bit integer boolean (0 or 1).
+      # @return [LLVM::Instruction] The resulting one-bit integer boolean (0 or 1).
       def is_not_null(val)
         unless val.kind_of?(LLVM::Value)
           raise ArgumentError, "Value passed to is_not_null must be of LLVM::Value. #{type_name(val)} given."
@@ -518,7 +520,7 @@ module LLVM
       # @param [Symbol] op One of the above operation symbols.
       # @param [LLVM::Value] lhs The first value (numeric or pointer).
       # @param [LLVM::Value] rhs A second value of the same type as the first.
-      # @return [LLVM::ConstantInt] The resulting one-bit integer boolean (0 or 1).
+      # @return [LLVM::Instruction] The resulting one-bit integer boolean (0 or 1).
       def opr(op, lhs, rhs)
         lhs = convert(lhs, :numeric)
         rhs = convert(rhs, lhs.type)
@@ -561,7 +563,7 @@ module LLVM
       # @param [LLVM::Value] crt If the condition is true (1), this is returned.
       # @param [LLVM::Value] wrg If the condition is false (0), this is returned.
       #   This must be of the same kind as +crt+.
-      # @return [LLVM::Value] The resulting value, either +crt+ or +wrg+.
+      # @return [LLVM::Instruction] The resulting value, either +crt+ or +wrg+.
       def select(cond, crt, wrg)
         val = convert(crt)
         @builder.select(convert(cond, Types::BOOL), val, convert(wrg, val.type))
@@ -582,7 +584,7 @@ module LLVM
       #   }, proc {
       #     printf("You entered %d, which is not 0! Good boy!", num)
       #   }
-      # @param [LLVM::ConstantInt, Boolean] cond The condition, a 0 or 1 value.
+      # @param [LLVM::Value, Boolean] cond The condition, a 0 or 1 value.
       # @param [Generator, Proc] crt If the condition is true (1), this executes. 
       #   This is only not needed when a block is given.
       # @param [Generator, Proc] wrg If the condition is false (0), this executes.
@@ -643,7 +645,7 @@ module LLVM
       #       ret
       #     end
       #   end
-      # @param [Array<Value>] vars A list of values (LLVM::Value or the Ruby equivalent) to create pointers of.
+      # @param [Array<Object>] vars A list of values (LLVM::Value or the Ruby equivalent) to create pointers of.
       #   It can also just be a single value.
       # @param [Proc] cmp A proc that returns (literally, not using any form of +ret+ or +return+) a 0 or 1 boolean.
       #   If this is not the given, the loop becomes infinte unless broken. The proc is passed the current values of +vars+
@@ -717,7 +719,7 @@ module LLVM
       end
     
       # Returns the given value, creating a return block if there is not one already.
-      # @param [Value] val The LLVM::Value or Ruby equivalent to return. Either returns void
+      # @param [Object] val The LLVM::Value or Ruby equivalent to return. Either returns void
       #   (if a the function's return type is void) or just branches to the return block if nil.
       def ret(val=nil)
         return if @finished
@@ -733,7 +735,7 @@ module LLVM
     
       # Returns the given value if +cond+ is true (1), creating a return block if not one already.
       # @param [LLVM::Value, Boolean] cond The condition, a 0 or 1 value.
-      # @param [Value] val The LLVM::Value or Ruby equivalent to return. Either returns void
+      # @param [Object] val The LLVM::Value or Ruby equivalent to return. Either returns void
       #   (if a the function's return type is void) or just branches to the return block if nil.
       # @param [LLVM::BasicBlock] blk An optional block to exit into if +cond+ is false.
       def cret(cond, val=nil, blk=nil)
@@ -751,22 +753,24 @@ module LLVM
       end
       
       # Returns the given value, without creating a return block.
-      # @param [Value] val The LLVM::Value or Ruby equivalent to return. Can only be nil if a
+      # @param [Object] val The LLVM::Value or Ruby equivalent to return. Can only be nil if a
       #   function's return type is void, otherwise raises an ArgumentError.
+      # @return [LLVM::Instruction] The return (+ret+) instruction.
       def sret(val=nil)
         return if @finished
         if @function.return_type == Types::VOID
-          @builder.ret_void
+          inst = @builder.ret_void
         else
           raise ArgumentError, "Value must be passed to non-void function simple return." if val.nil?
-          @builder.ret(convert(val, @function.return_type))
+          inst = @builder.ret(convert(val, @function.return_type))
         end
         self.finish
+        return inst
       end
     
       # Creates a return block and optionally stores the given value in the function's return value pointer,
       # but does not branch to the return block.
-      # @param [Value] val The optional LLVM::Value or Ruby equivalent to store in the function's return value. 
+      # @param [Object] val The optional LLVM::Value or Ruby equivalent to store in the function's return value.
       def pret(val=nil)
         return if @finished
         @function.setup_return
@@ -784,9 +788,11 @@ module LLVM
       # A terminator statement that tells LLVM that nothing can ever reach this position. This, for example,
       # can be placed after a conditional statement were both the then and else blocks return. This also calls 
       # {#finish} on the Generator, preventing a function from warning that there is no return at its end.
+      # @return [LLVM::Instruction] The unreachable instruction.
       def unreachable
-        @builder.unreachable
+        inst = @builder.unreachable
         self.finish
+        return inst
       end
     
       # Checks whether the Generator is finished, meaning {#finish} has been called.
@@ -806,7 +812,7 @@ module LLVM
       
       # Checks for unkown methods in the functions, macros, and globals of
       # the Generator's library and calls (for functions and macros) or returns (globals) 
-      # if one is found.
+      # it if one is found.
       def method_missing(sym, *args, &block)
         if @library.macros(true).include?(sym)
           call(sym, *args, &block)
