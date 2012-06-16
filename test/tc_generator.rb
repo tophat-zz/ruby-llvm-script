@@ -19,14 +19,14 @@ class TestGenerator < MiniTest::Unit::TestCase
       val = instance_eval(&block)
       sret(val) unless finished?
     end
-    jit ||= LLVM::JITCompiler.new(prog)
+    jit ||= LLVM::JITCompiler.new(prog.to_ptr)
     result = jit.run_function(func)
     type = LLVM::Type(type)
     return type.kind_of?(LLVM::IntType) ? (type.width == 1 ? result.to_b : result.to_i) : result.to_f(type)
   end
   def bexec(&block) exec(LLVM::Int1, &block) end
   def fexec(&block) exec(LLVM::Float, &block) end
-  def conv(func, val, type, *args) exec(type){ send(func, val, type, *args) } end
+  def conv(func, val, type, *args) exec(type){ __send__(func, val, type, *args) } end
   def comp(op, lhs, rhs) exec(LLVM::Int1){ opr(op, lhs, rhs) } end
   
   def test_args
@@ -375,6 +375,12 @@ class TestGenerator < MiniTest::Unit::TestCase
     assert_instance_of klass, block
   end
   
+  def test_select
+    assert_equal 8,  exec { select true,  8, 10 }
+    assert_equal 10, exec { select false, 8, 10 }
+    assert_equal 7,  exec { select "str", 4, 7  }
+  end
+  
   def test_cond
     refute bexec {
       cond false do
@@ -500,6 +506,12 @@ class TestGenerator < MiniTest::Unit::TestCase
   
   def test_return_block
     assert_equal @fun.return_block, @gen.return_block
+  end
+  
+  def test_unreachable
+    refute @gen.finished?
+    @gen.unreachable
+    assert @gen.finished?
   end
   
   def test_finish

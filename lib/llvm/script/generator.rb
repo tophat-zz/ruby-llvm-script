@@ -506,6 +506,17 @@ module LLVM
         gen.instance_eval(&proc)
         return gen
       end
+      
+      # Returns +crt+ if +cond+ is 1 or +wrg+ if +cond+ is 0.
+      # @param [LLVM::ConstantInt, Boolean] cond The condition, a 0 or 1 value..
+      # @param [LLVM::Value] crt If the condition is true (1), this is returned.
+      # @param [LLVM::Value] wrg If the condition is false (0), this is returned.
+      #   This must be of the same kind as +crt+.
+      # @return [LLVM::Value] The resulting value, either +crt+ or +wrg+.
+      def select(cond, crt, wrg)
+        val = convert(crt)
+        @builder.select(convert(cond, Types::BOOL), val, convert(wrg, val.type))
+      end
     
       # Creates a conditional (an if/then/else) statement.
       # @example Assuming
@@ -652,7 +663,7 @@ module LLVM
       # @param [LLVM::BasicBlock] block The block to branch to.
       def br(block)
         return if @finished
-        @builder.br(block)
+        @builder.br(block.to_ptr)
         self.finish
       end
     
@@ -681,7 +692,7 @@ module LLVM
         @function.setup_return
         @builder.store(convert(val, @function.return_type), @function.return_val) unless val.nil?
         cont = blk ? blk : @function.add_block("block")
-        @builder.cond(convert(cond, Types::BOOL), @function.return_block, cont)
+        @builder.cond(convert(cond, Types::BOOL), @function.return_block, cont.to_ptr)
         if blk
           self.finish
         else
@@ -720,6 +731,14 @@ module LLVM
       def return_block
         return @function.return_block
       end
+      
+      # A terminator statement that tells LLVM that nothing can ever reach this position. This, for example,
+      # can be placed after a conditional statement were both the then and else blocks return. This also calls 
+      # {#finish} on the Generator, preventing a function from warning that there is no return at its end.
+      def unreachable
+        @builder.unreachable
+        self.finish
+      end
     
       # Checks whether the Generator is finished, meaning {#finish} has been called.
       # @return [Boolean] A true/false value.
@@ -727,9 +746,9 @@ module LLVM
         return @finished
       end
     
-      # Finishes the Generator, meaning no more functions should be called. This
-      # is called internally in {#br}, {#ret}, and {#sret}. It is also called if a +blk+ or +exit+
-      # is provided for {#cret}, {#lp}, or {#cond}.
+      # Finishes the Generator, meaning that a terminator statement has been built and no more functions 
+      # should be called. This is called internally in {#br}, {#ret}, {#sret}, and {#unreachable}. It is 
+      # also called if a +blk+ or +exit+ is provided for {#cret}, {#lp}, or {#cond}.
       def finish
         return if @finished
         @builder.dispose
@@ -820,7 +839,7 @@ module LLVM
       end
     
       def type_name(obj)
-        return obj.name if obj.is_a?(Class)
+        return obj.name if obj.kind_of?(Class)
         type = LLVM::Type(obj)
         if type.kind_of?(LLVM::Type)
           kind = type.kind

@@ -24,14 +24,19 @@ module LLVM
           SecureRandom.uuid
         end
         
-        # Needed on Ruby 1.9.x to get the class of a BasicObject.
+        # Needed on Ruby 1.9.x to get the class of a ScriptObject.
         def class
           (class << self; self end).superclass
         end
         
-        # Needed on Ruby 1.9.x for instance_of testing of a BasicObject.
+        # Needed on Ruby 1.9.x for class testing of a ScriptObject.
         def instance_of?(klass)
           return self.class == klass
+        end
+        
+        # Needed on Ruby 1.9.x for ancestor testing of a ScriptObject.
+        def kind_of?(mod)
+          self.class.ancestors.include?(mod)
         end
         
         # On Ruby 1.9.x, tries to get unknown constants from Object.
