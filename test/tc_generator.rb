@@ -234,6 +234,31 @@ class TestGenerator < MiniTest::Unit::TestCase
     assert_raises(ArgumentError) { @gen.itof(50, "Not a type") }
   end
   
+  def test_ptrtoint_and_inttoptr
+    testcase = self
+    assert bexec {
+      ptr = alloca(LLVM::Int)
+      store(800, ptr)
+      int = ptrtoint(ptr, LLVM::Int64)
+      testcase.assert_equal LLVM::Int64.type, int.type
+      nptr = inttoptr(int, ptr.type)
+      testcase.assert_equal :pointer, nptr.type.kind
+      opr(:eq, load(ptr), load(nptr))
+    }
+    ptr = @gen.alloca(LLVM::Int)
+    assert_raises(ArgumentError) { @gen.ptrtoint(ptr, "Not a type") }
+    assert_raises(ArgumentError) { @gen.ptrtoint("Not a pointer", LLVM::Int) }
+    assert_raises(ArgumentError) { @gen.inttoptr(ptr, "Not a type") }
+  end
+  
+  def test_diff
+    assert_equal 1, exec(LLVM::Int64) {
+      ptr = alloca(LLVM::Int)
+      ptr2 = alloca(LLVM::Int)
+      diff(ptr, ptr2)
+    }
+  end
+  
   def test_cast
     assert_equal 12, conv(:cast, 12,   LLVM::Int64)
     assert_equal -8, conv(:cast, -8,   LLVM::Int64)
@@ -316,6 +341,25 @@ class TestGenerator < MiniTest::Unit::TestCase
   def test_extract
     assert_equal 7,  exec { extract([4, 7, 2], 1) }
     assert_equal 18, exec { extract(LLVM::ConstantVector.const([LLVM::Int(18), LLVM::Int(42)]), 0) }
+  end
+  
+  def test_shuffle
+    assert_equal 8, exec { 
+      nvec = shuffle([1, 2, 3], [4, 5, 6], [5, 2, 3, 1, 4, 0])
+      add extract(nvec, 1), extract(nvec, 4)
+    }
+    assert_random do 
+      exec do 
+        nvec = shuffle([1, 2, 3], [4, 5, 6], 2)
+        add extract(nvec, 0), extract(nvec, 1)
+      end
+    end
+    assert_random do 
+      exec do 
+        nvec = shuffle([1, 2, 3], [4, 5, 6])
+        add extract(nvec, 2), extract(nvec, 5)
+      end
+    end
   end
   
   def test_invert
@@ -547,6 +591,7 @@ class TestGenerator < MiniTest::Unit::TestCase
     assert_instance_of LLVM::Int,             convert(512)
     assert_instance_of LLVM::GlobalVariable,  convert("Test")
     assert_instance_of LLVM::ConstantArray,   convert([12, 4, 9])
+    assert_instance_of LLVM::ConstantVector,  convert([12, 4, 9], :vector)
     assert bexec { is_null(convert(nil, LLVM::Script::Types::CHARPTR)) }
     assert_raises(ArgumentError) { convert(Object.new) }
   end

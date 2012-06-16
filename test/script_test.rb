@@ -11,8 +11,7 @@ require "minitest/autorun"
 require 'tempfile'
 require 'mocha'
 
-class MiniTest::Unit::TestCase
-  
+class MiniTest::Unit::TestCase 
   def capture_stderr
     old = $stderr.dup
     file = Tempfile.new("log.txt")
@@ -30,4 +29,11 @@ class MiniTest::Unit::TestCase
     refute (out.empty? && err.empty?), "Expected stdout or stderr to not be silent."
   end
   
+  def assert_random(tries = 10, uniq = 1, msg = nil)
+    results = []
+    tries.downto(1) do 
+      results.push(yield)
+    end
+    assert results.uniq.length > uniq, "Expected #{results.inspect} to have more than #{uniq} unique value."
+  end
 end

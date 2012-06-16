@@ -259,6 +259,7 @@ module LLVM
           @builder.fp2ui(val, type)
         end
       end
+      alias f2i ftoi
       
       # Converts a integer to float.
       # @param [LLVM::ConstantInt, Integer] int The integer to convert.
@@ -273,6 +274,35 @@ module LLVM
         else
           @builder.ui2fp(val, type)
         end
+      end
+      alias i2f itof
+      
+      # Converts a pointer to an integer, truncating or zero extending as necessary.
+      # @param [LLVM::Value] ptr The pointer to convert.
+      # @param [LLVM::Type] type The type of integer to convert the pointer into.
+      # @return [LLVM::ConstantInteger] The resulting integer.
+      def ptrtoint(ptr, type)
+        @builder.ptr2int(validate_pointer(ptr, "The ptr2int function requires a pointer."), validate_type(type))
+      end
+      alias ptr2int ptrtoint
+      
+      # Converts a integer to an pointer.
+      # @param [LLVM::Value] int The integer to convert.
+      # @param [LLVM::Type] type The type of pointer to convert the integer into.
+      # @return [LLVM::Value] The resulting pointer.
+      def inttoptr(int, type)
+        @builder.int2ptr(convert(int, :integer), validate_type(type))
+      end
+      alias int2ptr inttoptr
+      
+      # Gets the integer difference between two pointers.
+      # @param [LLVM::Value] lptr The first pointer.
+      # @param [LLVM::Value] rptr The second pointer of the same type as the first.
+      # @return [LLVM::ConstantInt] The resulting integer.
+      def diff(lptr, rptr)
+        lhs = validate_pointer(lptr, "First value passed to diff is not a pointer.")
+        rhs = validate_pointer(rptr, "Second value passed to diff is not a pointer.")
+        Instruction.from_ptr(C.build_ptr_diff(@builder.to_ptr, lhs, rhs, ""))
       end
       
       # Casts an integer, float, or pointer to a different size (ex. short to long, double to float, 
@@ -398,6 +428,25 @@ module LLVM
         else
           @builder.extract_value(val, index.to_i)
         end
+      end
+      
+      # Shuffles the two vectors together using the given mask.
+      # @example
+      #   shuffle([1, 2, 3], [4, 5, 6], [5, 4, 3, 2, 1, 0]) # => Vector:(6, 5, 4, 3, 2, 1)
+      # @param [LLVM::ConstantVector, Array] lvec A vector to shuffle.
+      # @param [LLVM::ConstantVector, Array] rvec A vector of the same type as +lvec+ to shuffle +lvec+ with.
+      # @param [LLVM::ConstantVector, Array, Integer] mask A vector of integers specifying how the two vectors ought to 
+      #   be shuffled. If this is an integer or nil, the vectors will be shuffled together randomly and the resulting
+      #   vector will be the length of the the given integer or, if nil, both vectors combined.
+      # @return [LLVM::ConstanVector] The resulting shuffled vector.
+      def shuffle(lvec, rvec, mask=nil)
+        lvec = convert(lvec, :vector)
+        if mask.is_a?(Numeric) || mask.nil?
+          size = LLVM::C.get_vector_size(lvec.type) * 2
+          mask = (0...size).to_a.shuffle.slice(0, mask.nil? ? size : mask.to_i)
+        end
+        mask = convert(mask, :vector)
+        @builder.shuffle_vector(lvec, convert(rvec, lvec.type), mask)
       end
       
       # Inverts the given integer, equivalent to <tt>~num</tt> in C. This returns what is 
@@ -797,9 +846,9 @@ module LLVM
         elsif (val == 0 || val.nil?) && !type.nil? && type.kind == :pointer
           return type.null_pointer
         elsif val == true && (kind.nil? || kind == :numeric || kind == :integer)
-          return Types::BOOL.from_i(1)
+          return (klass || Types::BOOL).from_i(1)
         elsif val == false && (kind.nil? || kind == :numeric || kind == :integer)
-          return Types::BOOL.from_i(0)
+          return (klass || Types::BOOL).from_i(0)
         elsif check_decimal(kind) || (val.kind_of?(::Float) && (kind.nil? || kind == :numeric))
           return (klass || Types::FLOAT).from_f(val.to_f)
         elsif kind == :integer || kind == :numeric || (kind.nil? && val.kind_of?(Numeric))
@@ -808,8 +857,11 @@ module LLVM
           str = @library.string(val.to_s)
           return (!type.nil? && str.type != type) ? @builder.bit_cast(str, type) : str
         elsif kind == :array || (kind.nil? && val.kind_of?(Array))
-          type ||= convert(val.to_a.first).type
+          type = !type.nil? ? type.element_type : convert(val.to_a.first).type
           return LLVM::ConstantArray.const(type, val.to_a.map{|elm| convert(elm, type)})
+        elsif kind == :vector
+          type = !type.nil? ? type.element_type : convert(val.to_a.first).type
+          return LLVM::ConstantVector.const(val.to_a.map{|elm| convert(elm, type)})
         end
         types = hint.nil? ? "LLVM::Value, Numeric, Array, String, or True/False/Nil" : "#{type_name(hint)}"
         raise ArgumentError, "Value passed to Generator function should be a #{types}. #{type_name(val)} given."
