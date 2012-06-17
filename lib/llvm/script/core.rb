@@ -12,9 +12,10 @@ module LLVM
     #   false     | i1 1                            | :numeric, :integer    | Int1                                         
     #   Float     | Float or Double                 | :numeric, :decimal    | Float, Double  
     #   Numeric   | ConstantInt                     | :numeric, :integer    | Int1 to Int64                    
-    #   String    | ConstantArray, i8 pointer       | :pointer, :array      | Int8 array or pointer                    
-    #   Array     | ConstantArray, ConstantVector   | :array, :vector       | An array type                       
+    #   String*   | ConstantArray, i8 pointer       | :pointer, :array      | Int8 array or pointer                    
+    #   Array     | ConstantArray, ConstantVector   | :array, :vector       | An array type
     #
+    # * Strings can only be converted into i8 pointers in the {LLVM::Script::Generatpr#Convert Generator version of convert}.
     # @param [Object] val The object to convert into a LLVM::Value.
     # @param [Symbol, LLVM::Type] hint A symbolic kind or a LLVM::Type that signifies what kind 
     #   an object should be. If nil, the value will be converted based on its class.
@@ -42,7 +43,7 @@ module LLVM
         return (klass || Types::FLOAT).from_f(val.to_f)
       elsif kind == :integer || kind == :numeric || (kind.nil? && val.kind_of?(Numeric))
         return (klass || Types::INT).from_i(val.to_i)
-      elsif val.kind_of?(String) && (kind.nil? || kind == :pointer || kind == :array)
+      elsif val.kind_of?(String) && (kind.nil? || kind == :array)
         str = LLVM::ConstantArray.string(val.to_s)
         return kind == :pointer ? str.bitcast_to(Types::CHARPTR) : str
       elsif kind == :array || (kind.nil? && val.kind_of?(Array))

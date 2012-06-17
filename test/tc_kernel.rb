@@ -16,6 +16,7 @@ class TestKernel < MiniTest::Unit::TestCase
   end
   
   def test_namespace
+    skip if defined? Rake::DSL
     check_factory(LLVM::Script::Namespace, :namespace)
   end
   

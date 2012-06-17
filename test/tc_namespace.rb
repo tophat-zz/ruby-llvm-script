@@ -30,11 +30,11 @@ class TestNamespace < MiniTest::Unit::TestCase
   
   def check_factory(klass, methname)
     testcase = self
-    obj = @space.send(methname, "testobj") do
+    obj = @space.__send__(methname, "testobj") do
       testcase.assert_instance_of klass, self
     end
     assert_instance_of klass, obj
-    assert_equal obj, @space.send(methname, "testobj")
+    assert_equal obj, @space.__send__(methname, "testobj")
   end
   
   def test_namespace
