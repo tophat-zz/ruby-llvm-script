@@ -2,36 +2,14 @@ module LLVM
   module Script
     # An executable, compilable, optimizable library with a main function.
     class Program < Library
-      
-      @@programs = {}       # @private
-      @@last_program = nil  # @private
-      
-      # Retrieves a hash of all programs that have been created.
-      # @return [Hash<Symbol, LLVM::Script::Library>] An hash where each symbol is the name of the 
-      #   program it points to.
-      def self.collection
-        return @@programs
-      end
-      
-      # Retrieves the last created program.
-      # @return [LLVM::Script::Program] The last created program.
-      def self.last
-        return @@last_program
-      end
-      
       # Creates a new program.
-      # @param [String] name An optional name for the program. If you do not give one a unique id 
-      #   will be generated using #make_uuid.
-      # @param [Hash] opts Options for the new program, same as those for a library
-      #   (except :prefix is ALWAYS :none).
+      # @param [String] name The name of the program.
+      # @param [LLVM::Script::Namespace] space The namespace in which this library resides.
       # @param [Proc] block A block with the insides of the program.
       # @return [LLVM::Script::Program] The new program.
-      def initialize(name="", opts={}, &block)
+      def initialize(name, space=DEFAULT_SPACE, &block)
         LLVM.init_x86
-        opts[:prefix] = :none
-        super(name, opts, &block)
-        @@programs[@name.to_sym] = self
-        @@last_program = self
+        super(name, space, &block)
       end
       
       # Creates the main function of the program. The main function takes the arguments `argc` 
@@ -47,8 +25,9 @@ module LLVM
       # @param [Proc] block A block with the insides of the main function.
       def main(&block)
         unless @main
-          @main = self.function(:main, [Types::INT, Types::VOIDPTRPTR], Types::INT, &block)
-          visibility(:public, @main.name)
+          @main = Function.new(self, @module, "main", [Types::INT, Types::VOIDPTRPTR], Types::INT)
+          @functions[:public][:main] = @main
+          @main.build(&block) if ::Kernel.block_given?
         end
         return @main
       end

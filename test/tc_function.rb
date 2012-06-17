@@ -3,7 +3,7 @@ require 'script_test'
 class TestFunction < MiniTest::Unit::TestCase
   
   def make_function(args=[], ret=LLVM::Script::Types::VOID, &block)
-    lib = LLVM::Script::Library.new("testlib", :prefix => :none)
+    lib = LLVM::Script::Library.new("testlib")
     @fun = lib.function(:testfunc, args, ret, &block)
   end
   
@@ -11,7 +11,7 @@ class TestFunction < MiniTest::Unit::TestCase
     func = make_function [LLVM::Int, LLVM::Float, LLVM::Script::Types::VARARGS], LLVM::Int8
     assert_equal [LLVM::Int, LLVM::Float], func.arg_types
     assert_equal LLVM::Int8, func.return_type
-    assert_equal :testfunc, func.name.to_sym
+    assert_equal "rls.testlib.testfunc", func.name
     assert func.varargs?
   end 
   

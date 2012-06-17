@@ -714,8 +714,7 @@ module LLVM
         if @function.return_type == Types::VOID
           @builder.ret_void
         else
-          @function.setup_return
-          @builder.store(LLVM::Script::Convert(val, @function.return_type), @function.return_val) unless val.nil?
+          pret val
           @builder.br(@function.return_block)
         end
         self.finish
@@ -728,8 +727,7 @@ module LLVM
       # @param [LLVM::BasicBlock] blk An optional block to exit into if +cond+ is false.
       def cret(cond, val=nil, blk=nil)
         return if @finished
-        @function.setup_return
-        @builder.store(LLVM::Script::Convert(val, @function.return_type), @function.return_val) unless val.nil?
+        pret val
         cont = blk ? blk : @function.add_block("block")
         @builder.cond(LLVM::Script::Convert(cond, Types::BOOL), @function.return_block, cont.to_ptr)
         if blk

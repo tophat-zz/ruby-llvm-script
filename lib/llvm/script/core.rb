@@ -1,7 +1,5 @@
-# !markup markdown
-
 module LLVM
-  module Script  
+  module Script
     # Converts an object into a LLVM::Value. A hint can be specified to ensure that the value is 
     # of a given kind or type.
     #

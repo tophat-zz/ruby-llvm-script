@@ -2,43 +2,35 @@ include LLVM::Script::Types
 
 # Adds some ease-of-use functions to Kernel. It also includes {LLVM::Script::Types}.
 module Kernel
-  # Creates a new program with the given options and an optional name. If this is 
-  # called without a block and with no arguments, it returns the last created program or nil if none.
-  # If called without a block and with a name, returns the program with that name or nil if none.
-  # @param (see LLVM::Script::Program#initialize)
-  # @option (see LLVM::Script::Program#initialize)
-  # @return [LLVM::Script::Program] The new program.
-  # @see LLVM::Script::Program#initialize  
-  def program(name="", opts={}, &block)
-    unless block_given?
-      return LLVM::Script::Program.lookup(name)
-    else
-      return LLVM::Script::Program.new(name, opts, &block)
-    end
+  # @!macro [new] factory
+  #   Creates a new $0 or adds to it if one with the given name already exists. If this is 
+  #   called without a name, it returns the last created namespace in the {LLVM::Script::DEFAULT_SPACE} or 
+  #   nil if none have yet to be created. Otherwise, calls {LLVM::Script::Namespace#$0} on the 
+  #   {LLVM::Script::DEFAULT_SPACE}.
+  #   @param [Symbol, String] $1 A name for the new $0.
+  #   @param [Proc] block An optional block instance to build the new $0 with.
+  #   @return (see LLVM::Script::Namespace#$0)
+  #   @see LLVM::Script::Namespace#$0
+  def namespace(name="", &block)
+    return LLVM::Script::DEFAULT_SPACE.last if name.empty?
+    return LLVM::Script::DEFAULT_SPACE.namespace(name, &block)
   end
   
-  # (see LLVM::Script::Program.collection)
-  def programs
-    return LLVM::Script::Program.collection
+  # Gets a hash of all namespaces in the {LLVM::Script::DEFAULT_SPACE}.
+  # @return [Hash<Symbol, LLVM::Script::Namespace>] A hash where a symbol name corresponds to a namespace. 
+  def namespaces
+    return LLVM::Script::DEFAULT_SPACE.collection
   end
   
-  # Creates a new library with the given options and an optional name. If this is 
-  # called without a block and with no arguments, it returns the last created library or nil if none.
-  # If called without a block and with a name, returns the library with that name or nil if none.
-  # @param (see LLVM::Script::Library#initialize)
-  # @option (see LLVM::Script::Library#initialize)
-  # @return [LLVM::Script::Library] The new library.
-  # @see LLVM::Script::Library#initialize
+  # @macro factory
   def library(name="", opts={}, &block)
-    unless block_given?
-      return LLVM::Script::Library.lookup(name)
-    else
-      return LLVM::Script::Library.new(name, opts, &block)
-    end
+    return LLVM::Script::DEFAULT_SPACE.last if name.empty?
+    return LLVM::Script::DEFAULT_SPACE.library(name, &block)
   end
   
-  # (see LLVM::Script::Library.collection)
-  def libraries
-    return LLVM::Script::Library.collection
+  # @macro factory
+  def program(name="", &block)
+    return LLVM::Script::DEFAULT_SPACE.last if name.empty?
+    return LLVM::Script::DEFAULT_SPACE.program(name, &block)
   end
 end

@@ -2,15 +2,9 @@ require 'script_test'
 
 class TestProgram < MiniTest::Unit::TestCase
   
-  def test_initialize
-    prog = LLVM::Script::Program.new("testprog", :prefix => :all)
-    assert_equal "testprog", prog.name
-    assert_equal :none, prog.prefix
-  end
-  
   def test_main
     testcase = self
-    prog = LLVM::Script::Program.new
+    prog = LLVM::Script::Program.new("testprog")
     prog.private
     mfunc = prog.main do
       testcase.assert_instance_of LLVM::Script::Generator, self
@@ -42,7 +36,7 @@ class TestProgram < MiniTest::Unit::TestCase
   end
   
   def test_verify
-    prog = LLVM::Script::Program.new
+    prog = LLVM::Script::Program.new("testprog")
     prog.main do
       sret 1
     end
@@ -50,7 +44,7 @@ class TestProgram < MiniTest::Unit::TestCase
   end
   
   def test_optimize
-    prog = LLVM::Script::Program.new
+    prog = LLVM::Script::Program.new("testprog")
     LLVM::PassManager.any_instance.expects(:gdce!)
     prog.optimize(:gdce)
   end

@@ -1,70 +1,19 @@
-require 'securerandom'
-
 module LLVM
   module Script
-    # A non-executable container of functions, macros, and globals.
-    class Library < ScriptObject
-      
-      # The name of this library
-      attr_reader :name
-      
-      # When to prefix globals with the name of the library.
-      attr_reader :prefix
-      
-      @@libraries = {}      # @private
-      @@last_library = nil  # @private
-      
-      # Retrieves a hash of all libraries (not including subclasses) that have been created.
-      # @return [Hash<Symbol, LLVM::Script::Library>] An hash where each symbol is the name of the 
-      #   library it points to.
-      def self.collection
-        return @@libraries
-      end
-      
-      # Retrieves the last created library.
-      # @return [LLVM::Script::Library] The last created library.
-      def self.last
-        return @@last_library
-      end
-      
-      # Looks for the specified library.
-      # @param [String, Symbol] name The name of the library to look for. If no name is given, 
-      #   returns the last created library.
-      # @return [LLVM::Script::Library] The found library.
-      def self.lookup(name="")
-        libs = self.collection
-        if name.empty?
-          return self.last
-        elsif libs.include?(name.to_sym)
-          return libs[name.to_sym]
-        else
-          raise ArgumentError, "#{self.name}, #{name.to_s}, does not exist."
-        end
-      end
-      
+    # A namespace containing macros, functions, and globals.
+    class Library < Namespace 
       # Creates a new library.
-      # @param [String] name An optional name for the library. If you do not give one a unique id 
-      #   will be generated using #make_uuid.
-      # @param [Hash] opts Options for the new library.
-      # @option opts [:all, :smart, :none] :prefix (:smart) When to prefix globals with the name of the library.
-      #   :smart prefixes the functions in the LLVM IR but not in ruby-llvm-script. :all does both, :none does
-      #   neither.
-      # @option opts [:public, :private] :visibility (:public) The default visibility of globals in the library.
+      # @param [Symbol, String] name A name for the library.
+      # @param [LLVM::Script::Namespace] space The namespace in which this library resides.
       # @param [Proc] block A block with the insides of the library.
       # @return [LLVM::Script::Library] The new library.
-      def initialize(name="", opts={}, &block)
-        @prefix = opts[:prefix] == :none || opts[:prefix] == :all ? opts[:prefix] : :smart
-        @visibility = opts[:visibility] == :private ? :private : :public
-        @name = name.empty? ? make_uuid[0, 10] : name
+      def initialize(name, space=DEFAULT_SPACE, &block)
+        @visibility = :public
         @module = LLVM::Module.new(name)
         @globals = {:public=>{}, :private=>{}}
         @functions = {:public=>{}, :private=>{}}
         @macros = {:public=>{}, :private=>{}}
-        if self.instance_of?(Library)
-          @@last_library = self
-          @@libraries[@name.to_sym] = self
-        end
-        build(&block) if ::Kernel.block_given?
+        super(name, space, &block)
       end
       
       # @private
@@ -72,72 +21,47 @@ module LLVM
         @module.to_ptr
       end
       
-      # Generates a Uuid (Universally unique identifier).
-      # @return [String] The uuid.
-      def make_uuid
-        ary = SecureRandom.random_bytes(16).unpack("NnnnnN")
-        ary[2] = (ary[2] & 0x0fff) | 0x4000
-        ary[3] = (ary[3] & 0x3fff) | 0x8000
-        "%08x%04x%04x%04x%04x%08x" % ary
-      end
-      private :make_uuid
-      
       # Prints the library's LLVM IR to $stdout.
       def dump
         @module.dump
       end
-       
-      # Builds the library, instance evaluating block.
-      # @param [Proc] block The block to evaluate.
-      def build(&block)
-        self.instance_eval(&block)
-      end
       
       # Imports the given library, adding all of its public functions, macros, and globals to the caller.
-      # If the imported library's prefix style is :smart, all non-extern objects will have the library's name added 
-      # as a prefix (ex. if there is a function hello in a library called greeter, the function's name will 
-      # become greeter_hello), otherwise all objects will retain their declared names. If any object in the caller 
-      # has the same name as one of the imported objects, one of the following will happen:
-      # Macros::  The macro will be overwritten, and from then on, the macro will execute as declared in 
-      #           the imported library.
-      # Functions/Globals:: A warning will be printed and the version in the caller will take precedence in 
-      #                     ruby-llvm-script. If the linker is unable to resolve the conflict, it will error.
-      #                     *Advice:* Try to avoid function and global conflicts.
+      # If any object in the caller has the same name as one of the imported objects, one of the following
+      # will happen depending on what level the conflict occurred:
+      # Ruby::      The object will be overwritten, and from then on, the object will execute as declared in the 
+      #             imported library.
+      # LLVM IR::   A warning will be printed and if the linker is unable to resolve the conflict 
+      #             a RuntimeError will be raised.
       # @param [String, Symbol, LLVM::Script::Library] library The name of the library to import or the 
       #   library itself.
       # @return [LLVM::Script::Library] The imported library.
       # @raise [RuntimeError] Raised if the LLVM Linker fails.
       def import(library)
         if library.is_a?(String) || library.is_a?(Symbol)
-          if @@libraries.has_key?(library.to_sym)
-            library = @@libraries[library.to_sym]
-          else
+          unless self.include?(library)
             raise ArgumentError, "Library, #{library.to_s}, does not exist."
           end
+          library = self.lookup(library)
         elsif library.class != Library
           raise ArgumentError, "Can only import libraries. #{library.class.name} given."
         end
-        library.macros.each do |key, macro|
-          fullname = "#{library.name}_#{key.to_s}"
-          name = (library.prefix == :smart ? fullname.to_sym : key.to_sym)
-          @macros[:public][name] = macro
-        end
-        library.functions.each do |key, func|
-          name = (library.prefix == :smart ? func.name.to_sym : key.to_sym)
-          if functions.has_key?(name)
-            warn("Imported function, #{name.to_s}, already exists.")
-          else
-            self.extern(name, func.varargs? ? func.arg_types + [VARARGS] : func.arg_types, func.return_type)
+        @macros[:public].merge!(library.macros)
+        library.functions.each do |name, func|
+          if @module.functions.named(func.name)
+            warn("Imported function's (#{name.to_s}) address, #{func.name}, already exists.")
           end
+          args = func.varargs? ? func.arg_types + [Types::VARARGS] : func.arg_types
+          fun = Function.new(self, @module, func.name, args, func.return_type)
+          @functions[:public][name.to_sym] = fun
         end
-        library.globals.each do |key, info|
-          name = (library.prefix == :smart ? info.name.to_sym : key.to_sym)
-          if globals.has_key?(name)
-            warn("Imported global, #{name.to_s}, already exists.")
-          else
-            glob = global(name, info.type)
-            glob.global_constant = info.global_constant?
+        library.globals.each do |name, info|
+          if @module.globals.named(info.name)
+            warn("Imported global's (#{name.to_s}) address, #{info.name}, already exists.")
           end
+          glob = @module.globals.add(info.type, info.name)
+          glob.global_constant = info.global_constant?
+          @globals[:public][name.to_sym] = glob
         end
         err = @module.link(library, :linker_destroy_source)
         raise RuntimeError, "Failed to link library, #{library.name.to_s}, to #{name}." if err
@@ -169,7 +93,7 @@ module LLVM
       # If given a set of functions, changes the visibility of those 
       # functions to the given visibility.
       # @example
-      #   library do
+      #   library "VisibilityExample" do
       #     visibility  # => :public
       #     function :somefunc do
       #       # function contents
@@ -263,10 +187,9 @@ module LLVM
       # @param [Proc] block The insides of the function.
       # @return [LLVM::Script::Function] The new function.
       def function(name, args=[], ret=Types::VOID, &block)
-        fullname = "#{@name}_#{name.to_s}"
-        fun = Function.new(self, @module, @prefix == :none ? name.to_s : fullname, args, ret)
+        fun = Function.new(self, @module, "#{@address}.#{name.to_s}", args, ret)
         fun.linkage = :private if @visibility == :private
-        @functions[@visibility][(@prefix == :all ? fullname : name).to_sym] = fun
+        @functions[@visibility][name.to_sym] = fun
         fun.build(&block) if ::Kernel.block_given?
         return fun
       end
@@ -292,9 +215,8 @@ module LLVM
       # @param [Proc] proc The insides of the macro, executed when the macro is called.
       # @return [Proc] The proc passed to the function.
       def macro(name, &proc)
-        fullname = "#{@name}_#{name.to_s}"
         @macros[@visibility] ||= {}
-        @macros[@visibility][(@prefix == :all ? fullname : name).to_sym] = proc
+        @macros[@visibility][name.to_sym] = proc
       end
       
       # Creates a new global value.
@@ -307,11 +229,10 @@ module LLVM
           glob = @module.globals.add(info, name.to_s)
           @globals[:public][name.to_sym] = glob
         else
-          fullname = "#{@name}_#{name.to_s}"
-          glob = @module.globals.add(info.type, @prefix == :none ? name.to_s : fullname)
+          glob = @module.globals.add(info.type, "#{@address}.#{name.to_s}")
           glob.initializer = info
           glob.linkage = :private if @visibility == :private
-          @globals[@visibility][(@prefix == :all ? fullname : name).to_sym] = glob
+          @globals[@visibility][name.to_sym] = glob
         end
       end
       

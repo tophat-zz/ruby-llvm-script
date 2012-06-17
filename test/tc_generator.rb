@@ -3,14 +3,14 @@ require 'script_test'
 class TestGenerator < MiniTest::Unit::TestCase
   
   def setup
-    @lib = LLVM::Script::Library.new
+    @lib = LLVM::Script::Library.new("testlib")
     @fun = @lib.function :genfunc
     @mod = @fun.instance_eval{ @module }
     @gen = LLVM::Script::Generator.new(@lib, @mod, @fun)
   end
   
   def exec(type=LLVM::Int, &block)
-    prog = LLVM::Script::Program.new
+    prog = LLVM::Script::Program.new("testprog")
     func = prog.function :testfunc, [], type do
       val = instance_eval(&block)
       sret(val) unless finished?
@@ -174,10 +174,7 @@ class TestGenerator < MiniTest::Unit::TestCase
   def test_bitcast
     str = LLVM::Script::Convert("Testing")
     sptr = @gen.bitcast(str, LLVM::Script::Types::CHARPTR)
-    iptr = @gen.bitcast(100, LLVM::Script::Types::INTPTR)
     assert_equal :pointer, sptr.type.kind
-    assert_equal :pointer, iptr.type.kind
-    assert_equal LLVM::Int.type.width, iptr.type.element_type.width
     assert_equal 8, sptr.type.element_type.width
     assert_raises(ArgumentError) { @gen.bitcast(str, "Not a type") }
   end
