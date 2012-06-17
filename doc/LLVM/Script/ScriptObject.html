@@ -6,7 +6,7 @@
 <title>
   Class: LLVM::Script::ScriptObject
   
-    &mdash; Documentation by YARD 0.8.1
+    &mdash; Documentation by YARD 0.8.2.1
   
 </title>
 
@@ -104,18 +104,13 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>This class is Ruby version dependent.</p>
-<dl class="rdoc-list note-list"><dt>Ruby 1.8.x
-<dd>
-<p>It just provides a method to make a Uuid (Universally unique identifier).</p>
-</dd><dt>Ruby 1.9.x
-<dd>
-<p>It inherits BasicObject, allowing it to ignore default Kernel methods
-unless the method is missing. This allows you not to have to
-self.methodname syntax  when a Library or Program function name conflicts
-with a Kernel function.  An example of this is in the hello world program
-in the README.</p>
-</dd></dl>
+<p>This class does nothing on non-Ruby 1.9.x platforms.</p>
+
+<p>On Ruby 1.9.x, however, it inherits BasicObject. This allows it to ignore
+default  Kernel methods unless the method is missing. This allows you not
+to have to self.methodname  syntax when a Library or Program function name
+conflicts with a Kernel function. An example of  this is in the
+<a href="https://github.com/tophat/ruby-llvm-script/wiki/Hello-World" target="_parent" title="hello world program">hello world program</a>.</p>
 
 
   </div>
@@ -136,7 +131,7 @@ in the README.</p>
           <div class="docstring">
   <div class="discussion">
     
-<p>On Ruby 1.9.x, makes LLVM available to the object system</p>
+<p>Makes LLVM available to the object system</p>
 
 
   </div>
@@ -184,7 +179,7 @@ in the README.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>On Ruby 1.9.x, tries to get unknown constants from Object.</p>
+<p>Tries to get unknown constants from Object.</p>
 </div></span>
   
 </li>
@@ -217,7 +212,7 @@ in the README.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Needed on Ruby 1.9.x to get the class of a BasicObject.</p>
+<p>Needed in order to get the class of a ScriptObject.</p>
 </div></span>
   
 </li>
@@ -226,7 +221,7 @@ in the README.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#make_uuid-instance_method" title="#make_uuid (instance method)">- (String) <strong>make_uuid</strong> </a>
+      <a href="#instance_of%3F-instance_method" title="#instance_of? (instance method)">- (Boolean) <strong>instance_of?</strong>(klass) </a>
     
 
     
@@ -241,7 +236,31 @@ in the README.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Generates a Uuid (Universally unique identifier).</p>
+<p>Needed for class testing of a ScriptObject.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#kind_of%3F-instance_method" title="#kind_of? (instance method)">- (Boolean) <strong>kind_of?</strong>(mod) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Needed for ancestor testing of a ScriptObject.</p>
 </div></span>
   
 </li>
@@ -265,7 +284,7 @@ in the README.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>On Ruby 1.9.x, passes unknown methods to Kernel.</p>
+<p>Passes unknown methods to Kernel.</p>
 </div></span>
   
 </li>
@@ -289,7 +308,7 @@ in the README.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>On Ruby 1.9.x, checks for unknown methods in Kernel.</p>
+<p>Checks for unknown methods in Kernel.</p>
 </div></span>
   
 </li>
@@ -317,7 +336,7 @@ in the README.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>On Ruby 1.9.x, passes unknown methods to Kernel.</p>
+<p>Passes unknown methods to Kernel.</p>
 
 
   </div>
@@ -368,7 +387,7 @@ in the README.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>On Ruby 1.9.x, tries to get unknown constants from Object.</p>
+<p>Tries to get unknown constants from Object.</p>
 
 
   </div>
@@ -416,7 +435,7 @@ in the README.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Needed on Ruby 1.9.x to get the class of a BasicObject.</p>
+<p>Needed in order to get the class of a ScriptObject.</p>
 
 
   </div>
@@ -430,12 +449,12 @@ in the README.</p>
       <pre class="lines">
 
 
-27
-28
-29</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 27</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 17</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_class class kw'>class</span>
   <span class='lparen token'>(</span><span class='rubyid_class class kw'>class</span> <span class='lshft op'>&lt;&lt;</span> <span class='rubyid_self self kw'>self</span><span class='semicolon token'>;</span> <span class='rubyid_self self kw'>self</span> <span class='rubyid_end end kw'>end</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_superclass identifier id'>superclass</span>
@@ -447,9 +466,9 @@ in the README.</p>
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="make_uuid-instance_method">
+  <h3 class="signature " id="instance_of?-instance_method">
   
-    - (<tt>String</tt>) <strong>make_uuid</strong> 
+    - (<tt>Boolean</tt>) <strong>instance_of?</strong>(klass) 
   
 
   
@@ -458,7 +477,7 @@ in the README.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Generates a Uuid (Universally unique identifier).</p>
+<p>Needed for class testing of a ScriptObject.</p>
 
 
   </div>
@@ -471,14 +490,9 @@ in the README.</p>
     <li>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
-      
-        &mdash;
-        <div class='inline'>
-<p>The uuid.</p>
-</div>
       
     </li>
   
@@ -497,8 +511,63 @@ in the README.</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 22</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_make_uuid identifier id'>make_uuid</span>
-  <span class='rubyid_SecureRandom constant id'>SecureRandom</span><span class='dot token'>.</span><span class='rubyid_uuid identifier id'>uuid</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_instance_of? fid id'>instance_of?</span><span class='lparen token'>(</span><span class='rubyid_klass identifier id'>klass</span><span class='rparen token'>)</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_class identifier id'>class</span> <span class='eq op'>==</span> <span class='rubyid_klass identifier id'>klass</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="kind_of?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>kind_of?</strong>(mod) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Needed for ancestor testing of a ScriptObject.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+27
+28
+29</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 27</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_mod identifier id'>mod</span><span class='rparen token'>)</span>
+  <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_class identifier id'>class</span><span class='dot token'>.</span><span class='rubyid_ancestors identifier id'>ancestors</span><span class='dot token'>.</span><span class='rubyid_include? fid id'>include?</span><span class='lparen token'>(</span><span class='rubyid_mod identifier id'>mod</span><span class='rparen token'>)</span>
 <span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
@@ -518,7 +587,7 @@ in the README.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>On Ruby 1.9.x, checks for unknown methods in Kernel.</p>
+<p>Checks for unknown methods in Kernel.</p>
 
 
   </div>
@@ -566,9 +635,9 @@ in the README.</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Jun  6 17:35:08 2012 by
+  Generated on Sat Jun 16 20:45:51 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.1 (ruby-1.8.7).
+  0.8.2.1 (ruby-1.8.7).
 </div>
 
   </body>

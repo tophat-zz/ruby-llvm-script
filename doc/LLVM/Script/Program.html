@@ -6,7 +6,7 @@
 <title>
   Class: LLVM::Script::Program
   
-    &mdash; Documentation by YARD 0.8.1
+    &mdash; Documentation by YARD 0.8.2.1
   
 </title>
 
@@ -132,7 +132,7 @@
   <h2>Instance Attribute Summary</h2>
   
   <h3 class="inherited">Attributes inherited from <span class='object_link'><a href="Library.html" title="LLVM::Script::Library (class)">Library</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Library.html#module-instance_method" title="LLVM::Script::Library#module (method)">#module</a></span>, <span class='object_link'><a href="Library.html#name-instance_method" title="LLVM::Script::Library#name (method)">#name</a></span>, <span class='object_link'><a href="Library.html#prefix-instance_method" title="LLVM::Script::Library#prefix (method)">#prefix</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="Library.html#name-instance_method" title="LLVM::Script::Library#name (method)">#name</a></span>, <span class='object_link'><a href="Library.html#prefix-instance_method" title="LLVM::Script::Library#prefix (method)">#prefix</a></span></p>
 
 
   
@@ -370,7 +370,7 @@
   
   
   <h3 class="inherited">Methods inherited from <span class='object_link'><a href="ScriptObject.html" title="LLVM::Script::ScriptObject (class)">ScriptObject</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="ScriptObject.html#class-instance_method" title="LLVM::Script::ScriptObject#class (method)">#class</a></span>, <span class='object_link'><a href="ScriptObject.html#const_missing-class_method" title="LLVM::Script::ScriptObject.const_missing (method)">const_missing</a></span>, <span class='object_link'><a href="ScriptObject.html#make_uuid-instance_method" title="LLVM::Script::ScriptObject#make_uuid (method)">#make_uuid</a></span>, <span class='object_link'><a href="ScriptObject.html#method_missing-instance_method" title="LLVM::Script::ScriptObject#method_missing (method)">#method_missing</a></span>, <span class='object_link'><a href="ScriptObject.html#respond_to_missing%3F-instance_method" title="LLVM::Script::ScriptObject#respond_to_missing? (method)">#respond_to_missing?</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="ScriptObject.html#class-instance_method" title="LLVM::Script::ScriptObject#class (method)">#class</a></span>, <span class='object_link'><a href="ScriptObject.html#const_missing-class_method" title="LLVM::Script::ScriptObject.const_missing (method)">const_missing</a></span>, <span class='object_link'><a href="ScriptObject.html#instance_of%3F-instance_method" title="LLVM::Script::ScriptObject#instance_of? (method)">#instance_of?</a></span>, <span class='object_link'><a href="ScriptObject.html#kind_of%3F-instance_method" title="LLVM::Script::ScriptObject#kind_of? (method)">#kind_of?</a></span>, <span class='object_link'><a href="ScriptObject.html#method_missing-instance_method" title="LLVM::Script::ScriptObject#method_missing (method)">#method_missing</a></span>, <span class='object_link'><a href="ScriptObject.html#respond_to_missing%3F-instance_method" title="LLVM::Script::ScriptObject#respond_to_missing? (method)">#respond_to_missing?</a></span></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
@@ -473,7 +473,7 @@ ALWAYS :none).</p>
   <span class='rubyid_LLVM constant id'>LLVM</span><span class='dot token'>.</span><span class='rubyid_init_x86 identifier id'>init_x86</span>
   <span class='rubyid_opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:prefix</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='symbol val'>:none</span>
   <span class='rubyid_super super kw'>super</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_opts identifier id'>opts</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
-  <span class='rubyid_@@programs ivar id'>@@programs</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_self self kw'>self</span>
+  <span class='rubyid_@@programs ivar id'>@@programs</span><span class='lbrack token'>[</span><span class='rubyid_@name ivar id'>@name</span><span class='dot token'>.</span><span class='rubyid_to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_self self kw'>self</span>
   <span class='rubyid_@@last_program ivar id'>@@last_program</span> <span class='assign token'>=</span> <span class='rubyid_self self kw'>self</span>
 <span class='rubyid_end end kw'>end</span>
 </pre>
@@ -671,16 +671,16 @@ ALWAYS :none).</p>
       <pre class="lines">
 
 
-66
-67
-68
-69
 70
 71
-72</pre>
+72
+73
+74
+75
+76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/program.rb', line 66</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/program.rb', line 70</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_compile identifier id'>compile</span><span class='lparen token'>(</span><span class='rubyid_file identifier id'>file</span><span class='rparen token'>)</span>
   <span class='rubyid_@module ivar id'>@module</span><span class='dot token'>.</span><span class='rubyid_write_bitcode identifier id'>write_bitcode</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{file}.bc&quot;</span><span class='rparen token'>)</span>
@@ -708,7 +708,8 @@ ALWAYS :none).</p>
   <div class="discussion">
     
 <p>Creates the main function of the program. The main function takes the
-arguments `argc`  and `argv` and returns a integer (usually 0 on success).</p>
+arguments `argc`  and `argv` and returns a integer (usually 0 on success).
+If the function already exists, it is just returned.</p>
 
 
   </div>
@@ -756,17 +757,23 @@ arguments `argc`  and `argv` and returns a integer (usually 0 on success).</p>
       <pre class="lines">
 
 
-47
 48
 49
-50</pre>
+50
+51
+52
+53
+54</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/program.rb', line 47</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/program.rb', line 48</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_main identifier id'>main</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
-  <span class='rubyid_@main ivar id'>@main</span> <span class='opasgn op'>||=</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_function identifier id'>function</span><span class='lparen token'>(</span><span class='symbol val'>:main</span><span class='comma token'>,</span> <span class='lbrack token'>[</span><span class='rubyid_INT constant id'>INT</span><span class='comma token'>,</span> <span class='rubyid_VOIDPTRPTR constant id'>VOIDPTRPTR</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='rubyid_INT constant id'>INT</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
-  <span class='rubyid_visibility identifier id'>visibility</span><span class='lparen token'>(</span><span class='symbol val'>:public</span><span class='comma token'>,</span> <span class='rubyid_@main ivar id'>@main</span><span class='dot token'>.</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='rubyid_unless unless kw'>unless</span> <span class='rubyid_@main ivar id'>@main</span>
+    <span class='rubyid_@main ivar id'>@main</span> <span class='assign token'>=</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_function identifier id'>function</span><span class='lparen token'>(</span><span class='symbol val'>:main</span><span class='comma token'>,</span> <span class='lbrack token'>[</span><span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_INT constant id'>INT</span><span class='comma token'>,</span> <span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_VOIDPTRPTR constant id'>VOIDPTRPTR</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_INT constant id'>INT</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+    <span class='rubyid_visibility identifier id'>visibility</span><span class='lparen token'>(</span><span class='symbol val'>:public</span><span class='comma token'>,</span> <span class='rubyid_@main ivar id'>@main</span><span class='dot token'>.</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='rubyid_end end kw'>end</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_@main ivar id'>@main</span>
 <span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
@@ -830,15 +837,15 @@ LLVM::PassManager without the exclamation (!).</p>
       <pre class="lines">
 
 
-84
-85
-86
-87
 88
-89</pre>
+89
+90
+91
+92
+93</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/program.rb', line 84</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/program.rb', line 88</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_optimize identifier id'>optimize</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='rubyid_passes identifier id'>passes</span><span class='rparen token'>)</span>
   <span class='rubyid_@jit ivar id'>@jit</span> <span class='opasgn op'>||=</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_JITCompiler constant id'>JITCompiler</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_@module ivar id'>@module</span><span class='rparen token'>)</span>
@@ -912,16 +919,16 @@ args).</p>
       <pre class="lines">
 
 
-56
-57
-58
-59
 60
 61
-62</pre>
+62
+63
+64
+65
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/program.rb', line 56</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/program.rb', line 60</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_run identifier id'>run</span>
   <span class='rubyid_if if kw'>if</span> <span class='rubyid_@main ivar id'>@main</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
@@ -962,12 +969,12 @@ args).</p>
       <pre class="lines">
 
 
-75
-76
-77</pre>
+79
+80
+81</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/program.rb', line 75</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/program.rb', line 79</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_verify identifier id'>verify</span>
  <span class='rubyid_@module ivar id'>@module</span><span class='dot token'>.</span><span class='rubyid_verify! fid id'>verify!</span>
@@ -983,9 +990,9 @@ args).</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Jun  6 17:35:11 2012 by
+  Generated on Sat Jun 16 20:46:00 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.1 (ruby-1.8.7).
+  0.8.2.1 (ruby-1.8.7).
 </div>
 
   </body>

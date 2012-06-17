@@ -6,7 +6,7 @@
 <title>
   Class: LLVM::Script::Function
   
-    &mdash; Documentation by YARD 0.8.1
+    &mdash; Documentation by YARD 0.8.2.1
   
 </title>
 
@@ -367,7 +367,7 @@ function).</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#bitcast-instance_method" title="#bitcast (instance method)">- (LLVM::Value) <strong>bitcast</strong>(type) </a>
+      <a href="#bitcast-instance_method" title="#bitcast (instance method)">- (LLVM::ConstantExpr) <strong>bitcast</strong>(type) </a>
     
 
     
@@ -408,6 +408,30 @@ type.</p>
   
     <span class="summary_desc"><div class='inline'>
 <p>Builds the function using the given block.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#finished%3F-instance_method" title="#finished? (instance method)">- (Boolean) <strong>finished?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Checks whether the function has a return at its end.</p>
 </div></span>
   
 </li>
@@ -546,7 +570,7 @@ type.</p>
   
   
   <h3 class="inherited">Methods inherited from <span class='object_link'><a href="ScriptObject.html" title="LLVM::Script::ScriptObject (class)">ScriptObject</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="ScriptObject.html#class-instance_method" title="LLVM::Script::ScriptObject#class (method)">#class</a></span>, <span class='object_link'><a href="ScriptObject.html#const_missing-class_method" title="LLVM::Script::ScriptObject.const_missing (method)">const_missing</a></span>, <span class='object_link'><a href="ScriptObject.html#make_uuid-instance_method" title="LLVM::Script::ScriptObject#make_uuid (method)">#make_uuid</a></span>, <span class='object_link'><a href="ScriptObject.html#respond_to_missing%3F-instance_method" title="LLVM::Script::ScriptObject#respond_to_missing? (method)">#respond_to_missing?</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="ScriptObject.html#class-instance_method" title="LLVM::Script::ScriptObject#class (method)">#class</a></span>, <span class='object_link'><a href="ScriptObject.html#const_missing-class_method" title="LLVM::Script::ScriptObject.const_missing (method)">const_missing</a></span>, <span class='object_link'><a href="ScriptObject.html#instance_of%3F-instance_method" title="LLVM::Script::ScriptObject#instance_of? (method)">#instance_of?</a></span>, <span class='object_link'><a href="ScriptObject.html#kind_of%3F-instance_method" title="LLVM::Script::ScriptObject#kind_of? (method)">#kind_of?</a></span>, <span class='object_link'><a href="ScriptObject.html#respond_to_missing%3F-instance_method" title="LLVM::Script::ScriptObject#respond_to_missing? (method)">#respond_to_missing?</a></span></p>
 <div id="method_missing_details" class="method_details_list">
   <h2>Dynamic Method Handling</h2>
   <p class="notice this">
@@ -580,16 +604,16 @@ type.</p>
       <pre class="lines">
 
 
-113
-114
-115
-116
-117
-118
-119</pre>
+120
+121
+122
+123
+124
+125
+126</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 113</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 120</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='rubyid_sym identifier id'>sym</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='rubyid_args identifier id'>args</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
   <span class='rubyid_if if kw'>if</span> <span class='rubyid_@raw ivar id'>@raw</span><span class='dot token'>.</span><span class='rubyid_respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='rubyid_sym identifier id'>sym</span><span class='rparen token'>)</span>
@@ -611,7 +635,6 @@ type.</p>
     
       
       <span id=""></span>
-      <span id="arg_types-instance_method"></span>
       <div class="method_details first">
   <h3 class="signature first" id="arg_types-instance_method">
   
@@ -656,7 +679,6 @@ type.</p>
     
       
       <span id=""></span>
-      <span id="library-instance_method"></span>
       <div class="method_details ">
   <h3 class="signature " id="library-instance_method">
   
@@ -701,7 +723,6 @@ type.</p>
     
       
       <span id=""></span>
-      <span id="return_block-instance_method"></span>
       <div class="method_details ">
   <h3 class="signature " id="return_block-instance_method">
   
@@ -746,7 +767,6 @@ type.</p>
     
       
       <span id=""></span>
-      <span id="return_type-instance_method"></span>
       <div class="method_details ">
   <h3 class="signature " id="return_type-instance_method">
   
@@ -791,7 +811,6 @@ type.</p>
     
       
       <span id=""></span>
-      <span id="return_val-instance_method"></span>
       <div class="method_details ">
   <h3 class="signature " id="return_val-instance_method">
   
@@ -837,7 +856,6 @@ function).</p>
     
       
       <span id=""></span>
-      <span id="type-instance_method"></span>
       <div class="method_details ">
   <h3 class="signature " id="type-instance_method">
   
@@ -953,12 +971,12 @@ function).</p>
       <pre class="lines">
 
 
-90
-91
-92</pre>
+97
+98
+99</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 90</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 97</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_add_block identifier id'>add_block</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='assign token'>=</span><span class='string val'>&quot;&quot;</span><span class='rparen token'>)</span>
   <span class='rubyid_@raw ivar id'>@raw</span><span class='dot token'>.</span><span class='rubyid_basic_blocks identifier id'>basic_blocks</span><span class='dot token'>.</span><span class='rubyid_append identifier id'>append</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
@@ -1013,12 +1031,12 @@ function).</p>
       <pre class="lines">
 
 
-64
-65
-66</pre>
+71
+72
+73</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 64</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 71</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_args identifier id'>args</span>
   <span class='rubyid_return return kw'>return</span> <span class='rubyid_@raw ivar id'>@raw</span><span class='dot token'>.</span><span class='rubyid_params identifier id'>params</span>
@@ -1032,7 +1050,7 @@ function).</p>
       <div class="method_details ">
   <h3 class="signature " id="bitcast-instance_method">
   
-    - (<tt>LLVM::Value</tt>) <strong>bitcast</strong>(type) 
+    - (<tt>LLVM::ConstantExpr</tt>) <strong>bitcast</strong>(type) 
   
 
   
@@ -1075,7 +1093,7 @@ type.</p>
     <li>
       
       
-        <span class='type'>(<tt>LLVM::Value</tt>)</span>
+        <span class='type'>(<tt>LLVM::ConstantExpr</tt>)</span>
       
       
       
@@ -1094,12 +1112,12 @@ type.</p>
       <pre class="lines">
 
 
-77
-78
-79</pre>
+84
+85
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 77</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 84</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_bitcast identifier id'>bitcast</span><span class='lparen token'>(</span><span class='rubyid_type identifier id'>type</span><span class='rparen token'>)</span>
   <span class='rubyid_@raw ivar id'>@raw</span><span class='dot token'>.</span><span class='rubyid_bitcast_to identifier id'>bitcast_to</span><span class='lparen token'>(</span><span class='rubyid_type identifier id'>type</span><span class='rparen token'>)</span>
@@ -1183,9 +1201,71 @@ by a Generator.</p>
   <span class='rubyid_end end kw'>end</span>
   <span class='rubyid_@return_block ivar id'>@return_block</span><span class='dot token'>.</span><span class='rubyid_move_after identifier id'>move_after</span><span class='lparen token'>(</span><span class='rubyid_@raw ivar id'>@raw</span><span class='dot token'>.</span><span class='rubyid_basic_blocks identifier id'>basic_blocks</span><span class='dot token'>.</span><span class='rubyid_last identifier id'>last</span><span class='rparen token'>)</span> <span class='rubyid_unless unless_mod kw'>unless</span>  <span class='rubyid_@return_block ivar id'>@return_block</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
   <span class='rubyid_unless unless kw'>unless</span> <span class='rubyid_@generator ivar id'>@generator</span><span class='dot token'>.</span><span class='rubyid_finished? fid id'>finished?</span>
-    <span class='rubyid_warn identifier id'>warn</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{name.to_s.capitalize} has no return at the end of the function!&quot;</span><span class='rparen token'>)</span>
+    <span class='rubyid_warn identifier id'>warn</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{name.to_s.capitalize} has no terminator/return at the end of the function!&quot;</span><span class='rparen token'>)</span>
   <span class='rubyid_end end kw'>end</span>
   <span class='rubyid_@generator ivar id'>@generator</span><span class='dot token'>.</span><span class='rubyid_finish identifier id'>finish</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="finished?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>finished?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Checks whether the function has a return at its end.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A true/false value.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+64
+65
+66
+67</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 64</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_finished? fid id'>finished?</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_false false kw'>false</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_@generator ivar id'>@generator</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_@generator ivar id'>@generator</span><span class='dot token'>.</span><span class='rubyid_finished? fid id'>finished?</span>
 <span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
@@ -1237,12 +1317,12 @@ by a Generator.</p>
       <pre class="lines">
 
 
-83
-84
-85</pre>
+90
+91
+92</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 83</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 90</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_pointer identifier id'>pointer</span>
   <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Pointer constant id'>Pointer</span><span class='lparen token'>(</span><span class='rubyid_@type ivar id'>@type</span><span class='rparen token'>)</span>
@@ -1292,16 +1372,16 @@ by a Generator.</p>
       <pre class="lines">
 
 
-122
-123
-124
-125</pre>
+129
+130
+131
+132</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 122</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 129</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='rubyid_sym identifier id'>sym</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='rubyid_args identifier id'>args</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
-  <span class='rubyid_return return kw'>return</span> <span class='rubyid_true true kw'>true</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_@generator ivar id'>@generator</span><span class='dot token'>.</span><span class='rubyid_respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='rubyid_sym identifier id'>sym</span><span class='rparen token'>)</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_true true kw'>true</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_@raw ivar id'>@raw</span><span class='dot token'>.</span><span class='rubyid_respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='rubyid_sym identifier id'>sym</span><span class='rparen token'>)</span>
   <span class='rubyid_super super kw'>super</span><span class='lparen token'>(</span><span class='rubyid_sym identifier id'>sym</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='rubyid_args identifier id'>args</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
 <span class='rubyid_end end kw'>end</span>
 </pre>
@@ -1337,13 +1417,6 @@ Generator.</p>
       <pre class="lines">
 
 
-95
-96
-97
-98
-99
-100
-101
 102
 103
 104
@@ -1352,21 +1425,28 @@ Generator.</p>
 107
 108
 109
-110</pre>
+110
+111
+112
+113
+114
+115
+116
+117</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 95</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 102</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_setup_return identifier id'>setup_return</span>
   <span class='rubyid_return return kw'>return</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_@generator ivar id'>@generator</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
-  <span class='rubyid_return return kw'>return</span> <span class='rubyid_unless unless_mod kw'>unless</span> <span class='rubyid_@return_val ivar id'>@return_val</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
-  <span class='rubyid_@return_block ivar id'>@return_block</span> <span class='assign token'>=</span> <span class='rubyid_@raw ivar id'>@raw</span><span class='dot token'>.</span><span class='rubyid_basic_blocks identifier id'>basic_blocks</span><span class='dot token'>.</span><span class='rubyid_append identifier id'>append</span><span class='lparen token'>(</span><span class='string val'>&quot;return&quot;</span><span class='rparen token'>)</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_unless unless_mod kw'>unless</span> <span class='rubyid_@return_block ivar id'>@return_block</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
+  <span class='rubyid_@return_block ivar id'>@return_block</span> <span class='assign token'>=</span> <span class='rubyid_add_block identifier id'>add_block</span><span class='lparen token'>(</span><span class='string val'>&quot;return&quot;</span><span class='rparen token'>)</span>
   <span class='rubyid_builder identifier id'>builder</span> <span class='assign token'>=</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Builder constant id'>Builder</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span>
   <span class='rubyid_instruction identifier id'>instruction</span> <span class='assign token'>=</span> <span class='rubyid_@generator ivar id'>@generator</span><span class='dot token'>.</span><span class='rubyid_start_block identifier id'>start_block</span><span class='dot token'>.</span><span class='rubyid_instructions identifier id'>instructions</span><span class='dot token'>.</span><span class='rubyid_first identifier id'>first</span>
   <span class='rubyid_instruction identifier id'>instruction</span> <span class='integer val'>? </span><span class='rubyid_builder identifier id'>builder</span><span class='dot token'>.</span><span class='rubyid_position_before identifier id'>position_before</span><span class='lparen token'>(</span><span class='rubyid_instruction identifier id'>instruction</span><span class='rparen token'>)</span> <span class='colon op'>:</span> <span class='rubyid_builder identifier id'>builder</span><span class='dot token'>.</span><span class='rubyid_position_at_end identifier id'>position_at_end</span><span class='lparen token'>(</span><span class='rubyid_@generator ivar id'>@generator</span><span class='dot token'>.</span><span class='rubyid_start_block identifier id'>start_block</span><span class='rparen token'>)</span>
-  <span class='rubyid_@return_val ivar id'>@return_val</span> <span class='assign token'>=</span> <span class='rubyid_builder identifier id'>builder</span><span class='dot token'>.</span><span class='rubyid_alloca identifier id'>alloca</span><span class='lparen token'>(</span><span class='rubyid_@return_type ivar id'>@return_type</span><span class='comma token'>,</span> <span class='string val'>&quot;retval&quot;</span><span class='rparen token'>)</span>
+  <span class='rubyid_@return_val ivar id'>@return_val</span> <span class='assign token'>=</span> <span class='rubyid_builder identifier id'>builder</span><span class='dot token'>.</span><span class='rubyid_alloca identifier id'>alloca</span><span class='lparen token'>(</span><span class='rubyid_@return_type ivar id'>@return_type</span><span class='comma token'>,</span> <span class='string val'>&quot;retval&quot;</span><span class='rparen token'>)</span> <span class='rubyid_unless unless_mod kw'>unless</span> <span class='rubyid_@return_type ivar id'>@return_type</span> <span class='eq op'>==</span> <span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_VOID constant id'>VOID</span>
   <span class='rubyid_builder identifier id'>builder</span><span class='dot token'>.</span><span class='rubyid_position_at_end identifier id'>position_at_end</span><span class='lparen token'>(</span><span class='rubyid_@return_block ivar id'>@return_block</span><span class='rparen token'>)</span>
-  <span class='rubyid_if if kw'>if</span> <span class='rubyid_@return_type ivar id'>@return_type</span> <span class='eq op'>==</span> <span class='rubyid_VOID constant id'>VOID</span>
+  <span class='rubyid_if if kw'>if</span> <span class='rubyid_@return_type ivar id'>@return_type</span> <span class='eq op'>==</span> <span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_VOID constant id'>VOID</span>
     <span class='rubyid_builder identifier id'>builder</span><span class='dot token'>.</span><span class='rubyid_ret_void identifier id'>ret_void</span>
   <span class='rubyid_else else kw'>else</span>
     <span class='rubyid_builder identifier id'>builder</span><span class='dot token'>.</span><span class='rubyid_ret identifier id'>ret</span><span class='lparen token'>(</span><span class='rubyid_builder identifier id'>builder</span><span class='dot token'>.</span><span class='rubyid_load identifier id'>load</span><span class='lparen token'>(</span><span class='rubyid_@return_val ivar id'>@return_val</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -1423,12 +1503,12 @@ Generator.</p>
       <pre class="lines">
 
 
-70
-71
-72</pre>
+77
+78
+79</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 70</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/function.rb', line 77</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_varargs? fid id'>varargs?</span>
   <span class='rubyid_return return kw'>return</span> <span class='rubyid_@varargs ivar id'>@varargs</span>
@@ -1444,9 +1524,9 @@ Generator.</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Jun  6 17:35:12 2012 by
+  Generated on Sat Jun 16 20:46:02 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.1 (ruby-1.8.7).
+  0.8.2.1 (ruby-1.8.7).
 </div>
 
   </body>

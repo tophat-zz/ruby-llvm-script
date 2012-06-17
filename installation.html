@@ -30,39 +30,42 @@
 
 <p>In order to compile LLVM, you will need to download the source from <a href="http://llvm.org/releases/">here</a> (preferably version 3.0). Then you will need to navigate to the source in Command Prompt (Windows) or Terminal (Mac). To do this use <code>cd</code>:</p>
 
-<pre><code>cd path/to/llvm/source
+<pre><code>$ cd path/to/llvm/source
 </code></pre>
 
 <p>Then configure LLVM with the following:</p>
 
-<pre><code>./configure --enable-shared --enable-jit
+<pre><code>$ ./configure --enable-shared --enable-jit
 </code></pre>
 
 <p>After that finishes, run:</p>
 
-<pre><code>make
-</code></pre>
-
-<p>Then finally:</p>
-
-<pre><code>make install
+<pre><code>$ make
+$ make install
 </code></pre>
 
 <h3>From Homebrew</h3>
 
 <p>You can also install LLVM through <a href="http://mxcl.github.com/homebrew/">Homebrew</a>:</p>
 
-<pre><code>brew install llvm --shared --jit
+<pre><code>$ brew install llvm --shared --jit
 </code></pre>
 
 <h2>Installing Ruby-LLVM-Script</h2>
 
-<p>Then you can install ruby-llvm-script with: </p>
+<h3>From Rubygems</h3>
 
-<pre><code>sudo gem install ruby-llvm-script
+<p>After installing LLVM, you can install ruby-llvm-script with: </p>
+
+<pre><code>$ [sudo] gem install ruby-llvm-script
 </code></pre>
 
-<p>NOTE: This will install <a href="http://github.com/jvoorhis/ruby-llvm">ruby-llvm</a> as a dependency.</p></section>
+<h3>From Source</h3>
+
+<p>You can also install ruby-llvm-script from the source by downloading the repository and running bundler:</p>
+
+<pre><code>$ bundle install
+</code></pre></section>
 </div>
     <footer><p>Project and Website Copyright © 2012 <a href="https://github.com/tophat">tophat</a></p>
       <p>Hosted on GitHub Pages — Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>

@@ -6,7 +6,7 @@
 <title>
   Module: Kernel
   
-    &mdash; Documentation by YARD 0.8.1
+    &mdash; Documentation by YARD 0.8.2.1
   
 </title>
 
@@ -114,7 +114,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#libraries-instance_method" title="#libraries (instance method)">- (Object) <strong>libraries</strong> </a>
+      <a href="#libraries-instance_method" title="#libraries (instance method)">- (Hash&lt;Symbol, LLVM::Script::Library&gt;) <strong>libraries</strong> </a>
     
 
     
@@ -128,7 +128,10 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Retrieves a hash of all libraries (not including subclasses) that have been
+created.</p>
+</div></span>
   
 </li>
 
@@ -184,7 +187,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#programs-instance_method" title="#programs (instance method)">- (Object) <strong>programs</strong> </a>
+      <a href="#programs-instance_method" title="#programs (instance method)">- (Hash&lt;Symbol, LLVM::Script::Library&gt;) <strong>programs</strong> </a>
     
 
     
@@ -198,7 +201,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Retrieves a hash of all programs that have been created.</p>
+</div></span>
   
 </li>
 
@@ -215,13 +220,43 @@
       <div class="method_details first">
   <h3 class="signature first" id="libraries-instance_method">
   
-    - (<tt>Object</tt>) <strong>libraries</strong> 
+    - (<tt>Hash&lt;Symbol, <span class='object_link'><a href="LLVM/Script/Library.html" title="LLVM::Script::Library (class)">LLVM::Script::Library</a></span>&gt;</tt>) <strong>libraries</strong> 
   
 
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Retrieves a hash of all libraries (not including subclasses) that have been
+created.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash&lt;Symbol, <span class='object_link'><a href="LLVM/Script/Library.html" title="LLVM::Script::Library (class)">LLVM::Script::Library</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An hash where each symbol is the name of the  library it points to.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
@@ -235,7 +270,7 @@
       <pre class="code"><span class="info file"># File 'lib/llvm/script/kernel.rb', line 41</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_libraries identifier id'>libraries</span>
-  <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Library constant id'>Library</span><span class='dot token'>.</span><span class='rubyid_libraries identifier id'>libraries</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Library constant id'>Library</span><span class='dot token'>.</span><span class='rubyid_collection identifier id'>collection</span>
 <span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
@@ -564,13 +599,42 @@ ALWAYS :none).</p>
       <div class="method_details ">
   <h3 class="signature " id="programs-instance_method">
   
-    - (<tt>Object</tt>) <strong>programs</strong> 
+    - (<tt>Hash&lt;Symbol, <span class='object_link'><a href="LLVM/Script/Library.html" title="LLVM::Script::Library (class)">LLVM::Script::Library</a></span>&gt;</tt>) <strong>programs</strong> 
   
 
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Retrieves a hash of all programs that have been created.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash&lt;Symbol, <span class='object_link'><a href="LLVM/Script/Library.html" title="LLVM::Script::Library (class)">LLVM::Script::Library</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An hash where each symbol is the name of the  program it points to.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
@@ -584,7 +648,7 @@ ALWAYS :none).</p>
       <pre class="code"><span class="info file"># File 'lib/llvm/script/kernel.rb', line 21</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_programs identifier id'>programs</span>
-  <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Program constant id'>Program</span><span class='dot token'>.</span><span class='rubyid_programs identifier id'>programs</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Program constant id'>Program</span><span class='dot token'>.</span><span class='rubyid_collection identifier id'>collection</span>
 <span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
@@ -597,9 +661,9 @@ ALWAYS :none).</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Jun  6 17:35:07 2012 by
+  Generated on Sat Jun 16 20:45:49 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.1 (ruby-1.8.7).
+  0.8.2.1 (ruby-1.8.7).
 </div>
 
   </body>

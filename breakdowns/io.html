@@ -88,7 +88,7 @@
 </div>
 
 
-<p>This defines a ruby-llvm-script library. A program is an executable library. This means that libraries have all the functions and features of programs, except they can't be executed, compiled, or optimized (and don't have a <code>main</code> function). The reason for the existence of libraries is so that other programmers can write and distribute ruby-llvm-script that you can use in your programs. Also, like classes and modules in Ruby, they can be used to help compartmentalize your scripts. I will go over the functions contained in the "stdio" library as we come across them in the program.</p>
+<p>This defines a <a href="http://tophat.github.com/ruby-llvm-script/doc/LLVM/Script/Library.html">LLVM::Script::Library</a>. What we have been working with in the past examples are programs, which are executable libraries. This means that libraries have all the functions and features of programs, except they can't be executed, compiled, or optimized (and don't have a <code>main</code> function). The reason for the existence of libraries is so that other programmers can write and distribute ruby-llvm-script code that you can use in your programs. Also, like classes and modules in Ruby, they can be used to help compartmentalize your scripts. I will go over the functions contained in the "stdio" library as we come across them in the program.</p>
 
 <div class="highlight">
 <pre><span class="n">import</span> <span class="s2">"stdio"</span>
@@ -114,7 +114,7 @@
 </div>
 
 
-<p>Before we tackle this line, we need to clear something up. In LLVM (and in C), a string is an array of 8-bit (-128-127) integers, each integer representing a single character in the string. For this reason, 8-bit integers are commonly called <code>CHAR</code>'s. This line gets allocates a pointer to an array of <code>CHAR</code>'s the size of <code>bufsize</code> (previously defined as 800). This is equivalent to creating a 800 character string in ruby.</p>
+<p>Before we tackle this line, we need to clear something up. In LLVM (and in C), a string is an array of 8-bit (-128-127) integers, each integer representing a single character in the string. For this reason, 8-bit integers are commonly called <code>CHAR</code>'s. This line allocates a pointer to an array of <code>CHAR</code>'s the size of <code>bufsize</code> (previously defined as 800). This is equivalent to creating a 800 character string in ruby.</p>
 
 <div class="highlight">
 <pre><span class="n">extern</span> <span class="ss">:fgets</span><span class="p">,</span> <span class="o">[</span><span class="no">CHARPTR</span><span class="p">,</span> <span class="no">INT</span><span class="p">,</span> <span class="no">FILEPTR</span><span class="o">]</span><span class="p">,</span> <span class="no">CHARPTR</span>
@@ -141,7 +141,7 @@
 </div>
 
 
-<p>As stated in the C reference for <a href="http://www.cplusplus.com/reference/clibrary/cstring/strchr/">strchr</a>, it returns a pointer to first occurrence of the a character (the <code>INT</code> argument) in the given string (<code>CHARPTR</code>). In this case, it returns a pointer to the newline character ("\n", <a href="http://www.asciitable.com/">ASCII</a> 10) in <code>buf</code>.</p>
+<p>As stated in the C reference for <a href="http://www.cplusplus.com/reference/clibrary/cstring/strchr/">strchr</a>, it returns a pointer to first occurrence of a character (the <code>INT</code> argument) in the given string (<code>CHARPTR</code>). In this case, it returns a pointer to the newline character ("\n", <a href="http://www.asciitable.com/">ASCII</a> 10) in <code>buf</code>.</p>
 
 <div class="highlight">
 <pre><span class="n">store</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">p</span><span class="p">)</span>
