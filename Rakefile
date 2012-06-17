@@ -11,11 +11,7 @@ end
 
 begin
   require 'yard'
-
-  YARD::Rake::YardocTask.new do |t|
-    t.options = %W[--no-private]
-    t.files = [(Dir['lib/**/*.rb'] - ['lib/llvm/ext.rb', 'lib/llvm/linker.rb']), "-", "LICENSE"].flatten
-  end
+  YARD::Rake::YardocTask.new
 rescue LoadError
   warn "Yard is not installed. `gem install yard` to build documentation."
 end
