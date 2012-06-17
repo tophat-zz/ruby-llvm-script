@@ -25,7 +25,7 @@ begin
 
   Rcov::RcovTask.new do |t|
     t.libs << "test"
-    t.rcov_opts << "--exclude gems" << "--exclude 'lib/llvm/ext.rb'" << "--exclude 'lib/llvm/script/core.rb'"
+    t.rcov_opts << "--exclude gems" << "--exclude 'lib/llvm/ext.rb'" << "--exclude 'lib/llvm/script/platform.rb'"
     t.test_files = FileList["test/**/tc_*.rb"]
   end
 rescue LoadError

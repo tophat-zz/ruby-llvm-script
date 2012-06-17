@@ -2,12 +2,18 @@
 Duplication:
   max_calls: 3
   exclude:
-  - LLVM::Script::Generator#convert
+  - LLVM::Script#self.Convert
 LongParameterList:
   max_params: 5
 UncommunicativeModuleName: 
   accept: 
   - LLVM::C
+UncommunicativeMethodName: 
+  accept: 
+  - LLVM::Script#self.Convert
+  - LLVM::Script#self.Decimal
+  - LLVM::Script#self.Validate
+  - LLVM::Script#self.Typename
 IrresponsibleModule:
   exclude:
   - LLVM::Script::ScriptObject

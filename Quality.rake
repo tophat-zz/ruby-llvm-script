@@ -11,7 +11,7 @@ task :flog do
   threshold = 130
     
   bad_methods = flog.totals.select do |name, score|
-    next if name == "LLVM::Script::Generator#convert"
+    next if name == "LLVM::Script::Convert"
     score > threshold
   end
   
@@ -27,7 +27,7 @@ end
  
 desc "Analyze code duplication"
 task :flay do
-  threshold = 32.5
+  threshold = 35.4
   flay = Flay.new({:fuzzy => false, :verbose => false, :mass => threshold})
   flay.process(*Flay.expand_dirs_to_files(['lib'])) 
   

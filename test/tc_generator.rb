@@ -9,10 +9,6 @@ class TestGenerator < MiniTest::Unit::TestCase
     @gen = LLVM::Script::Generator.new(@lib, @mod, @fun)
   end
   
-  def convert(val, hint=nil)
-    @gen.instance_eval { convert(val, hint) }
-  end
-  
   def exec(type=LLVM::Int, &block)
     prog = LLVM::Script::Program.new
     func = prog.function :testfunc, [], type do
@@ -176,7 +172,7 @@ class TestGenerator < MiniTest::Unit::TestCase
   end
   
   def test_bitcast
-    str = @lib.string("Testing")
+    str = LLVM::Script::Convert("Testing")
     sptr = @gen.bitcast(str, LLVM::Script::Types::CHARPTR)
     iptr = @gen.bitcast(100, LLVM::Script::Types::INTPTR)
     assert_equal :pointer, sptr.type.kind
@@ -578,24 +574,5 @@ class TestGenerator < MiniTest::Unit::TestCase
     assert @gen.respond_to?(:testmacro)
     assert @gen.respond_to?(:testglobal)
     refute @gen.respond_to?(:nonexistant)
-  end
-  
-  def test_convert
-    assert_instance_of LLVM::Int1,            convert(true)
-    assert_instance_of LLVM::Int1,            convert(false)
-    assert_instance_of LLVM::Float,           convert(2.5)
-    assert_instance_of LLVM::Int,             convert(512)
-    assert_instance_of LLVM::GlobalVariable,  convert("Test")
-    assert_instance_of LLVM::ConstantArray,   convert([12, 4, 9])
-    assert_instance_of LLVM::ConstantVector,  convert([12, 4, 9], :vector)
-    assert bexec { is_null(convert(nil, LLVM::Script::Types::CHARPTR)) }
-    assert_raises(ArgumentError) { convert(Object.new) }
-  end
-  
-  def test_type_name
-    assert_equal LLVM::Int32.name,  @gen.instance_eval { type_name(LLVM::Int32.type) }
-    assert_equal "Integer pointer", @gen.instance_eval { type_name(LLVM::Script::Types::CHARPTR) }
-    assert_equal "Void",            @gen.instance_eval { type_name(LLVM::Script::Types::VOID) }
-    assert_equal "Numeric",         @gen.instance_eval { type_name(:numeric) }
   end
 end

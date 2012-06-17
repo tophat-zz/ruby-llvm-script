@@ -11,11 +11,6 @@ module LLVM
       # When to prefix globals with the name of the library.
       attr_reader :prefix
       
-      # A Uuid placed in front of global string names in LLVM IR to prevent them from conflicting 
-      # with other globals. It is chopped down to 5 characters to make the name somewhat readable 
-      # (thought not extremely unique).
-      @@str_id = nil
-      
       @@libraries = {}      # @private
       @@last_library = nil  # @private
       
@@ -58,16 +53,13 @@ module LLVM
       # @param [Proc] block A block with the insides of the library.
       # @return [LLVM::Script::Library] The new library.
       def initialize(name="", opts={}, &block)
-        @@str_id ||= make_uuid[0, 5]
         @prefix = opts[:prefix] == :none || opts[:prefix] == :all ? opts[:prefix] : :smart
         @visibility = opts[:visibility] == :private ? :private : :public
         @name = name.empty? ? make_uuid[0, 10] : name
         @module = LLVM::Module.new(name)
-        @strings = {}
         @globals = {:public=>{}, :private=>{}}
         @functions = {:public=>{}, :private=>{}}
         @macros = {:public=>{}, :private=>{}}
-        @elements = {}
         if self.instance_of?(Library)
           @@last_library = self
           @@libraries[@name.to_sym] = self
@@ -145,15 +137,6 @@ module LLVM
           else
             glob = global(name, info.type)
             glob.global_constant = info.global_constant?
-          end
-        end
-        library.strings.each do |str, glob|
-          if @strings.has_key?(str)
-            @strings[str].initializer = nil
-          else
-            glb = @module.globals.add(glob.type, glob.name)
-            glb.global_constant = 1
-            @strings[str] = glb
           end
         end
         err = @module.link(library, :linker_destroy_source)
@@ -272,12 +255,6 @@ module LLVM
       end
       private :values
       
-      # A hash of strings in the library.
-      # @return [Hash{String, LLVM::GlobalValue}] Hash of string values pointing to their LLVM equivalants.
-      def strings
-        return @strings
-      end
-      
       # Creates a new function.
       # @param [String, Symbol] name The name of the function.
       # @param [Array<LLVM::Type>] args An array containing the types of the args in the function.
@@ -347,22 +324,6 @@ module LLVM
         glob = global(name, info)
         glob.global_constant = 1
         return glob
-      end
-      
-      # Converts a ruby string into a LLVM global string (these strings are constant).
-      # @param [String] value The contents of the new string.
-      # @param [String, Symbol] name The optional name of the string.
-      # @return [LLVM::GlobalValue] The new string.
-      def string(value, name="")
-        if @strings.has_key?(value)
-          return @strings[value]
-        else
-          array = LLVM::ConstantArray.string(value)
-          glob = @module.globals.add(array.type, "#{@@str_id}-#{value}")
-          glob.initializer = array
-          glob.global_constant = 1
-          @strings[value] = glob
-        end
       end
     end
   end

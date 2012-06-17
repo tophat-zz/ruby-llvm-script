@@ -54,8 +54,6 @@ class TestLibrary < MiniTest::Unit::TestCase
     refute_includes lib.functions,  :importee_uncallable
     assert_includes lib.globals,    :importee_ret_int
     assert_includes lib.macros,     :importee_gret
-    assert_includes lib.strings,    "Testing"
-    assert_includes lib.strings,    "Uncallable"
   end
   
   def test_import_global_conflict
@@ -144,13 +142,6 @@ class TestLibrary < MiniTest::Unit::TestCase
     check_values(lib, :globals, :testglobal)
   end
   
-  def test_strings
-    lib = LLVM::Script::Library.new
-    str = lib.string "Testing 123"
-    assert_includes lib.strings, "Testing 123"
-    assert_equal str, lib.strings["Testing 123"]
-  end
-  
   def test_function
     testcase = self
     lib = LLVM::Script::Library.new
@@ -218,13 +209,5 @@ class TestLibrary < MiniTest::Unit::TestCase
     glob = lib.constant :testconstant, LLVM::Int.from_i(8)
     assert_instance_of LLVM::GlobalVariable, glob
     assert_equal 1, glob.global_constant?
-  end
-  
-  def test_string
-    lib = LLVM::Script::Library.new
-    str = lib.string "Testing 123"
-    assert_equal 1, str.global_constant?
-    assert_instance_of LLVM::GlobalVariable, str
-    assert_equal str, lib.string("Testing 123")
   end
 end
