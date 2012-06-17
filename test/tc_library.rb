@@ -171,7 +171,7 @@ class TestLibrary < MiniTest::Unit::TestCase
   
   def test_global
     lib = LLVM::Script::Library.new("testlib")
-    glob = lib.global :testglobal, LLVM::Int.from_i(8)
+    glob = lib.global :testglobal, 8
     refute_equal :testglobal, glob.name.to_sym
     assert_equal LLVM::Int.from_i(8), glob.initializer
     assert_instance_of LLVM::GlobalVariable, glob

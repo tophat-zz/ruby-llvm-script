@@ -221,7 +221,7 @@ module LLVM
       
       # Creates a new global value.
       # @param [String, Symbol] name The name of the global.
-      # @param [LLVM::Value, LLVM::Type] info If an LLVM::Value, the default value of the global. 
+      # @param [Object] info If an LLVM::Value or Ruby equivalent, the default value of the global. 
       #   Otherwise, it is the type of the external global.
       # @return [LLVM::GlobalValue] The new global.
       def global(name, info)
@@ -229,8 +229,9 @@ module LLVM
           glob = @module.globals.add(info, name.to_s)
           @globals[:public][name.to_sym] = glob
         else
-          glob = @module.globals.add(info.type, "#{@address}.#{name.to_s}")
-          glob.initializer = info
+          val = LLVM::Script::Convert(info)
+          glob = @module.globals.add(val.type, "#{@address}.#{name.to_s}")
+          glob.initializer = val
           glob.linkage = :private if @visibility == :private
           @globals[@visibility][name.to_sym] = glob
         end
