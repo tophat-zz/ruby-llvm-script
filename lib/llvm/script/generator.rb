@@ -100,7 +100,7 @@ module LLVM
       # @param [LLVM::Value, Numeric] amount The amount to add. 
       # @return [LLVM::Instruction] The newly incremented numeric pointer.
       def inc(ptr, amount=1)
-        validate_pointer(ptr, "The inc function can only increment pointers.")
+        ptr = convert(ptr, :pointer)
         val = @builder.load(ptr)
         @builder.store(add(val, amount), ptr)
         return ptr
@@ -111,7 +111,7 @@ module LLVM
       # @param [LLVM::Value, Numeric] amount The amount to subtract.
       # @return [LLVM::Instruction] The newly decremented numeric pointer.
       def dec(ptr, amount=1)
-        validate_pointer(ptr, "The dec function can only decrement pointers.")
+        ptr = convert(ptr, :pointer)
         val = @builder.load(ptr)
         @builder.store(sub(val, amount), ptr)
         return ptr
@@ -279,7 +279,7 @@ module LLVM
       # @param [LLVM::Type] type The type of integer to convert the pointer into.
       # @return [LLVM::Instruction] The resulting integer.
       def ptrtoint(ptr, type)
-        @builder.ptr2int(validate_pointer(ptr, "The ptr2int function requires a pointer."), validate_type(type))
+        @builder.ptr2int(convert(ptr, :pointer), validate_type(type))
       end
       alias ptr2int ptrtoint
       
@@ -297,9 +297,7 @@ module LLVM
       # @param [LLVM::Value] rptr The second pointer of the same type as the first.
       # @return [LLVM::Instruction] The resulting integer.
       def diff(lptr, rptr)
-        lhs = validate_pointer(lptr, "First value passed to diff is not a pointer.")
-        rhs = validate_pointer(rptr, "Second value passed to diff is not a pointer.")
-        Instruction.from_ptr(C.build_ptr_diff(@builder.to_ptr, lhs, rhs, ""))
+        Instruction.from_ptr(C.build_ptr_diff(@builder.to_ptr, convert(lptr, :pointer), convert(rptr, :pointer), ""))
       end
       
       # Casts an integer, float, or pointer to a different size (ex. short to long, double to float, 
@@ -352,14 +350,14 @@ module LLVM
       # @param [LLVM::Value] ptr The pointer to free.
       # @return [LLVM::Instruction] The free instruction.
       def free(ptr)
-        @builder.free(validate_pointer(ptr, "The free function can only free pointers."))
+        @builder.free(convert(ptr, :pointer))
       end
     
       # Gets the value a pointer points to.
       # @param [LLVM::Value] ptr The pointer to load.
       # @return [LLVM::Instruction] The value the pointer points to.
       def load(ptr)
-        @builder.load(validate_pointer(ptr, "The load function can only load pointers."))
+        @builder.load(convert(ptr, :pointer))
       end
     
       # Stores a value into a pointer (makes it point to this value).
@@ -367,7 +365,7 @@ module LLVM
       # @param [LLVM::Value] ptr The pointer to store the value in.
       # @return [LLVM::Instruction] The store instruction.
       def store(val, ptr)
-        validate_pointer(ptr, "The store function can only store values in pointers.")
+        ptr = convert(ptr, :pointer)
         @builder.store(convert(val, ptr.type.element_type), ptr)
       end
     
@@ -378,8 +376,7 @@ module LLVM
       # @return [LLVM::Instruction] A pointer to the value at the given index.
       # @see http://llvm.org/docs/GetElementPtr.html
       def gep(ptr, *indices)
-        indices = indices.flatten.map { |idx| index = convert(idx, :integer) }
-        @builder.gep(validate_pointer(ptr, "The gep function can only index pointers."), indices)
+        @builder.gep(convert(ptr, :pointer), indices.flatten.map{ |idx| convert(idx, :integer) })
       end
     
       # Same as {#gep}, but also loads the pointer after finding it.
@@ -842,7 +839,7 @@ module LLVM
           end
         elsif val.kind_of?(LLVM::Script::ScriptObject)
           return val
-        elsif (val == 0 || val.nil?) && !type.nil? && type.kind == :pointer
+        elsif (val == 0 || val.nil?) && !type.nil? && kind == :pointer
           return type.null_pointer
         elsif val == true && (kind.nil? || kind == :numeric || kind == :integer)
           return (klass || Types::BOOL).from_i(1)
@@ -854,7 +851,8 @@ module LLVM
           return (klass || Types::INT).from_i(val.to_i)
         elsif val.kind_of?(String) && (kind.nil? || kind == :pointer || kind == :array)
           str = @library.string(val.to_s)
-          return (!type.nil? && str.type != type) ? @builder.bit_cast(str, type) : str
+          type ||= (kind == :pointer ? Types::CHARPTR : str.type)
+          return str.type != type ? @builder.bit_cast(str, type) : str
         elsif kind == :array || (kind.nil? && val.kind_of?(Array))
           type = !type.nil? ? type.element_type : convert(val.to_a.first).type
           return LLVM::ConstantArray.const(type, val.to_a.map{|elm| convert(elm, type)})
@@ -880,13 +878,6 @@ module LLVM
           raise ArgumentError, "Type passed to Generator function must be of LLVM::Type. #{type.class.name} given."
         end
         return ntype
-      end
-      
-      def validate_pointer(ptr, message)
-        unless ptr.kind_of?(LLVM::Value) && ptr.type.kind == :pointer
-          raise ArgumentError, "#{message} #{type_name(ptr)} given."
-        end
-        return ptr
       end
     
       def type_name(obj)

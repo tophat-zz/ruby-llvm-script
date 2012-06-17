@@ -247,7 +247,7 @@ class TestGenerator < MiniTest::Unit::TestCase
     }
     ptr = @gen.alloca(LLVM::Int)
     assert_raises(ArgumentError) { @gen.ptrtoint(ptr, "Not a type") }
-    assert_raises(ArgumentError) { @gen.ptrtoint("Not a pointer", LLVM::Int) }
+    assert_raises(ArgumentError) { @gen.ptrtoint(8, LLVM::Int) }
     assert_raises(ArgumentError) { @gen.inttoptr(ptr, "Not a type") }
   end
   
@@ -293,7 +293,7 @@ class TestGenerator < MiniTest::Unit::TestCase
   
   def test_free
     assert @gen.free(@gen.malloc(LLVM::Int))
-    assert_raises(ArgumentError) { @gen.free("Not a pointer") }
+    assert_raises(ArgumentError) { @gen.free(45) }
   end
   
   def test_load_and_store
@@ -302,8 +302,8 @@ class TestGenerator < MiniTest::Unit::TestCase
       store(8.2, ptr)
       load(ptr)
     }
-    assert_raises(ArgumentError) { @gen.load("Not a pointer") }
-    assert_raises(ArgumentError) { @gen.store("Not a pointer") }
+    assert_raises(ArgumentError) { @gen.load(82) }
+    assert_raises(ArgumentError) { @gen.store(15) }
   end
   
   def test_gep
@@ -313,7 +313,7 @@ class TestGenerator < MiniTest::Unit::TestCase
       store(32, intptr)
       load(intptr)
     }
-    assert_raises(ArgumentError) { @gen.gep("Not a pointer") }
+    assert_raises(ArgumentError) { @gen.gep(31) }
   end
   
   def test_gev
@@ -322,7 +322,7 @@ class TestGenerator < MiniTest::Unit::TestCase
       sep(struct, 0, 0, 58.5)
       gev(struct, 0, 0)
     }
-    assert_raises(ArgumentError) { @gen.gev("Not a pointer") }
+    assert_raises(ArgumentError) { @gen.gev(63) }
   end
   
   def test_sep
@@ -331,7 +331,7 @@ class TestGenerator < MiniTest::Unit::TestCase
       ptr = sep(struct, 0, 0, 21.8)
       load(ptr)
     }
-    assert_raises(ArgumentError) { @gen.sep("Not a pointer") }
+    assert_raises(ArgumentError) { @gen.sep(17) }
   end
   
   def test_insert
