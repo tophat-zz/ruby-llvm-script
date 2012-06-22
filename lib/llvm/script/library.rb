@@ -33,39 +33,37 @@ module LLVM
       #             imported library.
       # LLVM IR::   A warning will be printed and if the linker is unable to resolve the conflict 
       #             a RuntimeError will be raised.
-      # @param [String, Symbol, LLVM::Script::Library] library The name of the library to import or the 
-      #   library itself.
-      # @return [LLVM::Script::Library] The imported library.
+      # @param [String, Symbol, LLVM::Script::Namespace] space The name of the namespace 
+      #   to import or the namespace itself (can not import programs).
       # @raise [RuntimeError] Raised if the LLVM Linker fails.
-      def import(library)
-        if library.is_a?(String) || library.is_a?(Symbol)
-          unless self.include?(library)
-            raise ArgumentError, "Library, #{library.to_s}, does not exist."
-          end
-          library = self.lookup(library)
-        elsif library.class != Library
-          raise ArgumentError, "Can only import libraries. #{library.class.name} given."
+      def import(space)
+        if space.is_a?(String) || space.is_a?(Symbol)
+          raise ArgumentError, "Namespace, #{space.to_s}, does not exist." unless include?(space)
+          space = lookup(space)
         end
-        @macros[:public].merge!(library.macros)
-        library.functions.each do |name, func|
-          if @module.functions.named(func.name)
-            warn("Imported function's (#{name.to_s}) address, #{func.name}, already exists.")
+        raise ArgumentError, "Cannot import programs." if space.instance_of?(Program)
+        if space.instance_of?(Library)
+          @macros[:public].merge!(space.macros)
+          space.functions.each do |name, func|
+            if @module.functions.named(func.name)
+              warn("Imported function's (#{name.to_s}) address, #{func.name}, already exists.")
+            end
+            args = func.varargs? ? func.arg_types + [Types::VARARGS] : func.arg_types
+            fun = Function.new(self, @module, func.name, args, func.return_type)
+            @functions[:public][name.to_sym] = fun
           end
-          args = func.varargs? ? func.arg_types + [Types::VARARGS] : func.arg_types
-          fun = Function.new(self, @module, func.name, args, func.return_type)
-          @functions[:public][name.to_sym] = fun
-        end
-        library.globals.each do |name, info|
-          if @module.globals.named(info.name)
-            warn("Imported global's (#{name.to_s}) address, #{info.name}, already exists.")
+          space.globals.each do |name, info|
+            if @module.globals.named(info.name)
+              warn("Imported global's (#{name.to_s}) address, #{info.name}, already exists.")
+            end
+            glob = @module.globals.add(info.type, info.name)
+            glob.global_constant = info.global_constant?
+            @globals[:public][name.to_sym] = glob
           end
-          glob = @module.globals.add(info.type, info.name)
-          glob.global_constant = info.global_constant?
-          @globals[:public][name.to_sym] = glob
+          err = @module.link(space, :linker_destroy_source)
+          raise RuntimeError, "Failed to link library, #{library.name.to_s}, to #{name}." if err
         end
-        err = @module.link(library, :linker_destroy_source)
-        raise RuntimeError, "Failed to link library, #{library.name.to_s}, to #{name}." if err
-        return library
+        space.collection.values.each{ |space| import(space) unless space.instance_of?(Program) }
       end
       
       # Shortcut to visibility with :public as the new visiblility. Equivalant to:
@@ -207,7 +205,7 @@ module LLVM
         # for atr in attributes
         #  fun.add_attribute(atr)
         # end
-        @functions[:public][name.to_sym] = fun
+        @functions[@visibility][name.to_sym] = fun
       end
       
       # Creates a new macro.
@@ -246,6 +244,13 @@ module LLVM
         glob = global(name, info)
         glob.global_constant = 1
         return glob
+      end
+      
+      # Defines a new struct type. Takes the same arguments as {LLVM::Script::Struct#initialize}.
+      # @return (see LLVM::Script::Struct#initialize)
+      # @see LLVM::Script::Struct#initialize
+      def struct(*args)
+        return LLVM::Script::Struct.new(*args)
       end
     end
   end

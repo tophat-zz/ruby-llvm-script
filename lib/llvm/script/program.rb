@@ -67,7 +67,13 @@ module LLVM
       def optimize(*passes)
         @jit ||= LLVM::JITCompiler.new(@module)
         manager = LLVM::PassManager.new(@jit)
-        passes.each{ |name| manager.__send__("#{name.to_s}!".to_sym) }
+        passes.each do |name|
+          begin
+            manager.__send__("#{name.to_s}!".to_sym) 
+          rescue NoMethodError
+            raise ArgumentError, "Unkown pass, #{name.to_s}, given to optimize."
+          end
+        end
         manager.run(@module)
       end
     end

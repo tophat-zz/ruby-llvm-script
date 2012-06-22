@@ -4,7 +4,7 @@ require 'rubygems'
 require 'llvm/script'
 require 'llvm/script/kernel'
 
-FILE = LLVM::Struct("FILE")
+FILE = LLVM::Script::Struct.new("FILE")
 FILEPTR = FILE.pointer
 
 library 'stdio' do  

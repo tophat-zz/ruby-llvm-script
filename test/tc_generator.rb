@@ -301,8 +301,8 @@ class TestGenerator < MiniTest::Unit::TestCase
   
   def test_gep
     assert_equal 32, exec {
-      struct = alloca(LLVM::Struct(LLVM::Int))
-      intptr = gep(struct, 0, 0.2)
+      struct = alloca(LLVM::Script::Struct.new(:int => LLVM::Int))
+      intptr = gep(struct, 0, 0)
       store(32, intptr)
       load(intptr)
     }
@@ -311,17 +311,17 @@ class TestGenerator < MiniTest::Unit::TestCase
   
   def test_gev
     assert_equal 58, exec {
-      struct = alloca(LLVM::Struct(LLVM::Int))
-      sep(struct, 0, 0, 58.5)
-      gev(struct, 0, 0)
+      struct = alloca(LLVM::Script::Struct.new(:int => LLVM::Int))
+      sep(struct, 0, :int, 58.5)
+      gev(struct, :int)
     }
     assert_raises(ArgumentError) { @gen.gev(63) }
   end
   
   def test_sep
     assert_equal 21, exec {
-      struct = alloca(LLVM::Struct(LLVM::Int))
-      ptr = sep(struct, 0, 0, 21.8)
+      struct = alloca(LLVM::Script::Struct.new(:int => LLVM::Int))
+      ptr = sep(struct, :int, 21.8)
       load(ptr)
     }
     assert_raises(ArgumentError) { @gen.sep(17) }

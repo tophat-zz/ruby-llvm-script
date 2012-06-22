@@ -45,6 +45,7 @@ class TestProgram < MiniTest::Unit::TestCase
   
   def test_optimize
     prog = LLVM::Script::Program.new("testprog")
+    assert_raises(ArgumentError) { prog.optimize(:noexistant) }
     LLVM::PassManager.any_instance.expects(:gdce!)
     prog.optimize(:gdce)
   end

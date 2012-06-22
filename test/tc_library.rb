@@ -154,7 +154,7 @@ class TestLibrary < MiniTest::Unit::TestCase
     lib = LLVM::Script::Library.new("testlib")
     lib.private
     func = lib.extern :testfunc
-    assert_includes lib.functions, :testfunc
+    refute_includes lib.functions, :testfunc
     assert_instance_of LLVM::Script::Function, func
     assert_equal :external, func.linkage
   end
@@ -198,5 +198,11 @@ class TestLibrary < MiniTest::Unit::TestCase
     glob = lib.constant :testconstant, LLVM::Int.from_i(8)
     assert_instance_of LLVM::GlobalVariable, glob
     assert_equal 1, glob.global_constant?
+  end
+  
+  def test_struct
+    lib = LLVM::Script::Library.new("testlib")
+    struct = lib.struct :teststruct
+    assert_instance_of LLVM::Script::Struct, struct
   end
 end

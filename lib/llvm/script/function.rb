@@ -28,10 +28,10 @@ module LLVM
         @return_type = ret
         if args.last == Types::VARARGS
           args.pop
-          @type = LLVM::Function(args.dup, ret, :varargs => true)
+          @type = LLVM::Function(args, ret, :varargs => true)
           @varargs = true
         else
-          @type = LLVM::Function(args.dup, ret)
+          @type = LLVM::Function(args, ret)
         end
         @arg_types = args
         @raw = @module.functions.add(name, @type)
@@ -118,11 +118,8 @@ module LLVM
     
       # Passes unknown methods to the internal LLVM::Function.
       def method_missing(sym, *args, &block)
-        if @raw.respond_to?(sym)
-          @raw.__send__(sym, *args, &block)
-        else
-          super(sym, *args, &block)
-        end
+        return @raw.__send__(sym, *args, &block) if @raw.respond_to?(sym)
+        super(sym, *args, &block)
       end
     
       # Checks for unknown methods in the internal LLVM::Function.

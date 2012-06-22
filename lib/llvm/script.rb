@@ -4,8 +4,10 @@ require 'llvm/execution_engine'
 require 'llvm/transforms/ipo'
 require 'llvm/transforms/scalar'
 
+require File.dirname(__FILE__) + '/script/struct'
 require File.dirname(__FILE__) + '/linker'
 require File.dirname(__FILE__) + '/ext'
+
 require File.dirname(__FILE__) + '/script/core'
 require File.dirname(__FILE__) + '/script/platform'
 require File.dirname(__FILE__) + '/script/types'

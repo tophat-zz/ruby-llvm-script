@@ -15,7 +15,7 @@ module LLVM
     #   String*   | ConstantArray, i8 pointer       | :pointer, :array      | Int8 array or pointer                    
     #   Array     | ConstantArray, ConstantVector   | :array, :vector       | An array type
     #
-    # * Strings can only be converted into i8 pointers in the {LLVM::Script::Generatpr#Convert Generator version of convert}.
+    # * Strings can only be converted into i8 pointers in the {LLVM::Script::Generator#Convert Generator version of convert}.
     # @param [Object] val The object to convert into a LLVM::Value.
     # @param [Symbol, LLVM::Type] hint A symbolic kind or a LLVM::Type that signifies what kind 
     #   an object should be. If nil, the value will be converted based on its class.
@@ -87,7 +87,7 @@ module LLVM
         return obj
       when :type
         type = LLVM::Type(obj)
-        unless type.kind_of?(LLVM::Type)
+        unless type.kind_of?(LLVM::Type) || type.kind_of?(LLVM::Script::Struct)
           raise ArgumentError, "#{obj.class.name} is not a valid LLVM::Type."
         end
         return type

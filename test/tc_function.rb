@@ -9,7 +9,7 @@ class TestFunction < MiniTest::Unit::TestCase
   
   def test_initialize
     func = make_function [LLVM::Int, LLVM::Float, LLVM::Script::Types::VARARGS], LLVM::Int8
-    assert_equal [LLVM::Int, LLVM::Float], func.arg_types
+    assert_equal [LLVM::Int.type, LLVM::Float.type], func.arg_types
     assert_equal LLVM::Int8, func.return_type
     assert_equal "rls.testlib.testfunc", func.name
     assert func.varargs?

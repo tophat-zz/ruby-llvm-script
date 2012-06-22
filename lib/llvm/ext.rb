@@ -34,7 +34,7 @@ module LLVM
   
   def self.Type(ty)
     case ty
-    when LLVM::Type 
+    when LLVM::Type, LLVM::Script::Struct
       return ty
     when LLVM::Value, Class
       return ty.type

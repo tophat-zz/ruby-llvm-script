@@ -109,6 +109,26 @@ module LLVM
       def program(name, &block)
         __factory__(Program, name, &block)
       end
+      
+      # If a method is unkown, tries to get a namespace in this namespaces collection with 
+      # the method symbol.
+      # @example
+      #   ex = namespace("ex")
+      #   ex.library "myamazinglib"
+      #   ex.myamazinglib # => <LLVM::Script::Library>
+      #
+      #   # Which allows one to do things like this.
+      #   ex.myamazinglib.function :awesomeness do
+      #     # function contents
+      #   end
+      def method_missing(meth, *args, &block)
+        return @collection[meth] || super(meth, *args, &block)
+      end
+      
+      # If a method is unkown, checks if their is a namespace with the method symbol.
+      def respond_to?(meth, *args, &block)
+        return @collection.include?(meth) || super(meth, *args, &block)
+      end
     end
     
     # A {LLVM::Script::Namespace} that is used by Kernel methods and is the default namespace for newly 

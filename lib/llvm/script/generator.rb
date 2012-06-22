@@ -377,7 +377,14 @@ module LLVM
       # @return [LLVM::Instruction] A pointer to the value at the given index.
       # @see http://llvm.org/docs/GetElementPtr.html
       def gep(ptr, *indices)
-        @builder.gep(Convert(ptr, :pointer), indices.flatten.map{ |idx| Convert(idx, :integer) })
+        ptr = Convert(ptr, :pointer)
+        type = ptr.type.element_type
+        type = type.element_type while type == :pointer
+        struct = LLVM::Script::Struct[type]
+        indices.flatten!
+        indices.unshift(0) if indices[0].is_a?(String) || indices[0].is_a?(Symbol) 
+        indices = indices.map{ |idx| idx.is_a?(String) || idx.is_a?(Symbol) ? struct.index(idx) : idx }
+        @builder.gep(ptr, indices.flatten.map{|idx| Convert(idx, :integer)})
       end
     
       # Same as {#gep}, but also loads the pointer after finding it.
@@ -649,7 +656,7 @@ module LLVM
         if cmp.nil? && inc.nil? && !block_provided
           raise ArgumentError, "A block, a compare proc, or a increment proc must be passed to loop."
         end
-        for var in [vars].flatten.compact
+        for var in Array(vars).compact
           var = Convert(var)
           ptr = @builder.alloca(var.type)
           @builder.store(var, ptr)
@@ -818,10 +825,10 @@ module LLVM
         super(sym, *args)
       end
       
-      # A version of {LLVM::Script::Convert} that can convert Ruby strings into i8 pointers.
-      # @param (see LLVM::Script::Convert)
-      # @return (see LLVM::Script::Convert)
-      # @see LLVM::Script::Convert
+      # A version of {LLVM::Script.Convert LLVM::Script::Convert} that can convert Ruby strings into i8 pointers.
+      # @param (see LLVM::Script.Convert)
+      # @return (see LLVM::Script.Convert)
+      # @see LLVM::Script.Convert LLVM::Script::Convert
       def convert(val, hint=nil)
         type = LLVM::Type(hint)
         kind = hint if hint.is_a?(Symbol)
