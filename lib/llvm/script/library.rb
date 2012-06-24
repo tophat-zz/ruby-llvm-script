@@ -1,19 +1,34 @@
 module LLVM
   module Script
-    # A namespace containing macros, functions, and globals.
-    class Library < Namespace 
+    # A mix-in for containers of functions, macros, and globals.
+    module Collection
+      
+      # The name of this library
+      attr_reader :name
+      
+      # The namespace in which this library resides.
+      attr_reader :namespace
+      
+      # The name of this library and its namespace's address joined together with a ".".
+      # Used to prefix functions and globals in LLVM IR.
+      attr_reader :address
+      
       # Creates a new library.
       # @param [Symbol, String] name A name for the library.
       # @param [LLVM::Script::Namespace] space The namespace in which this library resides.
       # @param [Proc] block A block with the insides of the library.
       # @return [LLVM::Script::Library] The new library.
       def initialize(name, space=DEFAULT_SPACE, &block)
+        @name = name.to_s
         @visibility = :public
         @module = LLVM::Module.new(name)
         @globals = {:public=>{}, :private=>{}}
         @functions = {:public=>{}, :private=>{}}
         @macros = {:public=>{}, :private=>{}}
-        super(name, space, &block)
+        @namespace = space
+        @namespace.add(self) if @namespace
+        @address = namespace.nil? ? @name : "#{namespace.address}.#{@name.gsub(" ", "")}"
+        build(&block) if ::Kernel.block_given?
       end
       
       # @private
@@ -26,22 +41,45 @@ module LLVM
         @module.dump
       end
       
-      # Imports the given library, adding all of its public functions, macros, and globals to the caller.
+      # Instance evaluates the given block.
+      # @param [Proc] block The block to evaluate.
+      def build(&block)
+        self.instance_eval(&block)
+      end
+
+      # Optimizes the library using the given passes.
+      # @param [List<String, Symbol>] passes A list of optimization passes to run. Equivalent to the methods
+      #   of LLVM::PassManager without the exclamation (!).
+      # @see http://jvoorhis.com/ruby-llvm/LLVM/PassManager.html
+      # @see http://llvm.org/docs/Passes.html 
+      def optimize(*passes)
+        @jit ||= LLVM::JITCompiler.new(@module)
+        manager = LLVM::PassManager.new(@jit)
+        passes.each do |name|
+          begin
+            manager.__send__("#{name.to_s}!".to_sym) 
+          rescue NoMethodError
+            raise ArgumentError, "Unkown pass, #{name.to_s}, given to optimize."
+          end
+        end
+        manager.run(@module)
+      end
+      
+      # Imports the given object, adding all of its public functions, macros, and globals to the caller.
       # If any object in the caller has the same name as one of the imported objects, one of the following
       # will happen depending on what level the conflict occurred:
       # Ruby::      The object will be overwritten, and from then on, the object will execute as declared in the 
       #             imported library.
       # LLVM IR::   A warning will be printed and if the linker is unable to resolve the conflict 
       #             a RuntimeError will be raised.
-      # @param [String, Symbol, LLVM::Script::Namespace] space The name of the namespace 
-      #   to import or the namespace itself (can not import programs).
+      # @param [String, Symbol, LLVM::Script::Namespace, LLVM::Script::Library] space The name of the object to 
+      #   import or the object itself. If a namespace, imports all of the contained namespaces and libraries.
       # @raise [RuntimeError] Raised if the LLVM Linker fails.
       def import(space)
         if space.is_a?(String) || space.is_a?(Symbol)
-          raise ArgumentError, "Namespace, #{space.to_s}, does not exist." unless include?(space)
-          space = lookup(space)
+          raise ArgumentError, "Namespace, #{space.to_s}, does not exist." unless @namespace.include?(space)
+          space = @namespace.lookup(space)
         end
-        raise ArgumentError, "Cannot import programs." if space.instance_of?(Program)
         if space.instance_of?(Library)
           @macros[:public].merge!(space.macros)
           space.functions.each do |name, func|
@@ -62,8 +100,11 @@ module LLVM
           end
           err = @module.link(space, :linker_destroy_source)
           raise RuntimeError, "Failed to link library, #{library.name.to_s}, to #{name}." if err
+        elsif space.kind_of?(Namespace)
+          space.children.values.each{ |child| import(child) if child.is_a?(Namespace) || child.is_a?(Library) }
+        else
+          raise ArgumentError, "Cam only import Namespaces and Libraries. #{space.class.name} given."
         end
-        space.collection.values.each{ |space| import(space) unless space.instance_of?(Program) }
       end
       
       # Shortcut to visibility with :public as the new visiblility. Equivalant to:
@@ -253,5 +294,7 @@ module LLVM
         return LLVM::Script::Struct.new(*args)
       end
     end
+    # A optimizable container of functions, macros, and globals. Its methods are defined in {Collection}.
+    class Library < ScriptObject; include Collection; end        
   end
 end

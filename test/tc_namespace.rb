@@ -32,10 +32,10 @@ class TestNamespace < MiniTest::Unit::TestCase
     assert_equal obj, @space.last
   end
   
-  def test_collection
+  def test_children
     obj = @space.library("testlib")
-    assert_includes @space.collection, obj.name.to_sym
-    assert_equal obj, @space.collection[obj.name.to_sym]
+    assert_includes @space.children, obj.name.to_sym
+    assert_equal obj, @space.children[obj.name.to_sym]
   end
   
   def test_namespace

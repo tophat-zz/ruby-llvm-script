@@ -42,11 +42,4 @@ class TestProgram < MiniTest::Unit::TestCase
     end
     assert_empty capture_stderr { prog.verify }
   end
-  
-  def test_optimize
-    prog = LLVM::Script::Program.new("testprog")
-    assert_raises(ArgumentError) { prog.optimize(:noexistant) }
-    LLVM::PassManager.any_instance.expects(:gdce!)
-    prog.optimize(:gdce)
-  end
 end

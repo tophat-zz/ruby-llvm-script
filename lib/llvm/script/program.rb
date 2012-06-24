@@ -1,15 +1,27 @@
 module LLVM
   module Script
-    # An executable, compilable, optimizable library with a main function.
-    class Program < Library
+    # An executable, compilable, optimizable library with a main function. It, however, is not a 
+    # subclass of {LLVM::Script::Library} because it can not be imported.
+    class Program < ScriptObject
+      include Collection
+      
       # Creates a new program.
       # @param [String] name The name of the program.
-      # @param [LLVM::Script::Namespace] space The namespace in which this library resides.
+      # @param [LLVM::Script::Namespace] space The namespace in which this program resides.
       # @param [Proc] block A block with the insides of the program.
       # @return [LLVM::Script::Program] The new program.
       def initialize(name, space=DEFAULT_SPACE, &block)
         LLVM.init_x86
-        super(name, space, &block)
+        @name = name.to_s
+        @visibility = :public
+        @module = LLVM::Module.new(name)
+        @globals = {:public=>{}, :private=>{}}
+        @functions = {:public=>{}, :private=>{}}
+        @macros = {:public=>{}, :private=>{}}
+        @namespace = space
+        @namespace.add(self) if @namespace
+        @address = namespace.nil? ? @name : "#{namespace.address}.#{@name.gsub(" ", "")}"
+        build(&block) if ::Kernel.block_given?
       end
       
       # Creates the main function of the program. The main function takes the arguments `argc` 
@@ -54,27 +66,9 @@ module LLVM
         File.delete("#{file}.s")
       end
       
-      # Verifys that the program is valid. Prints any problems to $stdout.
+      # Verifys that the program is valid. Prints any problems to stdout.
       def verify
-       @module.verify!
-      end
-
-      # Optimizes the program using the given passes.
-      # @param [List<String, Symbol>] passes A list of optimization passes to run. Equivalent to the methods
-      #   of LLVM::PassManager without the exclamation (!).
-      # @see http://jvoorhis.com/ruby-llvm/LLVM/PassManager.html
-      # @see http://llvm.org/docs/Passes.html 
-      def optimize(*passes)
-        @jit ||= LLVM::JITCompiler.new(@module)
-        manager = LLVM::PassManager.new(@jit)
-        passes.each do |name|
-          begin
-            manager.__send__("#{name.to_s}!".to_sym) 
-          rescue NoMethodError
-            raise ArgumentError, "Unkown pass, #{name.to_s}, given to optimize."
-          end
-        end
-        manager.run(@module)
+        @module.verify!
       end
     end
   end

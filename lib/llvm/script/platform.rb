@@ -24,9 +24,10 @@ module LLVM
         end
         
         # Needed for ancestor testing of a ScriptObject.
-        def kind_of?(mod)
+        def is_a?(mod)
           self.class.ancestors.include?(mod)
         end
+        alias kind_of? is_a?
         
         # Tries to get unknown constants from Object.
         def self.const_missing(name)

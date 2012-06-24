@@ -19,7 +19,7 @@ module Kernel
   # Gets a hash of all namespaces in the {LLVM::Script::DEFAULT_SPACE}.
   # @return [Hash<Symbol, LLVM::Script::Namespace>] A hash where a symbol name corresponds to a namespace. 
   def namespaces
-    return LLVM::Script::DEFAULT_SPACE.collection
+    return LLVM::Script::DEFAULT_SPACE.children
   end
   
   # @macro factory

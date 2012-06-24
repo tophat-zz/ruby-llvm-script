@@ -1,6 +1,6 @@
 module LLVM
   module Script
-    # A container of other namespaces.
+    # A container of namespaces, libraries, and programs.
     class Namespace < ScriptObject
       
       # The name of this namespace
@@ -19,11 +19,11 @@ module LLVM
       # @param [Proc] block An optional block to build the new namespace with.
       def initialize(name, parent=nil, &block)
         @name = name.to_s
-        @collection = {}
+        @children = {}
         @last_space = nil
         @parent = parent
-        @address = parent.nil? ? @name : "#{parent.address}.#{@name.gsub(" ", "")}"
         @parent.add(self) if @parent
+        @address = parent.nil? ? @name : "#{parent.address}.#{@name.gsub(" ", "")}"
         build(&block) if ::Kernel.block_given?
       end
       
@@ -33,10 +33,11 @@ module LLVM
         self.instance_eval(&block)
       end
       
-      # Retrieves an hash of the namespaces contained in this namespace.
-      # @return [Hash<Symbol, LLVM::Script::Namespace>] A hash where a symbol name corresponds to a namespace.
-      def collection
-        return @collection
+      # Retrieves an hash of the objects contained in this namespace.
+      # @return [Hash<Symbol, Object>] A hash where a symbol name corresponds to a namespace, library, 
+      #   or program.
+      def children
+        return @children
       end
       
       # Retrieves the last namespace created in this namespace.
@@ -48,7 +49,7 @@ module LLVM
       # Adds the given namespace into this namespace.
       # @param [LLVM::Script::Namespace] space The namespace to add.
       def add(space)
-        @collection[space.name.to_sym] = space
+        @children[space.name.to_sym] = space
         @last_space = space
       end
       
@@ -59,8 +60,8 @@ module LLVM
       def lookup(name="")
         if name.to_s.empty?
           return self.last
-        elsif @collection.include?(name.to_sym)
-          return @collection[name.to_sym]
+        elsif @children.include?(name.to_sym)
+          return @children[name.to_sym]
         elsif @parent
           return @parent.lookup(name)
         end
@@ -71,7 +72,7 @@ module LLVM
       # @param [String, Symbol] name The name of the namespace to look for.
       # @return [Boolean] The resulting true/false value.
       def include?(name)
-        return collection.include?(name.to_sym) || (@parent && @parent.include?(name))
+        return @children.include?(name.to_sym) || (@parent && @parent.include?(name))
       end
       
       # @!macro [new] factory
@@ -80,12 +81,12 @@ module LLVM
       #   @param [Proc] block An optional block instance to build the new $0 with.
       def __factory__(klass, name, &block)
         sym = name.to_sym
-        if @collection.include?(sym)
-          space = @collection[sym]
+        if @children.include?(sym)
+          space = @children[sym]
           space.instance_eval(&block) if ::Kernel.block_given?
         else
           space = klass.new(name, self, &block)
-          @collection[sym] = space
+          @children[sym] = space
           @last_space = space
         end
         return space
@@ -110,8 +111,8 @@ module LLVM
         __factory__(Program, name, &block)
       end
       
-      # If a method is unkown, tries to get a namespace in this namespaces collection with 
-      # the method symbol.
+      # If a method is unkown, tries to get a namespace in this namespace's collection with 
+      # same name as the method.
       # @example
       #   ex = namespace("ex")
       #   ex.library "myamazinglib"
@@ -122,12 +123,12 @@ module LLVM
       #     # function contents
       #   end
       def method_missing(meth, *args, &block)
-        return @collection[meth] || super(meth, *args, &block)
+        return @children[meth] || super(meth, *args, &block)
       end
       
       # If a method is unkown, checks if their is a namespace with the method symbol.
       def respond_to?(meth, *args, &block)
-        return @collection.include?(meth) || super(meth, *args, &block)
+        return @children.include?(meth) || super(meth, *args, &block)
       end
     end
     
