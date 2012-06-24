@@ -9,12 +9,6 @@ class TestKernel < MiniTest::Unit::TestCase
     assert_equal obj, send(methname)
   end
   
-  def test_namespaces
-    obj = LLVM::Script::Library.new("testlib")
-    assert_includes namespaces, obj.name.to_sym
-    assert_equal obj, namespaces[obj.name.to_sym]
-  end
-  
   def test_namespace
     skip if defined? Rake::DSL
     check_factory(LLVM::Script::Namespace, :namespace)

@@ -44,8 +44,7 @@ module LLVM
       elsif kind == :integer || kind == :numeric || (kind.nil? && val.kind_of?(Numeric))
         return (klass || Types::INT).from_i(val.to_i)
       elsif val.kind_of?(String) && (kind.nil? || kind == :array)
-        str = LLVM::ConstantArray.string(val.to_s)
-        return kind == :pointer ? str.bitcast_to(Types::CHARPTR) : str
+        return LLVM::ConstantArray.string(val.to_s)
       elsif kind == :array || (kind.nil? && val.kind_of?(Array))
         type = !type.nil? ? type.element_type : Convert(val.to_a.first).type
         return LLVM::ConstantArray.const(type, val.to_a.map{|elm| Convert(elm, type)})
@@ -103,14 +102,18 @@ module LLVM
       return obj.name if obj.kind_of?(Class)
       type = LLVM::Type(obj)
       if type.kind_of?(LLVM::Type)
-        kind = type.kind
-        if kind == :pointer
-          kind = type.element_type.kind while kind == :pointer
-          return "#{kind.to_s.capitalize} pointer"
-        elsif kind == :integer
+        case type.kind
+        when :pointer
+          level = 0
+          while type.kind == :pointer
+            type = type.element_type
+            level += 1
+          end
+          return Typename(type) + (" pointer" * level)
+        when :integer
           return LLVM.const_get("Int#{type.width}".to_sym).name
         else
-          return kind.to_s.capitalize
+          return type.kind.to_s.capitalize
         end
       elsif obj.kind_of?(Symbol)
         return obj.to_s.capitalize

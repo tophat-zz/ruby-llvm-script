@@ -10,7 +10,7 @@ module LLVM
       # @param [LLVM::Script::Namespace] space The namespace in which this program resides.
       # @param [Proc] block A block with the insides of the program.
       # @return [LLVM::Script::Program] The new program.
-      def initialize(name, space=DEFAULT_SPACE, &block)
+      def initialize(name, space=GlobalSpace, &block)
         LLVM.init_x86
         @name = name.to_s
         @visibility = :public

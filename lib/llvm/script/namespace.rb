@@ -159,6 +159,6 @@ module LLVM
     
     # A {LLVM::Script::Namespace} that is used by Kernel methods and is the default namespace for newly 
     # created libraries.
-    DEFAULT_SPACE = Namespace.new("rls")
+    GlobalSpace = Namespace.new("rls")
   end
 end

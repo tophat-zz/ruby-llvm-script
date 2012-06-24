@@ -21,10 +21,11 @@ class TestCore < MiniTest::Unit::TestCase
   end
   
   def test_typename
-    assert_equal LLVM::Int32.name,  LLVM::Script::Typename(LLVM::Int32.type)
-    assert_equal "Integer pointer", LLVM::Script::Typename(LLVM::Script::Types::CHARPTR)
-    assert_equal "Void",            LLVM::Script::Typename(LLVM::Script::Types::VOID)
-    assert_equal "Numeric",         LLVM::Script::Typename(:numeric)
+    assert_equal "LLVM::Int32",                 LLVM::Script::Typename(LLVM::Int32.type)
+    assert_equal "LLVM::Int8 pointer",          LLVM::Script::Typename(LLVM::Script::Types::CHARPTR)
+    assert_equal "LLVM::Int8 pointer pointer",  LLVM::Script::Typename(LLVM::Script::Types::CHARPTRPTR)
+    assert_equal "Void",                        LLVM::Script::Typename(LLVM::Script::Types::VOID)
+    assert_equal "Numeric",                     LLVM::Script::Typename(:numeric)
   end
   
   def test_validate

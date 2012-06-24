@@ -18,7 +18,7 @@ module LLVM
       # @param [LLVM::Script::Namespace] space The namespace in which this library resides.
       # @param [Proc] block A block with the insides of the library.
       # @return [LLVM::Script::Library] The new library.
-      def initialize(name, space=DEFAULT_SPACE, &block)
+      def initialize(name, space=GlobalSpace, &block)
         @name = name.to_s
         @visibility = :public
         @module = LLVM::Module.new(name)
