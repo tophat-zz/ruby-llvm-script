@@ -70,6 +70,24 @@ module LLVM
       def verify
         @module.verify!
       end
+      
+      # Optimizes the program using the given passes.
+      # @param [List<String, Symbol>] passes A list of optimization passes to run. Equivalent to the methods
+      #   of LLVM::PassManager without the exclamation (!).
+      # @see http://jvoorhis.com/ruby-llvm/LLVM/PassManager.html
+      # @see http://llvm.org/docs/Passes.html 
+      def optimize(*passes)
+        @jit ||= LLVM::JITCompiler.new(@module)
+        manager = LLVM::PassManager.new(@jit)
+        passes.each do |name|
+          begin
+            manager.__send__("#{name.to_s}!".to_sym) 
+          rescue NoMethodError
+            raise ArgumentError, "Unkown pass, #{name.to_s}, given to optimize."
+          end
+        end
+        manager.run(@module)
+      end
     end
   end
 end

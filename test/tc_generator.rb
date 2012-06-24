@@ -464,7 +464,7 @@ class TestGenerator < MiniTest::Unit::TestCase
       end
       sret -1
     }
-    assert_raises(ArgumentError) { @gen.lp(nil) }
+    assert_raises(ArgumentError) { @gen.lp }
   end
   
   def test_br

@@ -20,7 +20,7 @@ module LLVM
       def initialize(name, parent=nil, &block)
         @name = name.to_s
         @children = {}
-        @last_space = nil
+        @last_obj = nil
         @parent = parent
         @parent.add(self) if @parent
         @address = parent.nil? ? @name : "#{parent.address}.#{@name.gsub(" ", "")}"
@@ -40,17 +40,17 @@ module LLVM
         return @children
       end
       
-      # Retrieves the last namespace created in this namespace.
-      # @return [LLVM::Script::Namespace] The last created namespace.
+      # Retrieves the last object created in this namespace.
+      # @return [Object] The last created object.
       def last
-        return @last_space
+        return @last_obj
       end
       
-      # Adds the given namespace into this namespace.
-      # @param [LLVM::Script::Namespace] space The namespace to add.
+      # Adds the given object into this namespace.
+      # @param [Object] space The object to add.
       def add(space)
         @children[space.name.to_sym] = space
-        @last_space = space
+        @last_obj = space
       end
       
       # Looks for the specified namespace with the given name in this namespace and its parents.
@@ -86,8 +86,6 @@ module LLVM
           space.instance_eval(&block) if ::Kernel.block_given?
         else
           space = klass.new(name, self, &block)
-          @children[sym] = space
-          @last_space = space
         end
         return space
       end
@@ -99,16 +97,43 @@ module LLVM
         __factory__(Namespace, name, &block)
       end
       
+      # Retrieves a hash of the namespaces contained in this namespace.
+      # @return [Hash<Symbol, LLVM::Script::Namespace>] A hash of symbol names pointing their 
+      #   corresponding namespace.
+      def namespaces
+        spaces = {}
+        @children.each{ |key, child| spaces[key] = child if child.kind_of?(Namespace) }
+        return spaces
+      end
+      
       # @macro factory
       # @return [LLVM::Script::Library] The new library.
       def library(name, &block)
         __factory__(Library, name, &block)
       end
       
+      # Retrieves a hash of the libraries contained in this namespace.
+      # @return [Hash<Symbol, LLVM::Script::Library>] A hash of symbol names pointing their 
+      #   corresponding library.
+      def libraries
+        spaces = {}
+        @children.each{ |key, child| spaces[key] = child if child.kind_of?(Library) }
+        return spaces
+      end
+      
       # @macro factory
       # @return [LLVM::Script::Program] The new program.
       def program(name, &block)
         __factory__(Program, name, &block)
+      end
+      
+      # Retrieves a hash of the programs contained in this namespace.
+      # @return [Hash<Symbol, LLVM::Script::Library>] A hash of symbol names pointing their 
+      #   corresponding program.
+      def programs
+        spaces = {}
+        @children.each{ |key, child| spaces[key] = child if child.kind_of?(Program) }
+        return spaces
       end
       
       # If a method is unkown, tries to get a namespace in this namespace's collection with 

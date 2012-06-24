@@ -15,14 +15,6 @@ class TestLibrary < MiniTest::Unit::TestCase
     end
   end
   
-  def test_optimize
-    lib = LLVM::Script::Library.new("testlib")
-    lib.function(:testfunc){ sret }
-    assert_raises(ArgumentError) { lib.optimize(:noexistant) }
-    LLVM::PassManager.any_instance.expects(:gdce!)
-    lib.optimize(:gdce)
-  end
-  
   def test_import
      LLVM::Script::Library.new("importee") do
       extern :printf, [LLVM::Script::Types::CHARPTR, LLVM::Script::Types::VARARGS], LLVM::Script::Types::INT

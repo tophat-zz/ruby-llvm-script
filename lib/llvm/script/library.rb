@@ -46,24 +46,6 @@ module LLVM
       def build(&block)
         self.instance_eval(&block)
       end
-
-      # Optimizes the library using the given passes.
-      # @param [List<String, Symbol>] passes A list of optimization passes to run. Equivalent to the methods
-      #   of LLVM::PassManager without the exclamation (!).
-      # @see http://jvoorhis.com/ruby-llvm/LLVM/PassManager.html
-      # @see http://llvm.org/docs/Passes.html 
-      def optimize(*passes)
-        @jit ||= LLVM::JITCompiler.new(@module)
-        manager = LLVM::PassManager.new(@jit)
-        passes.each do |name|
-          begin
-            manager.__send__("#{name.to_s}!".to_sym) 
-          rescue NoMethodError
-            raise ArgumentError, "Unkown pass, #{name.to_s}, given to optimize."
-          end
-        end
-        manager.run(@module)
-      end
       
       # Imports the given object, adding all of its public functions, macros, and globals to the caller.
       # If any object in the caller has the same name as one of the imported objects, one of the following
@@ -72,17 +54,17 @@ module LLVM
       #             imported library.
       # LLVM IR::   A warning will be printed and if the linker is unable to resolve the conflict 
       #             a RuntimeError will be raised.
-      # @param [String, Symbol, LLVM::Script::Namespace, LLVM::Script::Library] space The name of the object to 
+      # @param [String, Symbol, LLVM::Script::Namespace, LLVM::Script::Library] obj The name of the object to 
       #   import or the object itself. If a namespace, imports all of the contained namespaces and libraries.
       # @raise [RuntimeError] Raised if the LLVM Linker fails.
-      def import(space)
-        if space.is_a?(String) || space.is_a?(Symbol)
-          raise ArgumentError, "Namespace, #{space.to_s}, does not exist." unless @namespace.include?(space)
-          space = @namespace.lookup(space)
+      def import(obj)
+        if obj.is_a?(String) || obj.is_a?(Symbol)
+          raise ArgumentError, "Namespace, #{obj.to_s}, does not exist." unless @namespace.include?(obj)
+          obj = @namespace.lookup(obj)
         end
-        if space.instance_of?(Library)
-          @macros[:public].merge!(space.macros)
-          space.functions.each do |name, func|
+        if obj.instance_of?(Library)
+          @macros[:public].merge!(obj.macros)
+          obj.functions.each do |name, func|
             if @module.functions.named(func.name)
               warn("Imported function's (#{name.to_s}) address, #{func.name}, already exists.")
             end
@@ -90,7 +72,7 @@ module LLVM
             fun = Function.new(self, @module, func.name, args, func.return_type)
             @functions[:public][name.to_sym] = fun
           end
-          space.globals.each do |name, info|
+          obj.globals.each do |name, info|
             if @module.globals.named(info.name)
               warn("Imported global's (#{name.to_s}) address, #{info.name}, already exists.")
             end
@@ -98,12 +80,12 @@ module LLVM
             glob.global_constant = info.global_constant?
             @globals[:public][name.to_sym] = glob
           end
-          err = @module.link(space, :linker_destroy_source)
+          err = @module.link(obj, :linker_destroy_source)
           raise RuntimeError, "Failed to link library, #{library.name.to_s}, to #{name}." if err
-        elsif space.kind_of?(Namespace)
-          space.children.values.each{ |child| import(child) if child.is_a?(Namespace) || child.is_a?(Library) }
+        elsif obj.kind_of?(Namespace)
+          obj.children.values.each{ |child| import(child) if child.is_a?(Namespace) || child.is_a?(Library) }
         else
-          raise ArgumentError, "Cam only import Namespaces and Libraries. #{space.class.name} given."
+          raise ArgumentError, "Cam only import Namespaces and Libraries. #{obj.class.name} given."
         end
       end
       
@@ -294,7 +276,7 @@ module LLVM
         return LLVM::Script::Struct.new(*args)
       end
     end
-    # A optimizable container of functions, macros, and globals. Its methods are defined in {Collection}.
+    # A container of functions, macros, and globals. Its methods are defined in {Collection}.
     class Library < ScriptObject; include Collection; end        
   end
 end

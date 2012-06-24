@@ -14,8 +14,7 @@ module LLVM
       attr_reader :function
       
       # Inside a {#lp} statement this value is set to the block which contains the loop.
-      # This is set internally, please do not change it.
-      attr_accessor :loop_block
+      attr_reader :loop_block
       
       # The current LLVM::BasicBlock of the Generator.
       attr_reader :basic_block
@@ -588,25 +587,13 @@ module LLVM
           raise ArgumentError, "The cond function must either be given a crt argument or a block."
         end
         exit_provided = exit ? true : false
-        unless crt.kind_of?(Generator)
-          gen = self.class.new(@library, @module, @function, @function.add_block("then"))
-          gen.instance_eval(&(crt ? crt : proc))
-        end
-        gen ||= crt
         exit ||= @function.add_block("exit") 
-        gen.br(exit)
-        gen.finish
+        gen = generate(crt ? crt : proc, [], "then", exit)
         ifblock = gen.start_block
         if wrg || (crt && ::Kernel.block_given?)
-          unless wrg.kind_of?(Generator)
-            gen = self.class.new(@library, @module, @function, @function.add_block("else"))
-            gen.instance_eval(&(wrg ? wrg : proc))
-          end
-          gen ||= wrg
+          gen = generate(wrg ? wrg : proc, [], "else", exit)
           elsblock = gen.start_block
-          gen.br(exit)
-          gen.finish
-        end 
+        end
         elsblock ||= exit
         bb = gen.basic_block
         exit.move_after(bb) unless exit == bb
@@ -672,27 +659,17 @@ module LLVM
         incblk = inc && (cmp || block_provided) ? @function.add_block("increment") : loopblk
         block = block_provided ? @function.add_block("block") : (inc ? incblk : loopblk)
         exit ||= @function.add_block("break")
-        if block_provided
-          gen = self.class.new(@library, @module, @function, cmp ? block : loopblk)
-          gen.loop_block = incblk
-          vals = ptrs[0, proc.arity >= 0 ? proc.arity : 0].map{ |ptr| gen.load(ptr) }
-          gen.instance_exec(*vals, &proc)
-          gen.br(inc ? incblk : loopblk)
-          gen.finish
-        end
         if cmp
-          gen = self.class.new(@library, @module, @function, loopblk)
-          vals = ptrs[0, cmp.arity >= 0 ? cmp.arity : 0].map{ |ptr| gen.load(ptr) }
-          cond = Convert(gen.instance_exec(*vals, &cmp), Types::BOOL)
-          gen.instance_eval { @builder.cond(cond, block, exit) }
+          vals = ptrs[0, cmp.arity >= 0 ? cmp.arity : 0]
+          gen, cond = generate(cmp, nil, loopblk){vals.map{|ptr| load(ptr)}}
+          gen.instance_eval{ @builder.cond(Convert(cond, Types::BOOL), block, exit) }
           gen.finish
         end
-        if inc
-          gen = self.class.new(@library, @module, @function, incblk)
-          gen.instance_exec(*ptrs[0, inc.arity >= 0 ? inc.arity : 0], &inc)
-          gen.br(loopblk)
-          gen.finish
+        if block_provided
+          vals = ptrs[0, proc.arity >= 0 ? proc.arity : 0]
+          gen = generate(proc, nil, cmp ? block : loopblk, incblk){@loop_block = incblk; vals.map{|ptr| load(ptr)}}
         end
+        gen = generate(inc, ptrs[0, inc.arity >= 0 ? inc.arity : 0], incblk, loopblk) if inc
         exit.move_after(gen.basic_block)
         unless exit_provided
           @builder.position_at_end(exit)
@@ -704,10 +681,10 @@ module LLVM
       end
     
       # Branches to the given block, finishing the current one and executing the given one.
-      # @param [LLVM::BasicBlock] block The block to branch to.
+      # @param [Generator, LLVM::BasicBlock] block The block to branch to.
       def br(block)
         return if @finished
-        @builder.br(block.to_ptr)
+        @builder.br(block.is_a?(Generator) ? block.start_block : block.to_ptr)
         self.finish
       end
     
@@ -841,6 +818,23 @@ module LLVM
       alias Convert convert
       
       private
+      
+      def generate(obj, args, block, exit=nil, &setup)
+        unless obj.kind_of?(Generator)
+          block = block.is_a?(String) ? @function.add_block(block) : block
+          gen = self.class.new(@library, @module, @function, block)
+          args ||= gen.instance_eval(&setup) if ::Kernel.block_given?
+          value = gen.instance_exec(*args, &obj)
+        end
+        gen ||= obj
+        if exit.nil?
+          return gen, value
+        else
+          gen.br(exit)
+          gen.finish
+          return gen
+        end
+      end
 
       def numeric_call(meths, num, arg, signed=true)
         case num.type.kind

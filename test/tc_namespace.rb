@@ -15,6 +15,13 @@ class TestNamespace < MiniTest::Unit::TestCase
     assert_equal obj, @space.__send__(methname, "testobj")
   end
   
+  def check_collection(factory, methname)
+    obj = @space.__send__(factory, "testobj")
+    collection = @space.__send__(methname)
+    assert_includes collection, obj.name.to_sym
+    assert_equal obj, collection[obj.name.to_sym]
+  end
+  
   def test_build
     space = @space
     testcase = self
@@ -48,6 +55,18 @@ class TestNamespace < MiniTest::Unit::TestCase
   
   def test_program
     check_factory(LLVM::Script::Program, :program)
+  end
+  
+  def test_namespaces
+    check_collection(:namespace, :namespaces)
+  end
+
+  def test_libraries
+    check_collection(:library, :libraries)
+  end
+
+  def test_programs
+    check_collection(:program, :programs)
   end
   
   def test_respond_to?
