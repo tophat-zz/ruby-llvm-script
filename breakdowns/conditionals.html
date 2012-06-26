@@ -1,27 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="chrome=1">
-<title>Ruby LLVM Script by tophat</title>
-<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/styles.css">
-<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/pygment_trac.css">
-<script src="http://tophat.github.com/ruby-llvm-script/javascripts/scale.fix.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ruby LLVM Script by tophat</title>
+    <link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/styles.css">
+    <link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="http://tophat.github.com/ruby-llvm-script/javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-</head>
-<body>
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  </head>
+  <body>
     <div class="wrapper">
-      <header><h1>Ruby LLVM Script</h1>
-        <p>Simple, clean interface for ruby-llvm.</p>
-        <p class="view"><a href="https://github.com/tophat/ruby-llvm-script">View the Project on GitHub <small>tophat/ruby-llvm-script</small></a></p>
-        <ul>
-<li><a href="https://github.com/tophat/ruby-llvm-script/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/tophat/ruby-llvm-script/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/tophat/ruby-llvm-script">View On <strong>GitHub</strong></a></li>
-        </ul></header><section><h1>Conditionals</h1>
+      <section>
+        <div id="title">
+          <h1>Ruby LLVM Script</h1>
+          <p>Simple, clean interface for ruby-llvm.</p>
+          <hr>
+          <span class="credits left">Copyright &copy; 2012 <a href="https://github.com/tophat">tophat</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a> & <a href="https://github.com/orderedlist">orderedlist</a></span>
+        </div>
+
+        <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
 <p>This page will analyze the example program <code>cond.rb</code> from the samples directory. <code>cond.rb</code> shows how conditionals are done in ruby-llvm-script.</p>
 
 <h3>Source</h3>
@@ -89,10 +96,11 @@
 
 <p>In the <a href="http://tophat.github.com/ruby-llvm-script/breakdowns/io.html">IO</a> example, the <code>cond</code> statement took a block (which acted as first proc) and executed that if the first argument returned 1 (the LLVM equivalent of true). If the first argument returned 0 (the LLVM equivalent of false), it just skipped the block. That was the ruby-llvm-script version of an if statement. This version, however, is the ruby-llvm-script equivalent of an if/else statement. Here, if the first argument returns 0, the second proc is executed instead of just moving on. </p>
 
-<p>So, in this case, if <code>num</code> is 0 it prints out: <code>"You entered a zero! Bad boy!"</code> followed by a newline ("\n"). If <code>num</code> is not 0 it prints out: <code>"You entered %d, which is not 0! Good boy!"</code> followed by a newline and with <code>"%d"</code> being replaced by the value of <code>num</code>. </p></section>
-</div>
-    <footer><p>Project and Website Copyright © 2012 <a href="https://github.com/tophat">tophat</a></p>
-      <p>Hosted on GitHub Pages — Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer><!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
-</body>
+<p>So, in this case, if <code>num</code> is 0 it prints out: <code>"You entered a zero! Bad boy!"</code> followed by a newline ("\n"). If <code>num</code> is not 0 it prints out: <code>"You entered %d, which is not 0! Good boy!"</code> followed by a newline and with <code>"%d"</code> being replaced by the value of <code>num</code>. </p>
+</body></html>
+
+      </section>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
 </html>

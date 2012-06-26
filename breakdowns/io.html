@@ -1,27 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="chrome=1">
-<title>Ruby LLVM Script by tophat</title>
-<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/styles.css">
-<link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/pygment_trac.css">
-<script src="http://tophat.github.com/ruby-llvm-script/javascripts/scale.fix.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ruby LLVM Script by tophat</title>
+    <link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/styles.css">
+    <link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="http://tophat.github.com/ruby-llvm-script/javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-</head>
-<body>
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="http://tophat.github.com/ruby-llvm-script/stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  </head>
+  <body>
     <div class="wrapper">
-      <header><h1>Ruby LLVM Script</h1>
-        <p>Simple, clean interface for ruby-llvm.</p>
-        <p class="view"><a href="https://github.com/tophat/ruby-llvm-script">View the Project on GitHub <small>tophat/ruby-llvm-script</small></a></p>
-        <ul>
-<li><a href="https://github.com/tophat/ruby-llvm-script/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/tophat/ruby-llvm-script/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/tophat/ruby-llvm-script">View On <strong>GitHub</strong></a></li>
-        </ul></header><section><h1>IO</h1>
+      <section>
+        <div id="title">
+          <h1>Ruby LLVM Script</h1>
+          <p>Simple, clean interface for ruby-llvm.</p>
+          <hr>
+          <span class="credits left">Copyright &copy; 2012 <a href="https://github.com/tophat">tophat</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a> & <a href="https://github.com/orderedlist">orderedlist</a></span>
+        </div>
+
+        <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
 <p>This page will analyze the example program <code>io.rb</code> from the samples directory. <code>io.rb</code> exhibits how basic input is done and how libraries work in ruby-llvm-script. It would be beneficially for you to understand the basic concepts behind <a href="http://en.wikipedia.org/wiki/Pointer_(computer_programming)">pointers</a> before breaking this example down. </p>
 
 <h3>Source</h3>
@@ -157,10 +164,11 @@
 </div>
 
 
-<p>This single function is the whole reason for using LLVM instead of just basic ruby. It turns the program into a native application with the given filename. This greatly decreases the startup time of your program. It also allows you to not have to distribute the source code of your program.</p></section>
-</div>
-    <footer><p>Project and Website Copyright © 2012 <a href="https://github.com/tophat">tophat</a></p>
-      <p>Hosted on GitHub Pages — Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer><!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
-</body>
+<p>This single function is the whole reason for using LLVM instead of just basic ruby. It turns the program into a native application with the given filename. This greatly decreases the startup time of your program. It also allows you to not have to distribute the source code of your program.</p>
+</body></html>
+
+      </section>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
 </html>
