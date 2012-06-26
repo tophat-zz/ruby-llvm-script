@@ -1,0 +1,2390 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: LLVM::Script::Collection
+  
+    &mdash; Documentation by YARD 0.8.2.1
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../../';
+  framesUrl = "../../frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (C)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../LLVM.html" title="LLVM (module)">LLVM</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Script.html" title="LLVM::Script (module)">Script</a></span></span>
+     &raquo; 
+    <span class="title">Collection</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: LLVM::Script::Collection
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r1">Included in:</dt>
+    <dd class="r1"><span class='object_link'><a href="Library.html" title="LLVM::Script::Library (class)">Library</a></span>, <span class='object_link'><a href="Program.html" title="LLVM::Script::Program (class)">Program</a></span></dd>
+    
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/llvm/script/library.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>A mix-in for containers of functions, macros, and globals.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#address-instance_method" title="#address (instance method)">- (Object) <strong>address</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The name of this library and its namespace’s address joined together with
+a “.”.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#name-instance_method" title="#name (instance method)">- (Object) <strong>name</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The name of this library.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#namespace-instance_method" title="#namespace (instance method)">- (Object) <strong>namespace</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The namespace in which this library resides.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#build-instance_method" title="#build (instance method)">- (Object) <strong>build</strong>(&amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Instance evaluates the given block.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#constant-instance_method" title="#constant (instance method)">- (LLVM::GlobalValue) <strong>constant</strong>(name, info) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates a new global constant.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#dump-instance_method" title="#dump (instance method)">- (Object) <strong>dump</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Prints the library’s LLVM IR to $stdout.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#extern-instance_method" title="#extern (instance method)">- (LLVM::Script::Function) <strong>extern</strong>(name, args = [], ret = Types::VOID, attributes = []) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Declares an external function (usually one found in th C standard lib).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#function-instance_method" title="#function (instance method)">- (LLVM::Script::Function) <strong>function</strong>(name, args = [], ret = Types::VOID, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates a new function.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#functions-instance_method" title="#functions (instance method)">- (Hash{Symbol, LLVM::Script::Function}) <strong>functions</strong>(include_private = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>An hash of functions in the library.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#global-instance_method" title="#global (instance method)">- (LLVM::GlobalValue) <strong>global</strong>(name, info) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates a new global value.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#globals-instance_method" title="#globals (instance method)">- (Hash{Symbol, LLVM::GlobalValue}) <strong>globals</strong>(include_private = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>An hash of globals in the library.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#import-instance_method" title="#import (instance method)">- (Object) <strong>import</strong>(obj) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Imports the given object, adding all of its public functions, macros, and
+globals to the caller.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (LLVM::Script::Library) <strong>initialize</strong>(name, space = GlobalSpace, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates a new library.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#macro-instance_method" title="#macro (instance method)">- (Proc) <strong>macro</strong>(name, &amp;proc) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates a new macro.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#macros-instance_method" title="#macros (instance method)">- (Hash{Symbol, Proc}) <strong>macros</strong>(include_private = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>An hash of macros in the library.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#private-instance_method" title="#private (instance method)">- (Object) <strong>private</strong>(*functions, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Shortcut to visibility with :private as the new visiblility.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#public-instance_method" title="#public (instance method)">- (Object) <strong>public</strong>(*functions, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Shortcut to visibility with :public as the new visiblility.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#struct-instance_method" title="#struct (instance method)">- (LLVM::Script::Struct) <strong>struct</strong>(*args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Defines a new struct type.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#visibility-instance_method" title="#visibility (instance method)">- (Object) <strong>visibility</strong>(new_visibility = nil, *values, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Visiblity control.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="address-instance_method">
+  
+    - (<tt>Object</tt>) <strong>address</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The name of this library and its namespace’s address joined together with
+a “.”. Used to prefix functions and globals in LLVM IR.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+14
+15
+16</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 14</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_address identifier id'>address</span>
+  <span class='rubyid_@address ivar id'>@address</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="name-instance_method">
+  
+    - (<tt>Object</tt>) <strong>name</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The name of this library</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+7
+8
+9</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 7</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_name identifier id'>name</span>
+  <span class='rubyid_@name ivar id'>@name</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="namespace-instance_method">
+  
+    - (<tt>Object</tt>) <strong>namespace</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The namespace in which this library resides.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+10
+11
+12</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 10</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_namespace identifier id'>namespace</span>
+  <span class='rubyid_@namespace ivar id'>@namespace</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="build-instance_method">
+  
+    - (<tt>Object</tt>) <strong>build</strong>(&amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Instance evaluates the given block.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>block</span>
+      
+      
+        <span class='type'>(<tt>Proc</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The block to evaluate.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+46
+47
+48</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 46</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_build identifier id'>build</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_instance_eval identifier id'>instance_eval</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="constant-instance_method">
+  
+    - (<tt>LLVM::GlobalValue</tt>) <strong>constant</strong>(name, info) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates a new global constant.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The name of the constant.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>info</span>
+      
+      
+        <span class='type'>(<tt>LLVM::Value</tt>, <tt>LLVM::Type</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>If an LLVM::Value, the value of the constant.  Otherwise, it is the type of
+the external constant.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>LLVM::GlobalValue</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The new constant.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+267
+268
+269
+270
+271</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 267</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_constant identifier id'>constant</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_info identifier id'>info</span><span class='rparen token'>)</span>
+  <span class='rubyid_glob identifier id'>glob</span> <span class='assign token'>=</span> <span class='rubyid_global identifier id'>global</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_info identifier id'>info</span><span class='rparen token'>)</span>
+  <span class='rubyid_glob identifier id'>glob</span><span class='dot token'>.</span><span class='rubyid_global_constant identifier id'>global_constant</span> <span class='assign token'>=</span> <span class='integer val'>1</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_glob identifier id'>glob</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="dump-instance_method">
+  
+    - (<tt>Object</tt>) <strong>dump</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Prints the library’s LLVM IR to $stdout.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+40
+41
+42</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 40</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_dump identifier id'>dump</span>
+  <span class='rubyid_@module ivar id'>@module</span><span class='dot token'>.</span><span class='rubyid_dump identifier id'>dump</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="extern-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Function.html" title="LLVM::Script::Function (class)">LLVM::Script::Function</a></span></tt>) <strong>extern</strong>(name, args = [], ret = Types::VOID, attributes = []) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Declares an external function (usually one found in th C standard lib).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The name of the function.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>args</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;LLVM::Type&gt;</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>[]</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An array containing the types of the args in the function. See
+LLVM::Script::Types for a list of some of the more commonly used types.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>ret</span>
+      
+      
+        <span class='type'>(<tt>LLVM::Type</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>Types::VOID</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The type of value this function returns.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>attributes</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;Symbol&gt;</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>[]</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An array of the attributes of this function. The current version of
+ruby-llvm (3.0.0) has no attributes, so ignore this.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Function.html" title="LLVM::Script::Function (class)">LLVM::Script::Function</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The external function.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+227
+228
+229
+230
+231
+232
+233</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 227</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_extern identifier id'>extern</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_args identifier id'>args</span><span class='assign token'>=</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='rubyid_ret identifier id'>ret</span><span class='assign token'>=</span><span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_VOID constant id'>VOID</span><span class='comma token'>,</span> <span class='rubyid_attributes identifier id'>attributes</span><span class='assign token'>=</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+  <span class='rubyid_fun identifier id'>fun</span> <span class='assign token'>=</span> <span class='rubyid_Function constant id'>Function</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_self self kw'>self</span><span class='comma token'>,</span> <span class='rubyid_@module ivar id'>@module</span><span class='comma token'>,</span> <span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_s identifier id'>to_s</span><span class='comma token'>,</span> <span class='rubyid_args identifier id'>args</span><span class='comma token'>,</span> <span class='rubyid_ret identifier id'>ret</span><span class='rparen token'>)</span>
+  <span class='comment val'># for atr in attributes</span>
+  <span class='comment val'>#  fun.add_attribute(atr)</span>
+  <span class='comment val'># end</span>
+  <span class='rubyid_@functions ivar id'>@functions</span><span class='lbrack token'>[</span><span class='rubyid_@visibility ivar id'>@visibility</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_fun identifier id'>fun</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="function-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Function.html" title="LLVM::Script::Function (class)">LLVM::Script::Function</a></span></tt>) <strong>function</strong>(name, args = [], ret = Types::VOID, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates a new function.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The name of the function.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>args</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;LLVM::Type&gt;</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>[]</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An array containing the types of the args in the function. See
+LLVM::Script::Types for a list of some of the more commonly used types.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>ret</span>
+      
+      
+        <span class='type'>(<tt>LLVM::Type</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>Types::VOID</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The type of value this function returns.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>block</span>
+      
+      
+        <span class='type'>(<tt>Proc</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The insides of the function.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Function.html" title="LLVM::Script::Function (class)">LLVM::Script::Function</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The new function.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+211
+212
+213
+214
+215
+216
+217</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 211</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_function identifier id'>function</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_args identifier id'>args</span><span class='assign token'>=</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='rubyid_ret identifier id'>ret</span><span class='assign token'>=</span><span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_VOID constant id'>VOID</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='rubyid_fun identifier id'>fun</span> <span class='assign token'>=</span> <span class='rubyid_Function constant id'>Function</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_self self kw'>self</span><span class='comma token'>,</span> <span class='rubyid_@module ivar id'>@module</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{@address}.#{name.to_s}&quot;</span><span class='comma token'>,</span> <span class='rubyid_args identifier id'>args</span><span class='comma token'>,</span> <span class='rubyid_ret identifier id'>ret</span><span class='rparen token'>)</span>
+  <span class='rubyid_fun identifier id'>fun</span><span class='dot token'>.</span><span class='rubyid_linkage identifier id'>linkage</span> <span class='assign token'>=</span> <span class='symbol val'>:private</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_@visibility ivar id'>@visibility</span> <span class='eq op'>==</span> <span class='symbol val'>:private</span>
+  <span class='rubyid_@functions ivar id'>@functions</span><span class='lbrack token'>[</span><span class='rubyid_@visibility ivar id'>@visibility</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_fun identifier id'>fun</span>
+  <span class='rubyid_fun identifier id'>fun</span><span class='dot token'>.</span><span class='rubyid_build identifier id'>build</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span> <span class='rubyid_if if_mod kw'>if</span> <span class='colon3 op'>::</span><span class='rubyid_Kernel constant id'>Kernel</span><span class='dot token'>.</span><span class='rubyid_block_given? fid id'>block_given?</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_fun identifier id'>fun</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="functions-instance_method">
+  
+    - (<tt>Hash{Symbol, <span class='object_link'><a href="Function.html" title="LLVM::Script::Function (class)">LLVM::Script::Function</a></span>}</tt>) <strong>functions</strong>(include_private = false) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>An hash of functions in the library.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>include_private</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether or not to include  functions whose visibility is private in the
+hash.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash{Symbol, <span class='object_link'><a href="Function.html" title="LLVM::Script::Function (class)">LLVM::Script::Function</a></span>}</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Hash of symbol names pointing to functions.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+177
+178
+179</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 177</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_functions identifier id'>functions</span><span class='lparen token'>(</span><span class='rubyid_include_private identifier id'>include_private</span><span class='assign token'>=</span><span class='rubyid_false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='rubyid_values identifier id'>values</span><span class='lparen token'>(</span><span class='rubyid_@functions ivar id'>@functions</span><span class='comma token'>,</span> <span class='rubyid_include_private identifier id'>include_private</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="global-instance_method">
+  
+    - (<tt>LLVM::GlobalValue</tt>) <strong>global</strong>(name, info) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates a new global value.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The name of the global.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>info</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>If an LLVM::Value or Ruby equivalent, the default value of the global. 
+Otherwise, it is the type of the external global.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>LLVM::GlobalValue</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The new global.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 249</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_global identifier id'>global</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_info identifier id'>info</span><span class='rparen token'>)</span>
+  <span class='rubyid_if if kw'>if</span> <span class='rubyid_info identifier id'>info</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Type constant id'>Type</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='rubyid_info identifier id'>info</span><span class='dot token'>.</span><span class='rubyid_is_a? fid id'>is_a?</span><span class='lparen token'>(</span><span class='rubyid_Class constant id'>Class</span><span class='rparen token'>)</span>
+    <span class='rubyid_glob identifier id'>glob</span> <span class='assign token'>=</span> <span class='rubyid_@module ivar id'>@module</span><span class='dot token'>.</span><span class='rubyid_globals identifier id'>globals</span><span class='dot token'>.</span><span class='rubyid_add identifier id'>add</span><span class='lparen token'>(</span><span class='rubyid_info identifier id'>info</span><span class='comma token'>,</span> <span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_s identifier id'>to_s</span><span class='rparen token'>)</span>
+    <span class='rubyid_@globals ivar id'>@globals</span><span class='lbrack token'>[</span><span class='symbol val'>:public</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_glob identifier id'>glob</span>
+  <span class='rubyid_else else kw'>else</span>
+    <span class='rubyid_val identifier id'>val</span> <span class='assign token'>=</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Convert constant id'>Convert</span><span class='lparen token'>(</span><span class='rubyid_info identifier id'>info</span><span class='rparen token'>)</span>
+    <span class='rubyid_glob identifier id'>glob</span> <span class='assign token'>=</span> <span class='rubyid_@module ivar id'>@module</span><span class='dot token'>.</span><span class='rubyid_globals identifier id'>globals</span><span class='dot token'>.</span><span class='rubyid_add identifier id'>add</span><span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_type identifier id'>type</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{@address}.#{name.to_s}&quot;</span><span class='rparen token'>)</span>
+    <span class='rubyid_glob identifier id'>glob</span><span class='dot token'>.</span><span class='rubyid_initializer identifier id'>initializer</span> <span class='assign token'>=</span> <span class='rubyid_val identifier id'>val</span>
+    <span class='rubyid_glob identifier id'>glob</span><span class='dot token'>.</span><span class='rubyid_linkage identifier id'>linkage</span> <span class='assign token'>=</span> <span class='symbol val'>:private</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_@visibility ivar id'>@visibility</span> <span class='eq op'>==</span> <span class='symbol val'>:private</span>
+    <span class='rubyid_@globals ivar id'>@globals</span><span class='lbrack token'>[</span><span class='rubyid_@visibility ivar id'>@visibility</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_glob identifier id'>glob</span>
+  <span class='rubyid_end end kw'>end</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="globals-instance_method">
+  
+    - (<tt>Hash{Symbol, LLVM::GlobalValue}</tt>) <strong>globals</strong>(include_private = false) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>An hash of globals in the library.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>include_private</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether or not to include  macros whose visibility is private in the hash.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash{Symbol, LLVM::GlobalValue}</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Hash of symbol names pointing to globals.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+193
+194
+195</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 193</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_globals identifier id'>globals</span><span class='lparen token'>(</span><span class='rubyid_include_private identifier id'>include_private</span><span class='assign token'>=</span><span class='rubyid_false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='rubyid_values identifier id'>values</span><span class='lparen token'>(</span><span class='rubyid_@globals ivar id'>@globals</span><span class='comma token'>,</span> <span class='rubyid_include_private identifier id'>include_private</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="import-instance_method">
+  
+    - (<tt>Object</tt>) <strong>import</strong>(obj) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Imports the given object, adding all of its public functions, macros, and
+globals to the caller. If any object in the caller has the same name as one
+of the imported objects, one of the following will happen depending on what
+level the conflict occurred:</p>
+<dl class="rdoc-list note-list"><dt>Ruby
+<dd>
+<p>The object will be overwritten, and from then on, the object will execute
+as declared in the  imported library.</p>
+</dd><dt>LLVM IR
+<dd>
+<p>A warning will be printed and if the linker is unable to resolve the
+conflict  a RuntimeError will be raised.</p>
+</dd></dl>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>obj</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>Symbol</tt>, <tt><span class='object_link'><a href="Namespace.html" title="LLVM::Script::Namespace (class)">LLVM::Script::Namespace</a></span></tt>, <tt><span class='object_link'><a href="Library.html" title="LLVM::Script::Library (class)">LLVM::Script::Library</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The name of the object to  import or the object itself. If a namespace,
+imports all of the contained namespaces and libraries.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>RuntimeError</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Raised if the LLVM Linker fails.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 60</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_import identifier id'>import</span><span class='lparen token'>(</span><span class='rubyid_obj identifier id'>obj</span><span class='rparen token'>)</span>
+  <span class='rubyid_case case kw'>case</span> <span class='rubyid_obj identifier id'>obj</span>
+  <span class='rubyid_when when kw'>when</span> <span class='rubyid_String constant id'>String</span><span class='comma token'>,</span> <span class='rubyid_Symbol constant id'>Symbol</span>
+    <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Namespace or Library, #{obj.to_s}, does not exist.&quot;</span> <span class='rubyid_unless unless_mod kw'>unless</span> <span class='rubyid_@namespace ivar id'>@namespace</span><span class='dot token'>.</span><span class='rubyid_include? fid id'>include?</span><span class='lparen token'>(</span><span class='rubyid_obj identifier id'>obj</span><span class='rparen token'>)</span>
+    <span class='rubyid_import identifier id'>import</span><span class='lparen token'>(</span><span class='rubyid_@namespace ivar id'>@namespace</span><span class='dot token'>.</span><span class='rubyid_lookup identifier id'>lookup</span><span class='lparen token'>(</span><span class='rubyid_obj identifier id'>obj</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+
+  <span class='rubyid_when when kw'>when</span> <span class='rubyid_Library constant id'>Library</span>
+    <span class='rubyid_@macros ivar id'>@macros</span><span class='lbrack token'>[</span><span class='symbol val'>:public</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='rubyid_merge! fid id'>merge!</span><span class='lparen token'>(</span><span class='rubyid_obj identifier id'>obj</span><span class='dot token'>.</span><span class='rubyid_macros identifier id'>macros</span><span class='rparen token'>)</span>
+    <span class='rubyid_obj identifier id'>obj</span><span class='dot token'>.</span><span class='rubyid_functions identifier id'>functions</span><span class='dot token'>.</span><span class='rubyid_each identifier id'>each</span> <span class='rubyid_do do kw'>do</span> <span class='bitor op'>|</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_func identifier id'>func</span><span class='bitor op'>|</span>
+      <span class='rubyid_if if kw'>if</span> <span class='rubyid_@module ivar id'>@module</span><span class='dot token'>.</span><span class='rubyid_functions identifier id'>functions</span><span class='dot token'>.</span><span class='rubyid_named identifier id'>named</span><span class='lparen token'>(</span><span class='rubyid_func identifier id'>func</span><span class='dot token'>.</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+        <span class='rubyid_warn identifier id'>warn</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Imported function's (#{name.to_s}) address, #{func.name}, already exists.&quot;</span><span class='rparen token'>)</span>
+      <span class='rubyid_end end kw'>end</span>
+      <span class='rubyid_args identifier id'>args</span> <span class='assign token'>=</span> <span class='rubyid_func identifier id'>func</span><span class='dot token'>.</span><span class='rubyid_varargs? fid id'>varargs?</span> <span class='integer val'>? </span><span class='rubyid_func identifier id'>func</span><span class='dot token'>.</span><span class='rubyid_arg_types identifier id'>arg_types</span> <span class='plus op'>+</span> <span class='lbrack token'>[</span><span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_VARARGS constant id'>VARARGS</span><span class='rbrack token'>]</span> <span class='colon op'>:</span> <span class='rubyid_func identifier id'>func</span><span class='dot token'>.</span><span class='rubyid_arg_types identifier id'>arg_types</span>
+      <span class='rubyid_fun identifier id'>fun</span> <span class='assign token'>=</span> <span class='rubyid_Function constant id'>Function</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_self self kw'>self</span><span class='comma token'>,</span> <span class='rubyid_@module ivar id'>@module</span><span class='comma token'>,</span> <span class='rubyid_func identifier id'>func</span><span class='dot token'>.</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_args identifier id'>args</span><span class='comma token'>,</span> <span class='rubyid_func identifier id'>func</span><span class='dot token'>.</span><span class='rubyid_return_type identifier id'>return_type</span><span class='rparen token'>)</span>
+      <span class='rubyid_@functions ivar id'>@functions</span><span class='lbrack token'>[</span><span class='symbol val'>:public</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_fun identifier id'>fun</span>
+    <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_obj identifier id'>obj</span><span class='dot token'>.</span><span class='rubyid_globals identifier id'>globals</span><span class='dot token'>.</span><span class='rubyid_each identifier id'>each</span> <span class='rubyid_do do kw'>do</span> <span class='bitor op'>|</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_info identifier id'>info</span><span class='bitor op'>|</span>
+      <span class='rubyid_if if kw'>if</span> <span class='rubyid_@module ivar id'>@module</span><span class='dot token'>.</span><span class='rubyid_globals identifier id'>globals</span><span class='dot token'>.</span><span class='rubyid_named identifier id'>named</span><span class='lparen token'>(</span><span class='rubyid_info identifier id'>info</span><span class='dot token'>.</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+        <span class='rubyid_warn identifier id'>warn</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Imported global's (#{name.to_s}) address, #{info.name}, already exists.&quot;</span><span class='rparen token'>)</span>
+      <span class='rubyid_end end kw'>end</span>
+      <span class='rubyid_glob identifier id'>glob</span> <span class='assign token'>=</span> <span class='rubyid_@module ivar id'>@module</span><span class='dot token'>.</span><span class='rubyid_globals identifier id'>globals</span><span class='dot token'>.</span><span class='rubyid_add identifier id'>add</span><span class='lparen token'>(</span><span class='rubyid_info identifier id'>info</span><span class='dot token'>.</span><span class='rubyid_type identifier id'>type</span><span class='comma token'>,</span> <span class='rubyid_info identifier id'>info</span><span class='dot token'>.</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+      <span class='rubyid_glob identifier id'>glob</span><span class='dot token'>.</span><span class='rubyid_global_constant identifier id'>global_constant</span> <span class='assign token'>=</span> <span class='rubyid_info identifier id'>info</span><span class='dot token'>.</span><span class='rubyid_global_constant? fid id'>global_constant?</span>
+      <span class='rubyid_@globals ivar id'>@globals</span><span class='lbrack token'>[</span><span class='symbol val'>:public</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_glob identifier id'>glob</span>
+    <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_err identifier id'>err</span> <span class='assign token'>=</span> <span class='rubyid_@module ivar id'>@module</span><span class='dot token'>.</span><span class='rubyid_link identifier id'>link</span><span class='lparen token'>(</span><span class='rubyid_obj identifier id'>obj</span><span class='comma token'>,</span> <span class='symbol val'>:linker_destroy_source</span><span class='rparen token'>)</span>
+    <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_RuntimeError constant id'>RuntimeError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Failed to link library, #{library.name.to_s}, to #{name}.&quot;</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_err identifier id'>err</span>
+  <span class='rubyid_when when kw'>when</span> <span class='rubyid_Namespace constant id'>Namespace</span>
+    <span class='rubyid_obj identifier id'>obj</span><span class='dot token'>.</span><span class='rubyid_children identifier id'>children</span><span class='dot token'>.</span><span class='rubyid_values identifier id'>values</span><span class='dot token'>.</span><span class='rubyid_each identifier id'>each</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rubyid_child identifier id'>child</span><span class='bitor op'>|</span> <span class='rubyid_import identifier id'>import</span><span class='lparen token'>(</span><span class='rubyid_child identifier id'>child</span><span class='rparen token'>)</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_child identifier id'>child</span><span class='dot token'>.</span><span class='rubyid_is_a? fid id'>is_a?</span><span class='lparen token'>(</span><span class='rubyid_Namespace constant id'>Namespace</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='rubyid_child identifier id'>child</span><span class='dot token'>.</span><span class='rubyid_is_a? fid id'>is_a?</span><span class='lparen token'>(</span><span class='rubyid_Library constant id'>Library</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+  <span class='rubyid_else else kw'>else</span>
+    <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Cam only import Namespaces and Libraries. #{obj.class.name} given.&quot;</span>
+  <span class='rubyid_end end kw'>end</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Library.html" title="LLVM::Script::Library (class)">LLVM::Script::Library</a></span></tt>) <strong>initialize</strong>(name, space = GlobalSpace, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates a new library.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>, <tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A name for the library.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>space</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Namespace.html" title="LLVM::Script::Namespace (class)">LLVM::Script::Namespace</a></span></tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>GlobalSpace</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The namespace in which this library resides.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>block</span>
+      
+      
+        <span class='type'>(<tt>Proc</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A block with the insides of the library.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 21</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_space identifier id'>space</span><span class='assign token'>=</span><span class='rubyid_GlobalSpace constant id'>GlobalSpace</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='rubyid_@name ivar id'>@name</span> <span class='assign token'>=</span> <span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_s identifier id'>to_s</span>
+  <span class='rubyid_@visibility ivar id'>@visibility</span> <span class='assign token'>=</span> <span class='symbol val'>:public</span>
+  <span class='rubyid_@module ivar id'>@module</span> <span class='assign token'>=</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Module constant id'>Module</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='rubyid_@globals ivar id'>@globals</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='symbol val'>:public=</span><span class='gt op'>&gt;</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='symbol val'>:private=</span><span class='gt op'>&gt;</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rbrace token'>}</span>
+  <span class='rubyid_@functions ivar id'>@functions</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='symbol val'>:public=</span><span class='gt op'>&gt;</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='symbol val'>:private=</span><span class='gt op'>&gt;</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rbrace token'>}</span>
+  <span class='rubyid_@macros ivar id'>@macros</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='symbol val'>:public=</span><span class='gt op'>&gt;</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='symbol val'>:private=</span><span class='gt op'>&gt;</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rbrace token'>}</span>
+  <span class='rubyid_@namespace ivar id'>@namespace</span> <span class='assign token'>=</span> <span class='rubyid_space identifier id'>space</span>
+  <span class='rubyid_@namespace ivar id'>@namespace</span><span class='dot token'>.</span><span class='rubyid_add identifier id'>add</span><span class='lparen token'>(</span><span class='rubyid_self self kw'>self</span><span class='rparen token'>)</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_@namespace ivar id'>@namespace</span>
+  <span class='rubyid_@address ivar id'>@address</span> <span class='assign token'>=</span> <span class='rubyid_namespace identifier id'>namespace</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='integer val'>? </span><span class='rubyid_@name ivar id'>@name</span> <span class='colon op'>:</span> <span class='dstring node'>&quot;#{namespace.address}.#{@name.gsub(&quot; &quot;, &quot;&quot;)}&quot;</span>
+  <span class='rubyid_build identifier id'>build</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span> <span class='rubyid_if if_mod kw'>if</span> <span class='colon3 op'>::</span><span class='rubyid_Kernel constant id'>Kernel</span><span class='dot token'>.</span><span class='rubyid_block_given? fid id'>block_given?</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="macro-instance_method">
+  
+    - (<tt>Proc</tt>) <strong>macro</strong>(name, &amp;proc) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates a new macro.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The name of the macro.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>proc</span>
+      
+      
+        <span class='type'>(<tt>Proc</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The insides of the macro, executed when the macro is called.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Proc</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The proc passed to the function.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+239
+240
+241
+242</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 239</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_macro identifier id'>macro</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_proc identifier id'>proc</span><span class='rparen token'>)</span>
+  <span class='rubyid_@macros ivar id'>@macros</span><span class='lbrack token'>[</span><span class='rubyid_@visibility ivar id'>@visibility</span><span class='rbrack token'>]</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='rubyid_@macros ivar id'>@macros</span><span class='lbrack token'>[</span><span class='rubyid_@visibility ivar id'>@visibility</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_proc identifier id'>proc</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="macros-instance_method">
+  
+    - (<tt>Hash{Symbol, Proc}</tt>) <strong>macros</strong>(include_private = false) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>An hash of macros in the library.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>include_private</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether or not to include  macros whose visibility is private in the hash.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash{Symbol, Proc}</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Hash of symbol names pointing to procs (macros).</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+185
+186
+187</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 185</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_macros identifier id'>macros</span><span class='lparen token'>(</span><span class='rubyid_include_private identifier id'>include_private</span><span class='assign token'>=</span><span class='rubyid_false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='rubyid_values identifier id'>values</span><span class='lparen token'>(</span><span class='rubyid_@macros ivar id'>@macros</span><span class='comma token'>,</span> <span class='rubyid_include_private identifier id'>include_private</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="private-instance_method">
+  
+    - (<tt>Object</tt>) <strong>private</strong>(*functions, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Shortcut to visibility with :private as the new visiblility. Equivalant to:</p>
+
+<pre class="code ruby18"><code>visibility :private, *functions, &amp;block</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>functions</span>
+      
+      
+        <span class='type'>(<tt>List&lt;<span class='object_link'><a href="Function.html" title="LLVM::Script::Function (class)">LLVM::Script::Function</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A list of functions to change to public visibility.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>block</span>
+      
+      
+        <span class='type'>(<tt>Proc</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A block to execute in public visibility.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li>Library#visibility</li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+107
+108
+109</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 107</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_private identifier id'>private</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='rubyid_functions identifier id'>functions</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='rubyid_visibility identifier id'>visibility</span><span class='lparen token'>(</span><span class='symbol val'>:private</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='rubyid_functions identifier id'>functions</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="public-instance_method">
+  
+    - (<tt>Object</tt>) <strong>public</strong>(*functions, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Shortcut to visibility with :public as the new visiblility. Equivalant to:</p>
+
+<pre class="code ruby18"><code>visibility :public, *functions, &amp;block</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>functions</span>
+      
+      
+        <span class='type'>(<tt>List&lt;<span class='object_link'><a href="Function.html" title="LLVM::Script::Function (class)">LLVM::Script::Function</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A list of functions to change to private visibility.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>block</span>
+      
+      
+        <span class='type'>(<tt>Proc</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A block to execute in private visibility.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li>Library#visibility</li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+98
+99
+100</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 98</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_public identifier id'>public</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='rubyid_functions identifier id'>functions</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='rubyid_visibility identifier id'>visibility</span><span class='lparen token'>(</span><span class='symbol val'>:public</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='rubyid_functions identifier id'>functions</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="struct-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Struct.html" title="LLVM::Script::Struct (class)">LLVM::Script::Struct</a></span></tt>) <strong>struct</strong>(*args) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Defines a new struct type. Takes the same arguments as
+<span class='object_link'><a href="Struct.html#initialize-instance_method" title="LLVM::Script::Struct#initialize (method)">Struct#initialize</a></span>.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Struct.html" title="LLVM::Script::Struct (class)">LLVM::Script::Struct</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The newly defined struct.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Struct.html#initialize-instance_method" title="LLVM::Script::Struct#initialize (method)">Struct#initialize</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+276
+277
+278</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 276</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_struct identifier id'>struct</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='rubyid_args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Struct constant id'>Struct</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='rubyid_args identifier id'>args</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="visibility-instance_method">
+  
+    - (<tt>Object</tt>) <strong>visibility</strong>(new_visibility = nil, *values, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Visiblity control.  If given no arguments, returns the current visibility.
+If just given a new visibility, sets the visibility to it. If given a
+block, evaluates it in the given visibility. If given a set of functions,
+changes the visibility of those  functions to the given visibility.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><span class='rubyid_library identifier id'>library</span> <span class='string val'>&quot;VisibilityExample&quot;</span> <span class='rubyid_do do kw'>do</span>
+  <span class='rubyid_visibility identifier id'>visibility</span>  <span class='comment val'># =&gt; :public</span>
+  <span class='rubyid_function identifier id'>function</span> <span class='symbol val'>:somefunc</span> <span class='rubyid_do do kw'>do</span>
+    <span class='comment val'># function contents</span>
+  <span class='rubyid_end end kw'>end</span>
+  <span class='rubyid_functions identifier id'>functions</span>   <span class='comment val'># =&gt; {:somefunc =&gt; &lt;LLVM::Script::Function&gt;}</span>
+
+  <span class='rubyid_visibility identifier id'>visibility</span> <span class='symbol val'>:private</span><span class='comma token'>,</span> <span class='symbol val'>:somefunc</span>
+  <span class='rubyid_functions identifier id'>functions</span>   <span class='comment val'># =&gt; {}</span>
+
+  <span class='rubyid_visibility identifier id'>visibility</span> <span class='symbol val'>:private</span> <span class='rubyid_do do kw'>do</span>
+    <span class='rubyid_visibility identifier id'>visibility</span>  <span class='comment val'># =&gt; :private</span>
+    <span class='rubyid_function identifier id'>function</span> <span class='symbol val'>:privatefunc</span> <span class='rubyid_do do kw'>do</span>
+      <span class='comment val'># function contents</span>
+    <span class='rubyid_end end kw'>end</span>
+  <span class='rubyid_end end kw'>end</span>
+  <span class='rubyid_functions identifier id'>functions</span>   <span class='comment val'># =&gt; {}</span>
+
+  <span class='rubyid_visibility identifier id'>visibility</span>  <span class='comment val'># =&gt; :public</span>
+  <span class='rubyid_visibility identifier id'>visibility</span> <span class='symbol val'>:private</span>
+  <span class='rubyid_visibility identifier id'>visibility</span>  <span class='comment val'># =&gt; :private</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>new_visibility</span>
+      
+      
+        <span class='type'>(<tt>:public</tt>, <tt>:private</tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The new visibility.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>values</span>
+      
+      
+        <span class='type'>(<tt>List&lt;<span class='object_link'><a href="Function.html" title="LLVM::Script::Function (class)">LLVM::Script::Function</a></span>, LLVM::Value&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A list of functions, macros, and/or globals  to change to the new
+visibility.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>block</span>
+      
+      
+        <span class='type'>(<tt>Proc</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A block to execute in the new visibility.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/library.rb', line 144</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_visibility identifier id'>visibility</span><span class='lparen token'>(</span><span class='rubyid_new_visibility identifier id'>new_visibility</span><span class='assign token'>=</span><span class='rubyid_nil nil kw'>nil</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='rubyid_values identifier id'>values</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_@visibility ivar id'>@visibility</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_new_visibility identifier id'>new_visibility</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
+  <span class='rubyid_new_visibility identifier id'>new_visibility</span> <span class='assign token'>=</span> <span class='rubyid_new_visibility identifier id'>new_visibility</span> <span class='eq op'>==</span> <span class='symbol val'>:private</span> <span class='question op'>?</span> <span class='symbol val'>:private</span> <span class='colon op'>:</span> <span class='symbol val'>:public</span>
+  <span class='rubyid_@visibility ivar id'>@visibility</span> <span class='assign token'>=</span> <span class='rubyid_new_visibility identifier id'>new_visibility</span> <span class='rubyid_unless unless_mod kw'>unless</span> <span class='colon3 op'>::</span><span class='rubyid_Kernel constant id'>Kernel</span><span class='dot token'>.</span><span class='rubyid_block_given? fid id'>block_given?</span> <span class='orop op'>||</span> <span class='rubyid_values identifier id'>values</span><span class='dot token'>.</span><span class='rubyid_length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
+  <span class='rubyid_if if kw'>if</span> <span class='colon3 op'>::</span><span class='rubyid_Kernel constant id'>Kernel</span><span class='dot token'>.</span><span class='rubyid_block_given? fid id'>block_given?</span>
+    <span class='rubyid_state identifier id'>state</span> <span class='assign token'>=</span> <span class='rubyid_@visibility ivar id'>@visibility</span>
+    <span class='rubyid_@visibility ivar id'>@visibility</span> <span class='assign token'>=</span> <span class='rubyid_new_visibility identifier id'>new_visibility</span>
+    <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_instance_eval identifier id'>instance_eval</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
+    <span class='rubyid_@visibility ivar id'>@visibility</span> <span class='assign token'>=</span> <span class='rubyid_state identifier id'>state</span>
+  <span class='rubyid_end end kw'>end</span>
+  <span class='rubyid_if if kw'>if</span> <span class='rubyid_values identifier id'>values</span><span class='dot token'>.</span><span class='rubyid_length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
+    <span class='rubyid_linkage identifier id'>linkage</span> <span class='assign token'>=</span> <span class='lparen token'>(</span><span class='rubyid_new_visibility identifier id'>new_visibility</span> <span class='eq op'>==</span> <span class='symbol val'>:private</span> <span class='question op'>?</span> <span class='symbol val'>:private</span> <span class='colon op'>:</span> <span class='symbol val'>:external</span><span class='rparen token'>)</span>
+    <span class='rubyid_values identifier id'>values</span><span class='dot token'>.</span><span class='rubyid_each identifier id'>each</span> <span class='rubyid_do do kw'>do</span> <span class='bitor op'>|</span><span class='rubyid_name identifier id'>name</span><span class='bitor op'>|</span>
+      <span class='rubyid_name identifier id'>name</span> <span class='assign token'>=</span> <span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_sym identifier id'>to_sym</span>
+      <span class='rubyid_if if kw'>if</span> <span class='rubyid_functions identifier id'>functions</span><span class='lparen token'>(</span><span class='rubyid_true true kw'>true</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_include? fid id'>include?</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+        <span class='rubyid_@functions ivar id'>@functions</span><span class='lbrack token'>[</span><span class='rubyid_new_visibility identifier id'>new_visibility</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_@functions ivar id'>@functions</span><span class='lbrack token'>[</span><span class='rubyid_@visibility ivar id'>@visibility</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='rubyid_delete identifier id'>delete</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+        <span class='rubyid_@functions ivar id'>@functions</span><span class='lbrack token'>[</span><span class='rubyid_new_visibility identifier id'>new_visibility</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='rubyid_linkage identifier id'>linkage</span> <span class='assign token'>=</span> <span class='rubyid_linkage identifier id'>linkage</span>
+      <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_macros identifier id'>macros</span><span class='lparen token'>(</span><span class='rubyid_true true kw'>true</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_include? fid id'>include?</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+        <span class='rubyid_@macros ivar id'>@macros</span><span class='lbrack token'>[</span><span class='rubyid_new_visibility identifier id'>new_visibility</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_@macros ivar id'>@macros</span><span class='lbrack token'>[</span><span class='rubyid_@visibility ivar id'>@visibility</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='rubyid_delete identifier id'>delete</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+      <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_globals identifier id'>globals</span><span class='lparen token'>(</span><span class='rubyid_true true kw'>true</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_include? fid id'>include?</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+        <span class='rubyid_@globals ivar id'>@globals</span><span class='lbrack token'>[</span><span class='rubyid_new_visibility identifier id'>new_visibility</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_@globals ivar id'>@globals</span><span class='lbrack token'>[</span><span class='rubyid_@visibility ivar id'>@visibility</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='rubyid_delete identifier id'>delete</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+        <span class='rubyid_@globals ivar id'>@globals</span><span class='lbrack token'>[</span><span class='rubyid_new_visibility identifier id'>new_visibility</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='rubyid_linkage identifier id'>linkage</span> <span class='assign token'>=</span> <span class='rubyid_linkage identifier id'>linkage</span>
+      <span class='rubyid_else else kw'>else</span>
+        <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Unknown function, macro, and/or global, #{name.to_s}, passed to visibility.&quot;</span>
+      <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_end end kw'>end</span>
+  <span class='rubyid_end end kw'>end</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Mon Jun 25 21:03:53 2012 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.2.1 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

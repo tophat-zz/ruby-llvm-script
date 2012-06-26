@@ -80,7 +80,7 @@
   
     <dt class="r1 last">Defined in:</dt>
     <dd class="r1 last">lib/llvm/script/core.rb<span class="defines">,<br />
-  lib/llvm/script/types.rb,<br /> lib/llvm/script/library.rb,<br /> lib/llvm/script/program.rb,<br /> lib/llvm/script/function.rb,<br /> lib/llvm/script/generator.rb</span>
+  lib/llvm/script/types.rb,<br /> lib/llvm/script/struct.rb,<br /> lib/llvm/script/library.rb,<br /> lib/llvm/script/program.rb,<br /> lib/llvm/script/function.rb,<br /> lib/llvm/script/platform.rb,<br /> lib/llvm/script/namespace.rb,<br /> lib/llvm/script/generator.rb</span>
 </dd>
   
 </dl>
@@ -90,15 +90,39 @@
 <p class="children">
   
     
-      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Script/Types.html" title="LLVM::Script::Types (module)">Types</a></span>
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Script/Collection.html" title="LLVM::Script::Collection (module)">Collection</a></span>, <span class='object_link'><a href="Script/Types.html" title="LLVM::Script::Types (module)">Types</a></span>
     
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Script/Function.html" title="LLVM::Script::Function (class)">Function</a></span>, <span class='object_link'><a href="Script/Generator.html" title="LLVM::Script::Generator (class)">Generator</a></span>, <span class='object_link'><a href="Script/Library.html" title="LLVM::Script::Library (class)">Library</a></span>, <span class='object_link'><a href="Script/Program.html" title="LLVM::Script::Program (class)">Program</a></span>, <span class='object_link'><a href="Script/ScriptObject.html" title="LLVM::Script::ScriptObject (class)">ScriptObject</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Script/Function.html" title="LLVM::Script::Function (class)">Function</a></span>, <span class='object_link'><a href="Script/Generator.html" title="LLVM::Script::Generator (class)">Generator</a></span>, <span class='object_link'><a href="Script/Library.html" title="LLVM::Script::Library (class)">Library</a></span>, <span class='object_link'><a href="Script/Namespace.html" title="LLVM::Script::Namespace (class)">Namespace</a></span>, <span class='object_link'><a href="Script/Program.html" title="LLVM::Script::Program (class)">Program</a></span>, <span class='object_link'><a href="Script/ScriptObject.html" title="LLVM::Script::ScriptObject (class)">ScriptObject</a></span>, <span class='object_link'><a href="Script/Struct.html" title="LLVM::Script::Struct (class)">Struct</a></span>
     
   
 </p>
 
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="GlobalSpace-constant" class="">GlobalSpace =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>A <span class='object_link'><a href="Script/Namespace.html" title="LLVM::Script::Namespace (class)">Namespace</a></span> that is used by Kernel methods and is the
+default namespace for newly  created libraries.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='rubyid_Namespace constant id'>Namespace</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;rls&quot;</span><span class='rparen token'>)</span>
+</pre></dd>
+      
+    </dl>
+  
 
 
 
@@ -106,11 +130,649 @@
 
 
 
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#Convert-class_method" title="Convert (class method)">+ (LLVM::Value) <strong>Convert</strong>(val, hint = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Converts an object into a LLVM::Value.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#Decimal-class_method" title="Decimal (class method)">+ (Boolean) <strong>Decimal</strong>(kind) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Checks that the given kind is a float kind (:decimal, :float, :double,
+:x86_fp80, :fp128, or :ppc_fp128).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#Typename-class_method" title="Typename (class method)">+ (String) <strong>Typename</strong>(obj) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns a human-readable description of the given object’s type.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#Validate-class_method" title="Validate (class method)">+ (LLVM::Value, LLVM::Type) <strong>Validate</strong>(obj, kind) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Validates that an object is of the given kind.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="Convert-class_method">
+  
+    + (<tt>LLVM::Value</tt>) <strong>Convert</strong>(val, hint = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Converts an object into a LLVM::Value. A hint can be specified to ensure
+that the value is  of a given kind or type.</p>
+
+<p><strong>Conversion Table</strong></p>
+
+<pre class="code ruby18"><code>Ruby      | LLVM                            | Possible Kinds        | Possible Types                            
+-------------------------------------------------------------------------------------------
+nil, 0    | null pointer                    | (none)                | A pointer type
+true      | i1 0                            | :numeric, :integer    | Int1                     
+false     | i1 1                            | :numeric, :integer    | Int1                                         
+Float     | Float or Double                 | :numeric, :decimal    | Float, Double  
+Numeric   | ConstantInt                     | :numeric, :integer    | Int1 to Int64                    
+String*   | ConstantArray, i8 pointer       | :pointer, :array      | Int8 array or pointer                    
+Array     | ConstantArray, ConstantVector   | :array, :vector       | An array type</code></pre>
+<ul><li>
+<p>Strings can only be converted into i8 pointers in the
+<span class='object_link'><a href="Script/Generator.html#Convert-instance_method" title="LLVM::Script::Generator#Convert (method)">Generator version of convert</a></span>.</p>
+</li></ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>val</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The object to convert into a LLVM::Value.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>hint</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>, <tt>LLVM::Type</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A symbolic kind or a LLVM::Type that signifies what kind  an object should
+be. If nil, the value will be converted based on its class.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>LLVM::Value</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The newly converted LLVM::Value</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 23</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_Convert constant id'>Convert</span><span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span><span class='comma token'>,</span> <span class='rubyid_hint identifier id'>hint</span><span class='assign token'>=</span><span class='rubyid_nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='rubyid_type identifier id'>type</span> <span class='assign token'>=</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Type constant id'>Type</span><span class='lparen token'>(</span><span class='rubyid_hint identifier id'>hint</span><span class='rparen token'>)</span>
+  <span class='rubyid_kind identifier id'>kind</span> <span class='assign token'>=</span> <span class='rubyid_hint identifier id'>hint</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_hint identifier id'>hint</span><span class='dot token'>.</span><span class='rubyid_is_a? fid id'>is_a?</span><span class='lparen token'>(</span><span class='rubyid_Symbol constant id'>Symbol</span><span class='rparen token'>)</span>
+  <span class='rubyid_kind identifier id'>kind</span> <span class='assign token'>=</span> <span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind identifier id'>kind</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Type constant id'>Type</span><span class='rparen token'>)</span>
+  <span class='rubyid_klass identifier id'>klass</span> <span class='assign token'>=</span> <span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_DOUBLE constant id'>DOUBLE</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_type identifier id'>type</span> <span class='eq op'>==</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Double constant id'>Double</span><span class='dot token'>.</span><span class='rubyid_type identifier id'>type</span> <span class='orop op'>||</span> <span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:double</span>
+  <span class='rubyid_klass identifier id'>klass</span> <span class='assign token'>=</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='dot token'>.</span><span class='rubyid_const_get identifier id'>const_get</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Int#{type.width}&quot;</span><span class='dot token'>.</span><span class='rubyid_to_sym identifier id'>to_sym</span><span class='rparen token'>)</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_IntType constant id'>IntType</span><span class='rparen token'>)</span> 
+  <span class='rubyid_if if kw'>if</span> <span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Value constant id'>Value</span><span class='rparen token'>)</span>
+    <span class='rubyid_if if kw'>if</span> <span class='rubyid_hint identifier id'>hint</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='orop op'>||</span> <span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_type identifier id'>type</span> <span class='eq op'>==</span> <span class='rubyid_type identifier id'>type</span> <span class='orop op'>||</span> <span class='lparen token'>(</span><span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='andop op'>&amp;&amp;</span> <span class='lparen token'>(</span><span class='lparen token'>(</span><span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:decimal</span> <span class='andop op'>&amp;&amp;</span> <span class='rubyid_Decimal constant id'>Decimal</span><span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind identifier id'>kind</span><span class='rparen token'>)</span><span class='rparen token'>)</span> <span class='orop op'>||</span>
+        <span class='lparen token'>(</span><span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:numeric</span> <span class='andop op'>&amp;&amp;</span> <span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:integer</span> <span class='orop op'>||</span> <span class='rubyid_Decimal constant id'>Decimal</span><span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind identifier id'>kind</span><span class='rparen token'>)</span><span class='rparen token'>)</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='rubyid_kind identifier id'>kind</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+      <span class='rubyid_return return kw'>return</span> <span class='rubyid_val identifier id'>val</span>
+    <span class='rubyid_end end kw'>end</span>
+  <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_ScriptObject constant id'>ScriptObject</span><span class='rparen token'>)</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_val identifier id'>val</span>
+  <span class='rubyid_elsif elsif kw'>elsif</span> <span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span> <span class='eq op'>==</span> <span class='integer val'>0</span> <span class='orop op'>||</span> <span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span><span class='rparen token'>)</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='andop op'>&amp;&amp;</span> <span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:pointer</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_null_pointer identifier id'>null_pointer</span>
+  <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_val identifier id'>val</span> <span class='eq op'>==</span> <span class='rubyid_true true kw'>true</span> <span class='andop op'>&amp;&amp;</span> <span class='lparen token'>(</span><span class='rubyid_kind identifier id'>kind</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='orop op'>||</span> <span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:numeric</span> <span class='orop op'>||</span> <span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:integer</span><span class='rparen token'>)</span>
+    <span class='rubyid_return return kw'>return</span> <span class='lparen token'>(</span><span class='rubyid_klass identifier id'>klass</span> <span class='orop op'>||</span> <span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_BOOL constant id'>BOOL</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_from_i identifier id'>from_i</span><span class='lparen token'>(</span><span class='integer val'>1</span><span class='rparen token'>)</span>
+  <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_val identifier id'>val</span> <span class='eq op'>==</span> <span class='rubyid_false false kw'>false</span> <span class='andop op'>&amp;&amp;</span> <span class='lparen token'>(</span><span class='rubyid_kind identifier id'>kind</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='orop op'>||</span> <span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:numeric</span> <span class='orop op'>||</span> <span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:integer</span><span class='rparen token'>)</span>
+    <span class='rubyid_return return kw'>return</span> <span class='lparen token'>(</span><span class='rubyid_klass identifier id'>klass</span> <span class='orop op'>||</span> <span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_BOOL constant id'>BOOL</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_from_i identifier id'>from_i</span><span class='lparen token'>(</span><span class='integer val'>0</span><span class='rparen token'>)</span>
+  <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_Decimal constant id'>Decimal</span><span class='lparen token'>(</span><span class='rubyid_kind identifier id'>kind</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='colon3 op'>::</span><span class='rubyid_Float constant id'>Float</span><span class='rparen token'>)</span> <span class='andop op'>&amp;&amp;</span> <span class='lparen token'>(</span><span class='rubyid_kind identifier id'>kind</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='orop op'>||</span> <span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:numeric</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+    <span class='rubyid_return return kw'>return</span> <span class='lparen token'>(</span><span class='rubyid_klass identifier id'>klass</span> <span class='orop op'>||</span> <span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_FLOAT constant id'>FLOAT</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_from_f identifier id'>from_f</span><span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_to_f identifier id'>to_f</span><span class='rparen token'>)</span>
+  <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:integer</span> <span class='orop op'>||</span> <span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:numeric</span> <span class='orop op'>||</span> <span class='lparen token'>(</span><span class='rubyid_kind identifier id'>kind</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='andop op'>&amp;&amp;</span> <span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_Numeric constant id'>Numeric</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+    <span class='rubyid_return return kw'>return</span> <span class='lparen token'>(</span><span class='rubyid_klass identifier id'>klass</span> <span class='orop op'>||</span> <span class='rubyid_Types constant id'>Types</span><span class='colon2 op'>::</span><span class='rubyid_INT constant id'>INT</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_from_i identifier id'>from_i</span><span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_to_i identifier id'>to_i</span><span class='rparen token'>)</span>
+  <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_String constant id'>String</span><span class='rparen token'>)</span> <span class='andop op'>&amp;&amp;</span> <span class='lparen token'>(</span><span class='rubyid_kind identifier id'>kind</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='orop op'>||</span> <span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:array</span><span class='rparen token'>)</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_ConstantArray constant id'>ConstantArray</span><span class='dot token'>.</span><span class='rubyid_string identifier id'>string</span><span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_to_s identifier id'>to_s</span><span class='rparen token'>)</span>
+  <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:array</span> <span class='orop op'>||</span> <span class='lparen token'>(</span><span class='rubyid_kind identifier id'>kind</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='andop op'>&amp;&amp;</span> <span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_Array constant id'>Array</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+    <span class='rubyid_type identifier id'>type</span> <span class='assign token'>=</span> <span class='notop op'>!</span><span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='integer val'>? </span><span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_element_type identifier id'>element_type</span> <span class='colon op'>:</span> <span class='rubyid_Convert constant id'>Convert</span><span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_to_a identifier id'>to_a</span><span class='dot token'>.</span><span class='rubyid_first identifier id'>first</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_type identifier id'>type</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_ConstantArray constant id'>ConstantArray</span><span class='dot token'>.</span><span class='rubyid_const identifier id'>const</span><span class='lparen token'>(</span><span class='rubyid_type identifier id'>type</span><span class='comma token'>,</span> <span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_to_a identifier id'>to_a</span><span class='dot token'>.</span><span class='rubyid_map identifier id'>map</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='rubyid_elm identifier id'>elm</span><span class='bitor op'>|</span> <span class='rubyid_Convert constant id'>Convert</span><span class='lparen token'>(</span><span class='rubyid_elm identifier id'>elm</span><span class='comma token'>,</span> <span class='rubyid_type identifier id'>type</span><span class='rparen token'>)</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:vector</span>
+    <span class='rubyid_type identifier id'>type</span> <span class='assign token'>=</span> <span class='notop op'>!</span><span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='integer val'>? </span><span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_element_type identifier id'>element_type</span> <span class='colon op'>:</span> <span class='rubyid_Convert constant id'>Convert</span><span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_to_a identifier id'>to_a</span><span class='dot token'>.</span><span class='rubyid_first identifier id'>first</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_type identifier id'>type</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_ConstantVector constant id'>ConstantVector</span><span class='dot token'>.</span><span class='rubyid_const identifier id'>const</span><span class='lparen token'>(</span><span class='rubyid_val identifier id'>val</span><span class='dot token'>.</span><span class='rubyid_to_a identifier id'>to_a</span><span class='dot token'>.</span><span class='rubyid_map identifier id'>map</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='rubyid_elm identifier id'>elm</span><span class='bitor op'>|</span> <span class='rubyid_Convert constant id'>Convert</span><span class='lparen token'>(</span><span class='rubyid_elm identifier id'>elm</span><span class='comma token'>,</span> <span class='rubyid_type identifier id'>type</span><span class='rparen token'>)</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='rubyid_end end kw'>end</span>
+  <span class='rubyid_if if kw'>if</span> <span class='rubyid_hint identifier id'>hint</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
+    <span class='rubyid_possibles identifier id'>possibles</span> <span class='assign token'>=</span> <span class='string val'>&quot;LLVM::Value, Numeric, Array, String, or True/False/Nil&quot;</span>
+    <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Cannot convert #{Typename(val)}, it is not of #{possibles}.&quot;</span>
+  <span class='rubyid_else else kw'>else</span>
+    <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Cannot convert #{Typename(val)} into a #{Typename(hint)}.&quot;</span>
+  <span class='rubyid_end end kw'>end</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="Decimal-class_method">
+  
+    + (<tt>Boolean</tt>) <strong>Decimal</strong>(kind) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Checks that the given kind is a float kind (:decimal, :float, :double,
+:x86_fp80, :fp128, or :ppc_fp128). :decimal in ruby-llvm-script signifies
+any kind of float.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>kind</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The kind to check.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The resulting true/false value.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+67
+68
+69
+70
+71
+72
+73</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 67</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_Decimal constant id'>Decimal</span><span class='lparen token'>(</span><span class='rubyid_kind identifier id'>kind</span><span class='rparen token'>)</span>
+  <span class='rubyid_case case kw'>case</span> <span class='rubyid_kind identifier id'>kind</span>
+  <span class='rubyid_when when kw'>when</span> <span class='symbol val'>:decimal</span><span class='comma token'>,</span> <span class='symbol val'>:float</span><span class='comma token'>,</span> <span class='symbol val'>:double</span><span class='comma token'>,</span> <span class='symbol val'>:x86_fp80</span><span class='comma token'>,</span> <span class='symbol val'>:fp128</span><span class='comma token'>,</span> <span class='symbol val'>:ppc_fp128</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_true true kw'>true</span>
+  <span class='rubyid_end end kw'>end</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_false false kw'>false</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="Typename-class_method">
+  
+    + (<tt>String</tt>) <strong>Typename</strong>(obj) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns a human-readable description of the given object’s type.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>obj</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The object to inspect.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The resulting type-name.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 101</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_Typename constant id'>Typename</span><span class='lparen token'>(</span><span class='rubyid_obj identifier id'>obj</span><span class='rparen token'>)</span>
+  <span class='rubyid_return return kw'>return</span> <span class='rubyid_obj identifier id'>obj</span><span class='dot token'>.</span><span class='rubyid_name identifier id'>name</span> <span class='rubyid_if if_mod kw'>if</span> <span class='rubyid_obj identifier id'>obj</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_Class constant id'>Class</span><span class='rparen token'>)</span>
+  <span class='rubyid_type identifier id'>type</span> <span class='assign token'>=</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Type constant id'>Type</span><span class='lparen token'>(</span><span class='rubyid_obj identifier id'>obj</span><span class='rparen token'>)</span>
+  <span class='rubyid_if if kw'>if</span> <span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Type constant id'>Type</span><span class='rparen token'>)</span>
+    <span class='rubyid_case case kw'>case</span> <span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind identifier id'>kind</span>
+    <span class='rubyid_when when kw'>when</span> <span class='symbol val'>:pointer</span>
+      <span class='rubyid_level identifier id'>level</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
+      <span class='rubyid_while while kw'>while</span> <span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind identifier id'>kind</span> <span class='eq op'>==</span> <span class='symbol val'>:pointer</span>
+        <span class='rubyid_type identifier id'>type</span> <span class='assign token'>=</span> <span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_element_type identifier id'>element_type</span>
+        <span class='rubyid_level identifier id'>level</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
+      <span class='rubyid_end end kw'>end</span>
+      <span class='rubyid_return return kw'>return</span> <span class='rubyid_Typename constant id'>Typename</span><span class='lparen token'>(</span><span class='rubyid_type identifier id'>type</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='lparen token'>(</span><span class='string val'>&quot; pointer&quot;</span> <span class='mult op'>*</span> <span class='rubyid_level identifier id'>level</span><span class='rparen token'>)</span>
+    <span class='rubyid_when when kw'>when</span> <span class='symbol val'>:integer</span>
+      <span class='rubyid_return return kw'>return</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='dot token'>.</span><span class='rubyid_const_get identifier id'>const_get</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Int#{type.width}&quot;</span><span class='dot token'>.</span><span class='rubyid_to_sym identifier id'>to_sym</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_name identifier id'>name</span>
+    <span class='rubyid_else else kw'>else</span>
+      <span class='rubyid_return return kw'>return</span> <span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind identifier id'>kind</span><span class='dot token'>.</span><span class='rubyid_to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='rubyid_capitalize identifier id'>capitalize</span>
+    <span class='rubyid_end end kw'>end</span>
+  <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_obj identifier id'>obj</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_Symbol constant id'>Symbol</span><span class='rparen token'>)</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_obj identifier id'>obj</span><span class='dot token'>.</span><span class='rubyid_to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='rubyid_capitalize identifier id'>capitalize</span>
+  <span class='rubyid_else else kw'>else</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_obj identifier id'>obj</span><span class='dot token'>.</span><span class='rubyid_class identifier id'>class</span><span class='dot token'>.</span><span class='rubyid_name identifier id'>name</span>
+  <span class='rubyid_end end kw'>end</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="Validate-class_method">
+  
+    + (<tt>LLVM::Value</tt>, <tt>LLVM::Type</tt>) <strong>Validate</strong>(obj, kind) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Validates that an object is of the given kind.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>obj</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The object to validate.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>kind</span>
+      
+      
+        <span class='type'>(<tt>:value</tt>, <tt>:type</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The kind of object <code>obj</code> should be. :value means an LLVM::Value,
+:type means an LLVM::Type.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>LLVM::Value</tt>, <tt>LLVM::Type</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The valid object.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 80</span>
+
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_Validate constant id'>Validate</span><span class='lparen token'>(</span><span class='rubyid_obj identifier id'>obj</span><span class='comma token'>,</span> <span class='rubyid_kind identifier id'>kind</span><span class='rparen token'>)</span>
+  <span class='rubyid_case case kw'>case</span> <span class='rubyid_kind identifier id'>kind</span>
+  <span class='rubyid_when when kw'>when</span> <span class='symbol val'>:value</span>
+    <span class='rubyid_unless unless kw'>unless</span> <span class='rubyid_obj identifier id'>obj</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Value constant id'>Value</span><span class='rparen token'>)</span>
+      <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{obj.class.name} is not a valid LLVM::Value.&quot;</span>
+    <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_obj identifier id'>obj</span>
+  <span class='rubyid_when when kw'>when</span> <span class='symbol val'>:type</span>
+    <span class='rubyid_type identifier id'>type</span> <span class='assign token'>=</span> <span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Type constant id'>Type</span><span class='lparen token'>(</span><span class='rubyid_obj identifier id'>obj</span><span class='rparen token'>)</span>
+    <span class='rubyid_unless unless kw'>unless</span> <span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Type constant id'>Type</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='rubyid_type identifier id'>type</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_LLVM constant id'>LLVM</span><span class='colon2 op'>::</span><span class='rubyid_Script constant id'>Script</span><span class='colon2 op'>::</span><span class='rubyid_Struct constant id'>Struct</span><span class='rparen token'>)</span>
+      <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{obj.class.name} is not a valid LLVM::Type.&quot;</span>
+    <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_type identifier id'>type</span>
+  <span class='rubyid_else else kw'>else</span>
+    <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Kind passed to validate must be either :value or :type. #{kind.inspect} given.&quot;</span>
+  <span class='rubyid_end end kw'>end</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
 
 </div>
 
     <div id="footer">
-  Generated on Sat Jun 16 20:45:42 2012 by
+  Generated on Mon Jun 25 21:03:50 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.2.1 (ruby-1.8.7).
 </div>

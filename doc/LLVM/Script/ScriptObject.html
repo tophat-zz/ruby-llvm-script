@@ -94,8 +94,8 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/llvm/script/core.rb<span class="defines">,<br />
-  lib/llvm/script/core.rb</span>
+    <dd class="r2 last">lib/llvm/script/platform.rb<span class="defines">,<br />
+  lib/llvm/script/platform.rb</span>
 </dd>
   
 </dl>
@@ -120,7 +120,7 @@ conflicts with a Kernel function. An example of  this is in the
 
 </div><div id="subclasses">
   <h2>Direct Known Subclasses</h2>
-  <p class="children"><span class='object_link'><a href="Function.html" title="LLVM::Script::Function (class)">Function</a></span>, <span class='object_link'><a href="Generator.html" title="LLVM::Script::Generator (class)">Generator</a></span>, <span class='object_link'><a href="Library.html" title="LLVM::Script::Library (class)">Library</a></span></p>
+  <p class="children"><span class='object_link'><a href="Function.html" title="LLVM::Script::Function (class)">Function</a></span>, <span class='object_link'><a href="Generator.html" title="LLVM::Script::Generator (class)">Generator</a></span>, <span class='object_link'><a href="Library.html" title="LLVM::Script::Library (class)">Library</a></span>, <span class='object_link'><a href="Namespace.html" title="LLVM::Script::Namespace (class)">Namespace</a></span>, <span class='object_link'><a href="Program.html" title="LLVM::Script::Program (class)">Program</a></span></p>
 </div>
 
   <h2>Constant Summary</h2>
@@ -245,9 +245,11 @@ conflicts with a Kernel function. An example of  this is in the
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#kind_of%3F-instance_method" title="#kind_of? (instance method)">- (Boolean) <strong>kind_of?</strong>(mod) </a>
+      <a href="#is_a%3F-instance_method" title="#is_a? (instance method)">- (Boolean) <strong>is_a?</strong>(mod) </a>
     
 
+    
+      (also: #kind_of?)
     
   </span>
   
@@ -350,13 +352,13 @@ conflicts with a Kernel function. An example of  this is in the
       <pre class="lines">
 
 
-37
 38
 39
-40</pre>
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 37</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/platform.rb', line 38</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='rubyid_sym identifier id'>sym</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='rubyid_args identifier id'>args</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='rubyid_block identifier id'>block</span><span class='rparen token'>)</span>
   <span class='rubyid_super super kw'>super</span> <span class='rubyid_unless unless_mod kw'>unless</span> <span class='colon3 op'>::</span><span class='rubyid_Kernel constant id'>Kernel</span><span class='dot token'>.</span><span class='rubyid_respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='rubyid_sym identifier id'>sym</span><span class='rparen token'>)</span>
@@ -401,12 +403,12 @@ conflicts with a Kernel function. An example of  this is in the
       <pre class="lines">
 
 
-32
 33
-34</pre>
+34
+35</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 32</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/platform.rb', line 33</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_const_missing identifier id'>const_missing</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='colon3 op'>::</span><span class='rubyid_Object constant id'>Object</span><span class='dot token'>.</span><span class='rubyid_const_get identifier id'>const_get</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
@@ -454,7 +456,7 @@ conflicts with a Kernel function. An example of  this is in the
 19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 17</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/platform.rb', line 17</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_class class kw'>class</span>
   <span class='lparen token'>(</span><span class='rubyid_class class kw'>class</span> <span class='lshft op'>&lt;&lt;</span> <span class='rubyid_self self kw'>self</span><span class='semicolon token'>;</span> <span class='rubyid_self self kw'>self</span> <span class='rubyid_end end kw'>end</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_superclass identifier id'>superclass</span>
@@ -509,7 +511,7 @@ conflicts with a Kernel function. An example of  this is in the
 24</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 22</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/platform.rb', line 22</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_instance_of? fid id'>instance_of?</span><span class='lparen token'>(</span><span class='rubyid_klass identifier id'>klass</span><span class='rparen token'>)</span>
   <span class='rubyid_return return kw'>return</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_class identifier id'>class</span> <span class='eq op'>==</span> <span class='rubyid_klass identifier id'>klass</span>
@@ -521,11 +523,15 @@ conflicts with a Kernel function. An example of  this is in the
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="kind_of?-instance_method">
+  <h3 class="signature " id="is_a?-instance_method">
   
-    - (<tt>Boolean</tt>) <strong>kind_of?</strong>(mod) 
+    - (<tt>Boolean</tt>) <strong>is_a?</strong>(mod) 
   
 
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='kind_of?-instance_method'>kind_of?</span></span>
+    </span>
   
 
   
@@ -564,9 +570,9 @@ conflicts with a Kernel function. An example of  this is in the
 29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 27</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/platform.rb', line 27</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_mod identifier id'>mod</span><span class='rparen token'>)</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_is_a? fid id'>is_a?</span><span class='lparen token'>(</span><span class='rubyid_mod identifier id'>mod</span><span class='rparen token'>)</span>
   <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_class identifier id'>class</span><span class='dot token'>.</span><span class='rubyid_ancestors identifier id'>ancestors</span><span class='dot token'>.</span><span class='rubyid_include? fid id'>include?</span><span class='lparen token'>(</span><span class='rubyid_mod identifier id'>mod</span><span class='rparen token'>)</span>
 <span class='rubyid_end end kw'>end</span>
 </pre>
@@ -614,12 +620,12 @@ conflicts with a Kernel function. An example of  this is in the
       <pre class="lines">
 
 
-43
 44
-45</pre>
+45
+46</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/llvm/script/core.rb', line 43</span>
+      <pre class="code"><span class="info file"># File 'lib/llvm/script/platform.rb', line 44</span>
 
 <span class='rubyid_def def kw'>def</span> <span class='rubyid_respond_to_missing? fid id'>respond_to_missing?</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_include_private identifier id'>include_private</span> <span class='assign token'>=</span> <span class='rubyid_false false kw'>false</span><span class='rparen token'>)</span>
   <span class='colon3 op'>::</span><span class='rubyid_Kernel constant id'>Kernel</span><span class='dot token'>.</span><span class='rubyid_respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_include_private identifier id'>include_private</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='rubyid_super super kw'>super</span>
@@ -635,7 +641,7 @@ conflicts with a Kernel function. An example of  this is in the
 </div>
 
     <div id="footer">
-  Generated on Sat Jun 16 20:45:51 2012 by
+  Generated on Mon Jun 25 21:03:58 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.2.1 (ruby-1.8.7).
 </div>
