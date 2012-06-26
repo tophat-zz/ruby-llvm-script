@@ -58,11 +58,12 @@ module LLVM
       #   import or the object itself. If a namespace, imports all of the contained namespaces and libraries.
       # @raise [RuntimeError] Raised if the LLVM Linker fails.
       def import(obj)
-        if obj.is_a?(String) || obj.is_a?(Symbol)
-          raise ArgumentError, "Namespace, #{obj.to_s}, does not exist." unless @namespace.include?(obj)
-          obj = @namespace.lookup(obj)
-        end
-        if obj.instance_of?(Library)
+        case obj
+        when String, Symbol
+          raise ArgumentError, "Namespace or Library, #{obj.to_s}, does not exist." unless @namespace.include?(obj)
+          import(@namespace.lookup(obj))
+
+        when Library
           @macros[:public].merge!(obj.macros)
           obj.functions.each do |name, func|
             if @module.functions.named(func.name)
@@ -82,7 +83,7 @@ module LLVM
           end
           err = @module.link(obj, :linker_destroy_source)
           raise RuntimeError, "Failed to link library, #{library.name.to_s}, to #{name}." if err
-        elsif obj.kind_of?(Namespace)
+        when Namespace
           obj.children.values.each{ |child| import(child) if child.is_a?(Namespace) || child.is_a?(Library) }
         else
           raise ArgumentError, "Cam only import Namespaces and Libraries. #{obj.class.name} given."

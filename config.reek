@@ -17,6 +17,8 @@ UncommunicativeMethodName:
 IrresponsibleModule:
   exclude:
   - LLVM::Script::ScriptObject
+NestedIterators:
+  enabled: false
 DataClump:
   enabled: false
 FeatureEnvy: 
